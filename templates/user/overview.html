@@ -1,0 +1,16 @@
+User profile of <b>{{ user.username }}</b>.
+
+<br /><br />
+
+TODO: Opinions of things you hived. <br />
+TODO: List opinions by categories <br />
+TODO: Display tags <br />
+TODO: Move TODOs to traq or something <br />
+
+<br />
+
+{% for opinion in opinions %}
+<div>{{ opinion.rating }}</div>
+<div>{{ opinion.item }}</div>
+{% endfor %}
+
