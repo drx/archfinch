@@ -2,7 +2,11 @@
 
 {% block content %}
 
-User profile of <b>{{ user.username }}</b>.
+User profile of <b>{{ viewed_user.username }}</b>.
+
+<br /><br />
+
+Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
 
 <br /><br />
 

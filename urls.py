@@ -6,8 +6,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$',     'hive.main.views.welcome'),
-    (r'^user/',    include('hive.userprofiles.urls')),
+    (r'^user/', include('hive.userprofiles.urls')),
     (r'^account/', include('hive.account.urls')),
+    (r'^test/', include('hive.testdata.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

@@ -33,7 +33,7 @@ class OpinionManager(models.Manager):
             LEFT JOIN main_opinion m2
             ON (m1.item_id=m2.item_id AND m2.user_id=%s)
             WHERE m1.user_id = %s
-            ORDER BY m2.rating IS NULL""", [viewer, viewed]) # Perhaps %d should be used here, instead of %s
+            ORDER BY m2.rating IS NULL""", [viewer.id, viewed.id]) # Perhaps %d should be used here, instead of %s
         result_list = []
         for row in cursor.fetchall():
             p = self.model(id=row[0], item_id=row[1], rating=row[2])
@@ -77,3 +77,56 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return "%s tagged %s %s." % (self.user.username, self.item.name, self.word.word)
+
+class SimilarityManager(models.Manager):
+
+    def sync_user(self, user):
+        for user2 in User.objects.all():
+            self.sync_users(user, user2)
+
+    def sync_users(self, user1, user2):
+        from django.db import connection
+        value = 0
+        if user1 == user2:
+            return
+
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT m1.rating, m2.rating
+            FROM main_opinion m1
+            INNER JOIN main_opinion m2
+            ON (m1.item_id = m2.item_id AND m1.user_id=%s)
+            WHERE m2.user_id = %s
+            """, [user1.id, user2.id])
+        for row in cursor.fetchall():
+            difference = abs(row[0] - row[1])
+            if difference == 0:
+                value += 2
+            elif difference == 1:
+                value += 1
+            elif difference == 2:
+                pass
+            elif difference == 3:
+                value -= 1
+            elif difference == 4:
+                value -= 2
+        print value
+        obj, created = Similarity.objects.get_or_create(user1=user1, user2=user2, defaults={'value': value})
+        if not created:
+            obj.value = value
+            obj.save()
+
+        obj, created = Similarity.objects.get_or_create(user1=user2, user2=user1, defaults={'value': value})
+        if not created:
+            obj.value = value
+            obj.save()
+
+class Similarity(models.Model):
+    user1 = models.ForeignKey(User)
+    user2 = models.ForeignKey(User, related_name="similarity_set2")
+    value = models.IntegerField()
+
+    objects = SimilarityManager()
+
+    def __unicode__(self):
+        return "S(%s, %s) = %d" % (self.user1.username, self.user2.username, self.value)
