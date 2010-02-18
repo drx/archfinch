@@ -110,7 +110,6 @@ class SimilarityManager(models.Manager):
                 value -= 1
             elif difference == 4:
                 value -= 2
-        print value
         obj, created = Similarity.objects.get_or_create(user1=user1, user2=user2, defaults={'value': value})
         if not created:
             obj.value = value

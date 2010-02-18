@@ -11,8 +11,8 @@ def overview(request, username):
         opinions = Opinion.objects.opinions_of(viewed_user, request.user)
 
         # this is only for testing and should be removed
-        #Similarity.objects.sync_users(viewed_user, request.user)
-        Similarity.objects.sync_user(viewed_user)
+        Similarity.objects.sync_users(viewed_user, request.user)
+        #Similarity.objects.sync_user(viewed_user)
 
         try:
             similarity_value = viewed_user.similarity_set.get(user2=request.user.id).value

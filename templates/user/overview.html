@@ -12,16 +12,21 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
 
 {% for opinion in opinions %}
 
-<div>{{ opinion.rating }}</div>
-<div>{{ opinion.your_rating }}</div>
-<div>{{ opinion.item }}</div>
+<div class="opinion">
+    <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
+    <div class="title">{{ opinion.item }}</div>
 
-    {# change this later, only temporary! #}
-    {% for tag in opinion.item.tag_set.all %}
+        {# change this later, only temporary! #}
+        {% for tag in opinion.item.tag_set.all %}
 
-    <div>{{ tag.word }}</div>
+        <div>{{ tag.word }}</div>
 
-    {% endfor %}
+        {% endfor %}
+    {% if opinion.your_rating %}
+    <span style="float: left; font-size: 10px; margin-right: 5px; margin-bottom: 15px;">Your opinion:</span> <div class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
+    <br />
+    {% endif %}
+</div>
 
 {% endfor %}
 

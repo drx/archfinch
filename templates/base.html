@@ -4,11 +4,93 @@
 <head>
     <title>{% block title %}The title{% endblock %}</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- temporary, put in style.css later -->
+    <style>
+        body
+        {
+            font-family: Verdana, Arial;
+            background-color: #ffffff;
+            border: 0;
+            margin: 0;
+        }
+        #content
+        {
+            margin: 10px;
+        }
+        ul.menu
+        {
+            float: left;
+            list-style-type: none;
+            width: 100%;
+        }
+        ul.menu li
+        {
+            display: inline;
+        }
+        .opinion .title
+        {
+            color: #333333;
+            padding: 8px 4px 4px 4px;
+            margin: 2px;
+        }
+        .opinion
+        {
+            margin-bottom: 10px;
+        }
+        .rating_small
+        {
+            width: 16px;
+            height: 15px;
+            font-size: 10px;
+            float: left;
+            vertical-align: middle;
+            text-align: center;
+            padding: 1px 0 0 0;
+        }
+        .rating
+        {
+            width: 30px;
+            height: 27px;
+            float: left;
+            vertical-align: middle;
+            text-align: center;
+            padding: 2px 0 0 0;
+            margin: 5px 8px 5px 5px;
+        }
+        .rating1
+        {
+            background-color: #f80000;
+            color: #ffffff;
+        }
+        .rating2
+        {
+            background-color: #f08800;
+            color: #ffffff;
+        }
+        .rating3
+        {
+            background-color: #e0e000;
+            color: #ffffff;
+        }
+        .rating4
+        {
+            background-color: #88f000;
+            color: #ffffff;
+        }
+        .rating5
+        {
+            background-color: #00a020;
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
+    <div id="logo">
+        Logo
+    </div>
     <div id="navbar">
         Temporary menu
-        <ul>
+        <ul class="menu">
             <li> <a href="/">index</a>
             <li> <a href="/account/signup">signup</a>
             <li> <a href="/account/login">login</a>
