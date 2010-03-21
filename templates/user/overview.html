@@ -14,7 +14,7 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
 
 <div class="opinion">
     <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
-    <div class="title">{{ opinion.item }}</div>
+    <div class="title"><a href="/item/{{ opinion.item.id }}">{{ opinion.item }}</a></div>
 
         {# change this later, only temporary! #}
         {% for tag in opinion.item.tag_set.all %}
