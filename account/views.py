@@ -1,4 +1,4 @@
-from hive.account.models import SignupForm
+﻿from hive.account.models import SignupForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 

@@ -86,7 +86,6 @@ class SimilarityManager(models.Manager):
 
     def sync_users(self, user1, user2):
         from django.db import connection
-        value = 0
         if user1 == user2:
             return
 
@@ -98,6 +97,8 @@ class SimilarityManager(models.Manager):
             ON (m1.item_id = m2.item_id AND m1.user_id=%s)
             WHERE m2.user_id = %s
             """, [user1.id, user2.id])
+
+        value = 0
         for row in cursor.fetchall():
             difference = abs(row[0] - row[1])
             if difference == 0:
