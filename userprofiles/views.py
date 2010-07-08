@@ -25,4 +25,5 @@ def overview(request, username):
     else:
         opinions = [] # TODO: fix this 
         return render_to_response('user/overview_anonymous.html',
-            {'viewed_user': viewed_user, 'opinions': opinions})
+            {'viewed_user': viewed_user, 'opinions': opinions},
+            context_instance=RequestContext(request))

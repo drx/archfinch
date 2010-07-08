@@ -10,4 +10,4 @@ def signup(request):
             return HttpResponseRedirect("/")
     else:
         form = SignupForm()
-    return render_to_response("account/signup.html", {'form': form,})
+    return render_to_response("account/signup.html", {'form': form,}, context_instance=RequestContext(request))
