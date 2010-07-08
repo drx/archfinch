@@ -27,3 +27,16 @@ def overview(request, username):
         return render_to_response('user/overview_anonymous.html',
             {'viewed_user': viewed_user, 'opinions': opinions},
             context_instance=RequestContext(request))
+
+def similar(request):
+    '''
+    Show users most similar to the logged in user.
+    '''
+
+    if request.user.is_authenticated():
+        similar_users = Similarity.objects.filter(user1__exact=request.user).exclude(user2__exact=request.user).order_by('-value')
+        return render_to_response('user/similar.html',
+            {'similar_users': similar_users[:10]})
+    else:
+        return render_to_response('user/similar_anonymous.html')
+    

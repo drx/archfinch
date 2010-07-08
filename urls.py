@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$',     'hive.main.views.welcome'),
     (r'^user/', include('hive.userprofiles.urls')),
+    (r'^similar', 'hive.userprofiles.views.similar'),
     (r'^account/', include('hive.account.urls')),
     (r'^test/', include('hive.testdata.urls')),
 

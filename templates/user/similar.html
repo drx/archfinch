@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Ten users most similar to you.
+
+<br /><br />
+
+{% for similarity in similar_users %}
+
+<div class="userlist">
+    <div class="user"><a href="/user/{{ similarity.user2 }}">{{ similarity.user2 }}</a></div>
+    <div class="similarity">{{ similarity.value }}</div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
