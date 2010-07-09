@@ -1,9 +1,10 @@
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 from main.models import Opinion, Similarity
+from users.models import User
 
 def overview(request, username):
     viewed_user = get_object_or_404(User, username=username)
@@ -34,7 +35,7 @@ def similar(request):
     '''
 
     if request.user.is_authenticated():
-        similar_users = request.user.get_profile().similar()
+        similar_users = request.user.similar()
         return render_to_response('user/similar.html',
             {'similar_users': similar_users[:10]})
     else:
