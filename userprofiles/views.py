@@ -11,8 +11,8 @@ def overview(request, username):
         opinions = Opinion.objects.opinions_of(viewed_user, request.user)
 
         # this is only for testing and should be removed
-        Similarity.objects.sync_users(viewed_user, request.user)
-        #Similarity.objects.sync_user(viewed_user)
+        Similarity.objects.update_user_pair(viewed_user, request.user)
+        #Similarity.objects.update_user(viewed_user)
 
         try:
             similarity_value = viewed_user.similarity_set.get(user2=request.user.id).value
@@ -34,7 +34,7 @@ def similar(request):
     '''
 
     if request.user.is_authenticated():
-        similar_users = Similarity.objects.filter(user1__exact=request.user).exclude(user2__exact=request.user).order_by('-value')
+        similar_users = request.user.get_profile().similar()
         return render_to_response('user/similar.html',
             {'similar_users': similar_users[:10]})
     else:

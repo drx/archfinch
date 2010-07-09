@@ -79,12 +79,17 @@ class Tag(models.Model):
         return "%s tagged %s %s." % (self.user.username, self.item.name, self.word.word)
 
 class SimilarityManager(models.Manager):
-
-    def sync_user(self, user):
+    def update_user(self, user):
+        '''
+        Update similarity values for a user against all other users.
+        '''
         for user2 in User.objects.all():
-            self.sync_users(user, user2)
+            self.update_user_pair(user, user2)
 
-    def sync_users(self, user1, user2):
+    def update_user_pair(self, user1, user2):
+        '''
+        Update similarity values for a pair of users.
+        '''
         from django.db import connection
         if user1 == user2:
             return
