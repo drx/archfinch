@@ -6,6 +6,8 @@ urlpatterns = patterns('hive.account.views',
     # (r'^login$', 'login'),
     # (r'^logout$', 'logout'),
     # (r'^prefs$', 'preferences'),
+
+    (r'^debug/updatesim$', 'update_similarities'),
 )
 
 urlpatterns += patterns('',
