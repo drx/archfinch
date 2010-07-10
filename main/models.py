@@ -33,7 +33,7 @@ class OpinionManager(models.Manager):
             LEFT JOIN main_opinion m2
             ON (m1.item_id=m2.item_id AND m2.user_id=%s)
             WHERE m1.user_id = %s
-            ORDER BY m2.rating IS NULL""", [viewer.id, viewed.id]) # Perhaps %d should be used here, instead of %s
+            ORDER BY m2.rating IS NULL, m1.rating DESC""", [viewer.id, viewed.id]) # Perhaps %d should be used here, instead of %s
         result_list = []
         for row in cursor.fetchall():
             p = self.model(id=row[0], item_id=row[1], rating=row[2])
