@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Results for <b>{{ query }}</b>.
+
+{% for result in results %}
+<p><a href="/item/{{ result.id }}">{{ result }}</a></p>
+{% endfor %}
+
+{% endblock %}
