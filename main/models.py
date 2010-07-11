@@ -15,6 +15,11 @@ class Item(models.Model):
     def __unicode__(self):
         return self.name
 
+class ItemProfile(models.Model):
+    item = models.OneToOneField(Item, related_name='profile')
+
+    page = models.TextField()
+
 class Action(models.Model):
     time = models.DateTimeField(auto_now_add=True, unique=False)
     

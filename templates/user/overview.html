@@ -14,7 +14,17 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
 
 <div class="opinion">
     <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
-    <div class="title"><a href="/item/{{ opinion.item.id }}">{{ opinion.item }}</a></div>
+    <div class="title"><a href="/item/{{ opinion.item.id }}/{{ opinion.item|slugify }}">{{ opinion.item }}</a>
+
+    <span style="font-size: 10px" class="debug">{Debug: set to 
+     <a href="/opinion/set/{{ opinion.item.id }}/1">1</a>,
+     <a href="/opinion/set/{{ opinion.item.id }}/2">2</a>,
+     <a href="/opinion/set/{{ opinion.item.id }}/3">3</a>,
+     <a href="/opinion/set/{{ opinion.item.id }}/4">4</a>,
+     <a href="/opinion/set/{{ opinion.item.id }}/5">5</a>;
+     <a href="/opinion/remove/{{ opinion.item.id }}">remove</a>}
+    </span>
+    </div>
 
         {# change this later, only temporary! #}
         {% for tag in opinion.item.tag_set.all %}

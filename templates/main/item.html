@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<b>{{ item.name }}</b>.
+
+<br /><br />
+
+If you like {{ item.name }}, you might like: [...]
+
+<br /><br />
+
+{% if opinion %}
+    <span style="float: left; margin-top: 6px;">Your opinion:</span> <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
+{% else %}
+    You have not yet rated {{ item.name }}. You might (like|love|hate|dislike) it.
+{% endif %}
+
+{{ item.profile.page }}
+
+{% endblock %}
