@@ -11,6 +11,8 @@ def query(request):
 
     results = Item.objects.all()
     for word in words:
+        if word.startswith('"'):
+            word = word[1:-1]
         results = results.filter(name__icontains=word)
 
     if request.user.is_authenticated():

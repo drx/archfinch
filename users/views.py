@@ -8,6 +8,7 @@ from users.models import User
 
 def overview(request, username):
     viewed_user = get_object_or_404(User, username=username)
+
     if request.user.is_authenticated():
         opinions = Opinion.objects.opinions_of(viewed_user, request.user)
 
