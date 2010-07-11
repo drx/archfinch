@@ -9,7 +9,7 @@ Ten users most similar to you.
 {% for similarity in similar_users %}
 
 <div class="userlist">
-    <div class="user"><a href="/user/{{ similarity.user2 }}">{{ similarity.user2 }}</a></div>
+    <div class="user"><a href="{% url users.views.overview similarity.user2 %}">{{ similarity.user2 }}</a></div>
     <div class="similarity">{{ similarity.value }}</div>
 </div>
 

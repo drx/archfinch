@@ -5,7 +5,7 @@ urlpatterns = patterns('hive.account.views',
     (r'^signup$', 'signup'),
     # (r'^login$', 'login'),
     # (r'^logout$', 'logout'),
-    # (r'^prefs$', 'preferences'),
+    (r'^prefs$', 'preferences'),
 
     (r'^debug/updatesim$', 'update_similarities'),
 )

@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     (r'^account/', include('hive.account.urls')),
     (r'^test/', include('hive.testdata.urls')),
 
-    (r'^item/(?P<item_id>[0-9]+)(/.*)?$', 'hive.main.views.item'),
+    (r'^item/(?P<item_id>[0-9]+)(?:/(.*))?$', 'hive.main.views.item'),
     (r'^opinion/set/(?P<item_id>[0-9]+)/(?P<rating>[1-5])$', 'hive.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9]+)$', 'hive.main.views.opinion_remove'),
 
