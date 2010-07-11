@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404, HttpResponse
 from django.template import RequestContext
-from main.models import Item, Opinion, Action
+from main.models import Item, Opinion, Action, Similarity
 
 def welcome(request):
     if request.user.is_authenticated():
@@ -46,9 +46,14 @@ def opinion_set(request, item_id, rating):
     action = Action()
     action.save()
     opinion, created = Opinion.objects.get_or_create(user=request.user, item=item, defaults={'action': action})
+    old_rating = opinion.rating
     opinion.rating = rating
     opinion.action = action
     opinion.save()
+
+    if created or rating != old_rating:
+        delta = {item_id: ('set', old_rating, rating)}
+        Similarity.objects.update_user_delta(request.user, delta)
 
     return HttpResponse('OK.')
 
@@ -66,6 +71,11 @@ def opinion_remove(request, item_id):
         return render_to_response('error.html', {'error_msg': 'You need to be logged in to remove a rating.'})
 
     # see a similar comment for opinion_set
-    opinion = Opinion.objects.get(user=request.user, item=item).delete()
+    opinion = Opinion.objects.get(user=request.user, item=item)
+    old_rating = opinion.rating
+    opinion.delete()
+
+    delta = {item_id: ('remove', old_rating)}
+    Similarity.objects.update_user_delta(request.user, delta)
 
     return HttpResponse('OK.')

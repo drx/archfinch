@@ -91,6 +91,19 @@ class SimilarityManager(models.Manager):
         for user2 in User.objects.all():
             self.update_user_pair(user, user2)
 
+    def update_user_delta(self, user, delta):
+        '''
+        Update similarity values for a user against all other users after an opinion set update,
+         represented by a delta dict.
+        '''
+
+        items = list(delta.iterkeys())
+        users = Opinion.objects.filter(item__in=items).values_list('user', flat=True)
+
+        for user2_id in users:
+            user2 = User.objects.get(pk=user2_id)
+            self.update_user_pair(user, user2)
+
     def update_user_pair(self, user1, user2):
         '''
         Update similarity values for a pair of users.
