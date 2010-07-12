@@ -17,4 +17,3 @@ urlpatterns += patterns('',
         {'template_name': 'account/logout.html'}),
 
 )
-

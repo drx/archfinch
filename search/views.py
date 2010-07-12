@@ -4,6 +4,7 @@ from django.template import RequestContext
 from main.models import Item
 import re
 
+
 def query(request):
     q = request.GET['q']
 

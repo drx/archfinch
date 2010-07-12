@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from main.models import Opinion, Similarity
 from users.models import User
 
+
 def overview(request, username):
     viewed_user = get_object_or_404(User, username=username)
 
@@ -17,7 +18,8 @@ def overview(request, username):
         #Similarity.objects.update_user(viewed_user)
 
         try:
-            similarity_value = viewed_user.similarity_set.get(user2=request.user.id).value
+            similarity_value = viewed_user.similarity_set.get(
+                user2=request.user.id).value
         except ObjectDoesNotExist:
             similarity_value = None
         return render_to_response('user/overview.html',
@@ -25,10 +27,11 @@ def overview(request, username):
             'similarity': similarity_value},
              context_instance=RequestContext(request))
     else:
-        opinions = [] # TODO: fix this 
+        opinions = []  # TODO: fix this
         return render_to_response('user/overview_anonymous.html',
             {'viewed_user': viewed_user, 'opinions': opinions},
             context_instance=RequestContext(request))
+
 
 def similar(request):
     '''
@@ -41,4 +44,3 @@ def similar(request):
             {'similar_users': similar_users[:10]})
     else:
         return render_to_response('user/similar_anonymous.html')
-    

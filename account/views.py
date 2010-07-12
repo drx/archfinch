@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from main.models import Similarity
 
+
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -11,16 +12,21 @@ def signup(request):
             return HttpResponseRedirect("/")
     else:
         form = SignupForm()
-    return render_to_response("account/signup.html", {'form': form,}, context_instance=RequestContext(request))
+    return render_to_response("account/signup.html",
+        {'form': form},
+        context_instance=RequestContext(request))
+
 
 def preferences(request):
     pass
+
 
 def update_similarities(request):
     '''
     Update similarities against other users.
 
-    This method is for debug purposes only, and should be removed as soon as it is not needed any more.
+    This method is for debug purposes only, and should be removed as soon
+     as it is not needed any more.
     '''
 
     if not request.user.is_authenticated():

@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Category(models.Model):
     name = models.CharField(max_length=200)
 
     def __unicode__(self):
         return self.name
+
 
 class Item(models.Model):
     category = models.ForeignKey(Category)
@@ -15,16 +17,19 @@ class Item(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class ItemProfile(models.Model):
     item = models.OneToOneField(Item, related_name='profile')
 
     page = models.TextField()
 
+
 class Action(models.Model):
     time = models.DateTimeField(auto_now_add=True, unique=False)
-    
+
     def __unicode__(self):
         return self.time.ctime()
+
 
 class OpinionManager(models.Manager):
 
@@ -38,13 +43,16 @@ class OpinionManager(models.Manager):
             LEFT JOIN main_opinion m2
             ON (m1.item_id=m2.item_id AND m2.user_id=%s)
             WHERE m1.user_id = %s
-            ORDER BY m2.rating IS NULL, m1.rating DESC""", [viewer.id, viewed.id]) # Perhaps %d should be used here, instead of %s
+            ORDER BY m2.rating IS NULL, m1.rating DESC""",
+                [viewer.id, viewed.id])  # Perhaps %d should be used here,
+                                         #  instead of %s
         result_list = []
         for row in cursor.fetchall():
             p = self.model(id=row[0], item_id=row[1], rating=row[2])
             p.your_rating = row[3]
             result_list.append(p)
         return result_list
+
 
 class Opinion(models.Model):
     user = models.ForeignKey(User)
@@ -60,18 +68,22 @@ class Opinion(models.Model):
         (6, 'Among my favorites'),
         (0, 'No opinion'),
     )
-    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES,
+        null=True, blank=True)
 
     objects = OpinionManager()
 
     def __unicode__(self):
-        return "%s gave %s a rating of %d." % (self.user.username, self.item.name, self.rating)
+        return "%s gave %s a rating of %d." % (self.user.username,
+            self.item.name, self.rating)
+
 
 class Word(models.Model):
     word = models.CharField(max_length=50)
-    
+
     def __unicode__(self):
         return self.word
+
 
 class Tag(models.Model):
     user = models.ForeignKey(User)
@@ -81,7 +93,9 @@ class Tag(models.Model):
     word = models.ForeignKey(Word)
 
     def __unicode__(self):
-        return "%s tagged %s %s." % (self.user.username, self.item.name, self.word.word)
+        return "%s tagged %s %s." % (self.user.username,
+            self.item.name, self.word.word)
+
 
 class SimilarityManager(models.Manager):
     def update_user(self, user):
@@ -93,12 +107,13 @@ class SimilarityManager(models.Manager):
 
     def update_user_delta(self, user, delta):
         '''
-        Update similarity values for a user against all other users after an opinion set update,
-         represented by a delta dict.
+        Update similarity values for a user against all other users after
+         an opinion set update, represented by a delta dict.
         '''
 
         items = list(delta.iterkeys())
-        users = Opinion.objects.filter(item__in=items).values_list('user', flat=True)
+        users = Opinion.objects.filter(item__in=items).values_list('user',
+            flat=True)
 
         for user2_id in users:
             user2 = User.objects.get(pk=user2_id)
@@ -134,15 +149,18 @@ class SimilarityManager(models.Manager):
                 value -= 1
             elif difference == 4:
                 value -= 2
-        obj, created = Similarity.objects.get_or_create(user1=user1, user2=user2, defaults={'value': value})
+        obj, created = Similarity.objects.get_or_create(user1=user1,
+            user2=user2, defaults={'value': value})
         if not created:
             obj.value = value
             obj.save()
 
-        obj, created = Similarity.objects.get_or_create(user1=user2, user2=user1, defaults={'value': value})
+        obj, created = Similarity.objects.get_or_create(user1=user2,
+            user2=user1, defaults={'value': value})
         if not created:
             obj.value = value
             obj.save()
+
 
 class Similarity(models.Model):
     user1 = models.ForeignKey(User)
@@ -152,4 +170,5 @@ class Similarity(models.Model):
     objects = SimilarityManager()
 
     def __unicode__(self):
-        return "S(%s, %s) = %d" % (self.user1.username, self.user2.username, self.value)
+        return "S(%s, %s) = %d" % (self.user1.username,
+            self.user2.username, self.value)

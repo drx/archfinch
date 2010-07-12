@@ -3,6 +3,7 @@ from django.contrib.auth.backends import ModelBackend as BaseModelBackend
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import get_model
 
+
 class ModelBackend(BaseModelBackend):
     def authenticate(self, username=None, password=None):
         try:

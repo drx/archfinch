@@ -1,12 +1,17 @@
-from django.shortcuts import render_to_response, get_object_or_404, HttpResponse
+from django.shortcuts import (render_to_response, get_object_or_404,
+    HttpResponse)
 from django.template import RequestContext
 from main.models import Item, Opinion, Action, Similarity
 
+
 def welcome(request):
     if request.user.is_authenticated():
-        return render_to_response("main/welcome.html", context_instance=RequestContext(request))
+        return render_to_response("main/welcome.html",
+            context_instance=RequestContext(request))
     else:
-        return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
+        return render_to_response("main/welcome_anonymous.html",
+            context_instance=RequestContext(request))
+
 
 def item(request, item_id):
     '''
@@ -24,7 +29,9 @@ def item(request, item_id):
     else:
         opinion = None
 
-    return render_to_response("main/item.html", {'item': item, 'opinion': opinion})
+    return render_to_response("main/item.html",
+        {'item': item, 'opinion': opinion})
+
 
 def recommend(request):
     '''
@@ -36,9 +43,10 @@ def recommend(request):
         return render_to_response("main/recommend.html",
             {'recommendations': recommendations},
             context_instance=RequestContext(request))
-    else: 
-        return render_to_response("main/recommend_anonymous.html", context_instance=RequestContext(request))
-        
+    else:
+        return render_to_response("main/recommend_anonymous.html",
+            context_instance=RequestContext(request))
+
 
 def opinion_set(request, item_id, rating):
     '''
@@ -52,14 +60,18 @@ def opinion_set(request, item_id, rating):
     item = get_object_or_404(Item, pk=item_id)
 
     if not request.user.is_authenticated():
-        # perhaps this is an opportunity to capture a yet unregistered user and shouldn't be an error
-        return render_to_response('error.html', {'error_msg': 'You need to be logged in to set a rating.'})
+        # perhaps this is an opportunity to capture a yet unregistered user
+        #  and shouldn't be an error
+        return render_to_response('error.html',
+            {'error_msg': 'You need to be logged in to set a rating.'})
 
-    # this should be forwarded to a server which does this kind of work and not done during the client request
+    # this should be forwarded to a server which does this kind of work
+    #  and not done during the client request
     # also, this should update similarities
     action = Action()
     action.save()
-    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item, defaults={'action': action})
+    opinion, created = Opinion.objects.get_or_create(user=request.user,
+        item=item, defaults={'action': action})
     old_rating = opinion.rating
     opinion.rating = rating
     opinion.action = action
@@ -70,6 +82,7 @@ def opinion_set(request, item_id, rating):
         Similarity.objects.update_user_delta(request.user, delta)
 
     return HttpResponse('OK.')
+
 
 def opinion_remove(request, item_id):
     '''
@@ -82,7 +95,8 @@ def opinion_remove(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
 
     if not request.user.is_authenticated():
-        return render_to_response('error.html', {'error_msg': 'You need to be logged in to remove a rating.'})
+        return render_to_response('error.html',
+            {'error_msg': 'You need to be logged in to remove a rating.'})
 
     # see a similar comment for opinion_set
     opinion = Opinion.objects.get(user=request.user, item=item)

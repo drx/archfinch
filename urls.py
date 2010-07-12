@@ -13,12 +13,14 @@ urlpatterns = patterns('',
     (r'^test/', include('hive.testdata.urls')),
 
     (r'^item/(?P<item_id>[0-9]+)(?:/(.*))?$', 'hive.main.views.item'),
-    (r'^opinion/set/(?P<item_id>[0-9]+)/(?P<rating>[1-5])$', 'hive.main.views.opinion_set'),
-    (r'^opinion/remove/(?P<item_id>[0-9]+)$', 'hive.main.views.opinion_remove'),
+    (r'^opinion/set/(?P<item_id>[0-9]+)/(?P<rating>[1-5])$',
+        'hive.main.views.opinion_set'),
+    (r'^opinion/remove/(?P<item_id>[0-9]+)$',
+        'hive.main.views.opinion_remove'),
 
     (r'^search$', 'hive.search.views.query'),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -1,4 +1,5 @@
-from hive.main.models import Category, Item, Opinion, Tag, Word, Action, Similarity
+from hive.main.models import (Category, Item, Opinion, Tag, Word, Action,
+    Similarity)
 from django.contrib import admin
 
 admin.site.register(Category)
