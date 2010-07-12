@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^$',     'hive.main.views.welcome'),
     (r'^user/', include('hive.users.urls')),
     (r'^similar', 'hive.users.views.similar'),
+    (r'^recommend', 'hive.main.views.recommend'),
     (r'^account/', include('hive.account.urls')),
     (r'^test/', include('hive.testdata.urls')),
 

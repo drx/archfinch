@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Things you might like.
+
+{% for item in recommendations %}
+<div class="recommendation">
+<div class="title"><a href="{% url main.views.item item.id item|slugify %}">{{ item }}</a></div>
+<div class="likeness">{{ item.rating_sum }}</div>
+</div>
+
+{% endfor %}
+
+{% endblock %}

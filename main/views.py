@@ -26,6 +26,20 @@ def item(request, item_id):
 
     return render_to_response("main/item.html", {'item': item, 'opinion': opinion})
 
+def recommend(request):
+    '''
+    Shows a list of recommendations.
+    '''
+
+    if request.user.is_authenticated():
+        recommendations = request.user.recommend()
+        return render_to_response("main/recommend.html",
+            {'recommendations': recommendations},
+            context_instance=RequestContext(request))
+    else: 
+        return render_to_response("main/recommend_anonymous.html", context_instance=RequestContext(request))
+        
+
 def opinion_set(request, item_id, rating):
     '''
     Set rating for a (user, item) pair.
