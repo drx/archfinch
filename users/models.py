@@ -27,7 +27,7 @@ class User(BaseUser):
         cursor = connection.cursor()
         cursor.execute("""
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
-             SUM(mo.rating-3) AS rating_sum
+             SUM((mo.rating-3)*ms.value) AS rating_sum
             FROM main_similarity ms
              INNER JOIN main_opinion mo
               ON ms.user2_id=mo.user_id
@@ -36,9 +36,12 @@ class User(BaseUser):
             WHERE ms.user1_id=%s
              AND ms.user2_id!=%s
              AND ms.value > 0
+             AND NOT EXISTS
+              (SELECT 1 FROM main_opinion mo2
+               WHERE mo2.item_id=mi.id AND mo2.user_id=%s)
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name
             ORDER BY rating_sum DESC""",
-            [self.id, self.id])
+            [self.id, self.id, self.id])
         result_list = []
         for row in cursor.fetchall():
             if row[4] <= 0:
