@@ -12,7 +12,7 @@ class Category(models.Model):
 class Item(models.Model):
     category = models.ForeignKey(Category)
     parent = models.ForeignKey('Item', null=True, blank=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=1000)
 
     def __unicode__(self):
         return self.name
