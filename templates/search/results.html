@@ -5,7 +5,10 @@
 Results for <b>{{ query }}</b>.
 
 {% for result in results %}
-<p><a href="{% url main.views.item result.id result.name|slugify %}">{{ result }}</a></p>
+<p>
+<div class="title"><a href="{% url main.views.item result.id result.name|slugify %}">{{ result }}</a></div>
+<div class="category_element">{{ result.category }}</div>
+</p>
 {% endfor %}
 
 {% endblock %}
