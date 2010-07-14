@@ -6,15 +6,24 @@
 
 <br /><br />
 
-If you like {{ item.name }}, you might like: [...]
+If you like this {{ item.category.element_singular }}, you might like: [...]
 
 <br /><br />
 
 {% if opinion %}
     <span style="float: left; margin-top: 6px;">Your opinion:</span> <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
 {% else %}
-    You have not yet rated {{ item.name }}. You might (like|love|hate|dislike) it.
+    You have not rated this {{ item.category.element_singular }}. You might (like|love|hate|dislike) it.
 {% endif %}
+
+    <br/><br/><span style="font-size: 10px" class="debug">{Debug: set to 
+     <a href="{% url hive.main.views.opinion_set item.id 1%}">1</a>,
+     <a href="{% url hive.main.views.opinion_set item.id 2%}">2</a>,
+     <a href="{% url hive.main.views.opinion_set item.id 3%}">3</a>,
+     <a href="{% url hive.main.views.opinion_set item.id 4%}">4</a>,
+     <a href="{% url hive.main.views.opinion_set item.id 5%}">5</a>,
+     <a href="{% url hive.main.views.opinion_remove item.id %}">remove</a>}
+    </span>
 
 {{ item.profile.page }}
 
