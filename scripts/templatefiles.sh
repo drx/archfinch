@@ -8,4 +8,4 @@
 # You might use it like this:
 #
 #  vim -p `./templatefiles.sh`
-find . -regextype posix-extended -regex ".*\.html" | sort
+find ./templates -regextype posix-extended -regex ".*\.html" | sort
