@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+    element_singular = models.CharField(max_length=200)
+    element_plural = models.CharField(max_length=200)
 
     def __unicode__(self):
         return self.name

@@ -7,7 +7,7 @@ Results for <b>{{ query }}</b>.
 {% for result in results %}
 <p>
 <div class="title"><a href="{% url main.views.item result.id result.name|slugify %}">{{ result }}</a></div>
-<div class="category_element">{{ result.category }}</div>
+<div class="category_element">{{ result.category.element_singular|capfirst }}</div>
 </p>
 {% endfor %}
 
