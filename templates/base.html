@@ -8,7 +8,7 @@
     <style>
         body
         {
-            font-family: Verdana, Arial;
+            font-family: Verdana;
             background-color: #ffffff;
             border: 0;
             margin: 0;
@@ -16,6 +16,7 @@
         #content
         {
             margin: 10px;
+            width: 40em;
         }
         ul.menu
         {
@@ -40,46 +41,53 @@
         }
         .opinion
         {
-            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+        .opinion.highlight
+        {
+            background-color: #f8f8ff;
         }
         .category_element
         {
             font-size: 11px;
             color: #aaaaaa;
         }
+        .rating, .rating_small
+        {
+            float: left;
+            text-align: center;
+            cursor: default;
+            font-weight: bold;
+        }
         .rating_small
         {
             width: 16px;
-            height: 15px;
+            height: 16px;
             font-size: 10px;
-            float: left;
-            vertical-align: middle;
-            text-align: center;
-            padding: 1px 0 0 0;
+            padding: 0 0 0 0;
+            line-height: 15px;
         }
         .rating
         {
-            width: 30px;
-            height: 27px;
-            float: left;
-            vertical-align: middle;
-            text-align: center;
-            padding: 2px 0 0 0;
+            padding: 0 0 0 0;
             margin: 5px 8px 5px 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 27px;
         }
         .rating1
         {
-            background-color: #f80000;
+            background-color: #f02000;
             color: #ffffff;
         }
         .rating2
         {
-            background-color: #f08800;
+            background-color: #ffcc00;
             color: #ffffff;
         }
         .rating3
         {
-            background-color: #efe90d;
+            background-color: #fff600;
             color: #ffffff;
         }
         .rating4
@@ -92,7 +100,74 @@
             background-color: #00a020;
             color: #ffffff;
         }
+        /*.rating1.rate
+        {
+            background-color: #fec0c0;
+        }
+        .rating2.rate
+        {
+            background-color: #fceec0;
+        }
+        .rating3.rate
+        {
+            background-color: #fcfacd;
+        }
+        .rating4.rate
+        {
+            background-color: #eefcc0;
+        }
+        .rating5.rate
+        {
+            background-color: #c0e8c8;
+        }*/
+        .rating_label
+        {
+            float: left;
+            margin-right: 5px;
+        }
+        .rate.rating_small
+        {
+            opacity: 0.25;
+        }
+        .your_opinion
+        {
+            display: inline;
+        }
+        .highlight .your_opinion
+        {
+            display: none;
+        }
+        .rate
+        {
+            display: none;
+        }
+        .highlight .rate
+        {
+            display: inline;
+        }
     </style>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".opinion").hover(
+        function(e){
+            $(this).addClass('highlight')
+        },
+        function(e){
+            $(this).removeClass('highlight')
+        }
+    );
+    $(".rate .rating_small").hover(
+        function(e){
+            $(this).removeClass('rate')
+        },
+        function(e){
+            $(this).addClass('rate')
+        }
+    );
+});
+</script>
 </head>
 <body>
     <div id="logo">
@@ -108,6 +183,9 @@
             <li> <a href="{% url account.views.preferences %}">preferences</a>
             <li> <a href="{% url users.views.similar %}">similar users</a>
             <li> <a href="{% url main.views.recommend %}">things you might like</a>
+            {% if user %}
+            <li> <a href="{% url users.views.overview user.username %}">your profile</a>
+            {% endif %}
             <li> <form action="{% url search.views.query %}"><input type='text' name='q' value='Search...' onClick='this.value=""'></form>
         </ul>
     </div>

@@ -32,10 +32,22 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
         <div>{{ tag.word }}</div>
 
         {% endfor %}
+    <div style="font-size: 10px; margin-bottom: 15px;">
     {% if opinion.your_rating %}
-    <span style="float: left; font-size: 10px; margin-right: 5px; margin-bottom: 15px;">Your opinion:</span> <div class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
-    <br />
+    <div class="your_opinion">
+    <span class="rating_label">Your opinion:</span> <div class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
+    </div>
     {% endif %}
+    <div class="rate nodisplay">
+        <span class="rating_label">Rate:</span>
+        <span class="rating_small rate rating1">1</span>
+        <span class="rating_small rate rating2">2</span>
+        <span class="rating_small rate rating3">3</span>
+        <span class="rating_small rate rating4">4</span>
+        <span class="rating_small rate rating5">5</span>
+    </div>
+    <br />
+    </div>
 </div>
 
 {% endfor %}
