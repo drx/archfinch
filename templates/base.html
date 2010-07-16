@@ -2,7 +2,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>{% block title %}The title{% endblock %}</title>
+    <title>{% block title %}Archfinch{% endblock %}</title>
     <link rel="stylesheet" href="style.css" />
     <!-- temporary, put in style.css later -->
     <style>
@@ -160,6 +160,14 @@
         {
             display: none;
         }
+        #logo
+        {
+            margin: 0.75em;
+            font-family: Trebuchet MS;
+            font-weight: bold;
+            font-size: 24px;
+            color: #0099ff;
+        }
     </style>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
@@ -218,10 +226,9 @@ $(document).ready(function(){
 </head>
 <body>
     <div id="logo">
-        Logo
+        Archfinch
     </div>
     <div id="navbar">
-        Temporary menu
         <ul class="menu">
             <li> <a href="/">index</a>
             <li> <a href="{% url account.views.signup %}">signup</a>
