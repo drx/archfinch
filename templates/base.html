@@ -152,6 +152,10 @@
         {
             display: inline;
         }
+        .nodisplay
+        {
+            display: none;
+        }
     </style>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
@@ -203,6 +207,7 @@ $(document).ready(function(){
         yr.removeClass("rating1 rating2 rating3 rating4 rating5")
         yr.addClass("rating"+rating)
         yr.html(rating)
+        yr.parent().removeClass("nodisplay")
     });
 });
 </script>
