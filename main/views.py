@@ -1,6 +1,7 @@
 from django.shortcuts import (render_to_response, get_object_or_404,
     HttpResponse)
 from django.template import RequestContext
+from django.utils import simplejson
 from main.models import Item, Opinion, Action, Similarity
 
 
@@ -62,8 +63,9 @@ def opinion_set(request, item_id, rating):
     if not request.user.is_authenticated():
         # perhaps this is an opportunity to capture a yet unregistered user
         #  and shouldn't be an error
-        return render_to_response('error.html',
-            {'error_msg': 'You need to be logged in to set a rating.'})
+        json = simplejson.dumps({'success': False,
+            'error_msg': 'You need to be logged in to set a rating.'})
+        return HttpResponse(json, mimetype='application/json')
 
     # this should be forwarded to a server which does this kind of work
     #  and not done during the client request
@@ -81,7 +83,8 @@ def opinion_set(request, item_id, rating):
         delta = {item_id: ('set', old_rating, rating)}
         Similarity.objects.update_user_delta(request.user, delta)
 
-    return HttpResponse('OK.')
+    json = simplejson.dumps({'success': True})
+    return HttpResponse(json, mimetype='application/json')
 
 
 def opinion_remove(request, item_id):
@@ -95,8 +98,9 @@ def opinion_remove(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
 
     if not request.user.is_authenticated():
-        return render_to_response('error.html',
-            {'error_msg': 'You need to be logged in to remove a rating.'})
+        json = simplejson.dumps({'success': False,
+            'error_msg': 'You need to be logged in to remove a rating.'})
+        return HttpResponse(json, mimetype='application/json')
 
     # see a similar comment for opinion_set
     opinion = Opinion.objects.get(user=request.user, item=item)
@@ -106,4 +110,5 @@ def opinion_remove(request, item_id):
     delta = {item_id: ('remove', old_rating)}
     Similarity.objects.update_user_delta(request.user, delta)
 
-    return HttpResponse('OK.')
+    json = simplejson.dumps({'success': True})
+    return HttpResponse(json, mimetype='application/json')

@@ -14,17 +14,7 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
 
 <div class="opinion">
     <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
-    <div class="title"><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a>
-
-    <span style="font-size: 10px" class="debug">{Debug: set to 
-     <a href="{% url hive.main.views.opinion_set opinion.item.id 1%}">1</a>,
-     <a href="{% url hive.main.views.opinion_set opinion.item.id 2%}">2</a>,
-     <a href="{% url hive.main.views.opinion_set opinion.item.id 3%}">3</a>,
-     <a href="{% url hive.main.views.opinion_set opinion.item.id 4%}">4</a>,
-     <a href="{% url hive.main.views.opinion_set opinion.item.id 5%}">5</a>,
-     <a href="{% url hive.main.views.opinion_remove opinion.item.id %}">remove</a>}
-    </span>
-    </div>
+    <div class="title"><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></div>
 
         {# change this later, only temporary! #}
         {% for tag in opinion.item.tag_set.all %}
@@ -32,19 +22,20 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
         <div>{{ tag.word }}</div>
 
         {% endfor %}
-    <div style="font-size: 10px; margin-bottom: 15px;">
+    <div class="user_opinion" item="{{ opinion.item.id }}">
     {% if opinion.your_rating %}
     <div class="your_opinion">
-    <span class="rating_label">Your opinion:</span> <div class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
+    <span class="rating_label">Your opinion:</span> <div id="yr_{{ opinion.item.id }}" class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
+
     </div>
     {% endif %}
-    <div class="rate nodisplay">
+    <div class="user_rate nodisplay">
         <span class="rating_label">Rate:</span>
-        <span class="rating_small rate rating1">1</span>
-        <span class="rating_small rate rating2">2</span>
-        <span class="rating_small rate rating3">3</span>
-        <span class="rating_small rate rating4">4</span>
-        <span class="rating_small rate rating5">5</span>
+        <span class="rating_small rate {% if opinion.your_rating == 1 %}rated{% endif %} rating1">1</span>
+        <span class="rating_small rate {% if opinion.your_rating == 2 %}rated{% endif %} rating2">2</span>
+        <span class="rating_small rate {% if opinion.your_rating == 3 %}rated{% endif %} rating3">3</span>
+        <span class="rating_small rate {% if opinion.your_rating == 4 %}rated{% endif %} rating4">4</span>
+        <span class="rating_small rate {% if opinion.your_rating == 5 %}rated{% endif %} rating5">5</span>
     </div>
     <br />
     </div>

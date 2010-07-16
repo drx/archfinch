@@ -20,9 +20,7 @@
         }
         ul.menu
         {
-            float: left;
             list-style-type: none;
-            width: 100%;
         }
         ul.menu li
         {
@@ -41,7 +39,12 @@
         }
         .opinion
         {
-            padding-bottom: 5px;
+            padding-bottom: 3px;
+        }
+        .user_opinion
+        {
+            font-size: 10px;
+            margin-bottom: 15px;
         }
         .opinion.highlight
         {
@@ -127,7 +130,11 @@
         }
         .rate.rating_small
         {
-            opacity: 0.25;
+            opacity: 0.15;
+        }
+        .rated.rating_small
+        {
+            opacity: 1.0;
         }
         .your_opinion
         {
@@ -137,11 +144,11 @@
         {
             display: none;
         }
-        .rate
+        .user_rate
         {
             display: none;
         }
-        .highlight .rate
+        .highlight .user_rate
         {
             display: inline;
         }
@@ -149,6 +156,22 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
 <script type="text/javascript">
+(function($) {
+  $.fn.disableTextSelect = function() {
+      return this.each(function(){
+        if($.browser.mozilla){//Firefox
+          $(this).css("MozUserSelect","none");
+        }else if($.browser.msie){//IE
+          $(this).bind("selectstart",function(){return false;});
+        }else{//Opera, etc.
+          $(this).mousedown(function(){return false;});
+        }
+      });
+  }
+  $(function($){
+      $(".rating,.rating_small").disableTextSelect();
+  });
+})(jQuery); 
 $(document).ready(function(){
     $(".opinion").hover(
         function(e){
@@ -158,7 +181,7 @@ $(document).ready(function(){
             $(this).removeClass('highlight')
         }
     );
-    $(".rate .rating_small").hover(
+    $(".user_rate .rating_small").hover(
         function(e){
             $(this).removeClass('rate')
         },
@@ -166,6 +189,21 @@ $(document).ready(function(){
             $(this).addClass('rate')
         }
     );
+    $(".user_rate .rating_small").click(function(e){
+        if ($(this).hasClass("rated"))
+        {
+            return false;
+        }
+        item_id = $(this).parents(".user_opinion").attr("item")
+        rating = $(this).html()
+        $.getJSON("/opinion/set/"+item_id+"/"+rating)
+        $(this).siblings().removeClass("rated")
+        $(this).addClass("rated")
+        yr = $("#yr_"+item_id)
+        yr.removeClass("rating1 rating2 rating3 rating4 rating5")
+        yr.addClass("rating"+rating)
+        yr.html(rating)
+    });
 });
 </script>
 </head>
