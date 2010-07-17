@@ -41,6 +41,8 @@ def similar(request):
     if request.user.is_authenticated():
         similar_users = request.user.similar()
         return render_to_response('user/similar.html',
-            {'similar_users': similar_users[:10]})
+            {'similar_users': similar_users[:10]},
+            context_instance=RequestContext(request))
     else:
-        return render_to_response('user/similar_anonymous.html')
+        return render_to_response('user/similar_anonymous.html',
+            context_instance=RequestContext(request))

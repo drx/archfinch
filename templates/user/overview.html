@@ -2,14 +2,7 @@
 
 {% block content %}
 
-User profile of <b>{{ viewed_user.username }}</b>.
-
-<br /><br />
-
-Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
-
-<br /><br />
-
+<div style='float: left'>
 {% for opinion in opinions %}
 
 <div class="opinion">
@@ -41,5 +34,17 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
 </div>
 
 {% endfor %}
+
+</div>
+<div style='float: right;'>
+User profile of <b>{{ viewed_user.username }}</b>.
+
+<br /><br />
+
+Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
+
+<br /><br />
+
+</div>
 
 {% endblock %}

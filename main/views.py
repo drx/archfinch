@@ -31,7 +31,8 @@ def item(request, item_id):
         opinion = None
 
     return render_to_response("main/item.html",
-        {'item': item, 'opinion': opinion})
+        {'item': item, 'opinion': opinion},
+        context_instance=RequestContext(request))
 
 
 def recommend(request):

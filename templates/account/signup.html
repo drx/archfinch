@@ -6,6 +6,7 @@
     <h1>Account signup</h1>
 
     <form action="" method="post">
+        {% csrf_token %}
         <table>
         {{ form.as_table }}
         </table>

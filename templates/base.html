@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        return false
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -20,13 +21,11 @@
         #content
         {
             margin: 10px;
-            width: 40em;
         }
         ul.menu
         {
             list-style-type: none;
             padding: 0;
-            margin-left: 1.5em;
         }
         ul.menu li
         {
@@ -47,6 +46,7 @@
         .opinion
         {
             padding-bottom: 3px;
+            width: 40em;
         }
         .user_opinion
         {
@@ -185,12 +185,24 @@
         #navbar
         {
             font-size: 10px;
+            margin-bottom: 30px;
+            margin-left: 1.5em;
         }
         #navbar a
         {
             color: #0055ee;
         }
-        #search
+        #loginform
+        {
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+        #loginform input
+        {
+            width: 10em;
+            margin-right: 1em;
+        }
+        input[type="text"], input[type="password"]
         {
             border: 1px solid #0099ff;
             color: #333333;
@@ -240,7 +252,7 @@ $(document).ready(function(){
         function(e){
             $(this).removeClass('highlight')
         }
-    );
+    )
     $(".user_rate .rating_small").hover(
         function(e){
             $(this).removeClass('rate')
@@ -254,8 +266,9 @@ $(document).ready(function(){
             rsh = $("#rsh_"+item_id)
             rsh.html('')
         }
-    );
-    $(".user_rate .rating_small").click(function(e){
+    )
+    $(".user_rate .rating_small").click(function(e)
+    {
         if ($(this).hasClass("rated"))
         {
             return false;
@@ -270,7 +283,46 @@ $(document).ready(function(){
         yr.addClass("rating"+rating)
         yr.html(rating)
         yr.parent().removeClass("nodisplay")
-    });
+    })
+    $("#menu_logout").click(function(e)
+    {
+        $.getJSON("/account/logout/ajax", function(data)
+            {
+                $("#menu_loggedin").addClass("nodisplay") 
+                $("#menu_notloggedin").removeClass("nodisplay") 
+            })
+        e.preventDefault()
+    })
+    $("#menu_login").click(function(e)
+    {
+        $("#loginform").toggle('fast')
+        e.preventDefault()
+    })
+    $("#loginform").submit(function(e)
+    {
+        $.ajax({
+            url: "/account/login/ajax",
+            dataType: "json",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(data)
+            {
+                if (data['success'])
+                {
+                    username = data['username']
+                    $("#menu_user").html(username).attr("href", "/user/"+username)
+                    $("#menu_loggedin").removeClass("nodisplay")
+                    $("#menu_notloggedin").addClass("nodisplay")
+                    $("#loginform").hide('fast')
+                }
+                else
+                {
+                    $("#loginform_error").html(data['error_msg'])
+                }
+            }
+        })
+        e.preventDefault()
+    })
 });
 </script>
 </head>
@@ -280,16 +332,32 @@ $(document).ready(function(){
     </div>
     <div id="navbar">
         <ul class="menu">
-            <li> <a href="{% url account.views.signup %}">signup</a>
-            <li> <a href="{% url django.contrib.auth.views.login %}">login</a>
-            <li> <a href="{% url django.contrib.auth.views.logout %}">logout</a>
+            <span id="menu_loggedin" {% if not user.is_authenticated %}class="nodisplay"{% endif %}>
+            {% if user.is_authenticated %}
+            <li> <a href="{% url users.views.overview user.username %}" id="menu_user">{{ user.username }}</a>
+            {% else %}
+            <li> <a href="" id="menu_user"></a>
+            {% endif %}
+            <li> <a href="{% url logout %}" id="menu_logout">logout</a>
             <li> <a href="{% url account.views.preferences %}">preferences</a>
+            </span>
+            <span id="menu_notloggedin" {% if user.is_authenticated %}class="nodisplay"{% endif %}>
+            <li> <a href="{% url account.views.signup %}" id="menu_signup">signup</a>
+            <li> <a href="{% url login %}" id="menu_login">login</a>
+            </span>
             <li> <a href="{% url users.views.similar %}">similar users</a>
             <li> <a href="{% url main.views.recommend %}">things you might like</a>
-            {% if user %}
-            <li> <a href="{% url users.views.overview user.username %}">your profile</a>
-            {% endif %}
             <li> <form style="display:inline" action="{% url search.views.query %}"><input type='text' id='search' name='q' value='Search...' onClick='this.value=""'></form>
+            <form method="post" id="loginform" action="{% url login-ajax %}" class="nodisplay">
+                <label for="id_username">Username:</label>
+                <input id="id_username" type="text" name="username" maxlength="30" />
+                <label for="id_password">Password:</label>
+                <input type="password" name="password" id="id_password" />
+                {% csrf_token %}
+                <input type="hidden" name="next" value="" />
+                <div class="nodisplay"><input type="submit" value="Login"></div>
+                <div class="loginform_error"></div>
+            </form>
         </ul>
     </div>
 
