@@ -35,6 +35,7 @@ Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
         <span class="rating_small rate {% if opinion.your_rating == 4 %}rated{% endif %} rating4">4</span>
         <span class="rating_small rate {% if opinion.your_rating == 5 %}rated{% endif %} rating5">5</span>
     </div>
+    <div class="rating_small_hint" id="rsh_{{ opinion.item.id }}"></div>
     <br />
     </div>
 </div>

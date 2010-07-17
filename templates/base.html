@@ -25,10 +25,13 @@
         ul.menu
         {
             list-style-type: none;
+            padding: 0;
+            margin-left: 1.5em;
         }
         ul.menu li
         {
             display: inline;
+            margin-left: 5px;
         }
         .opinion .title
         {
@@ -160,6 +163,12 @@
         {
             display: none;
         }
+        .rating_small_hint
+        {
+            float: left;
+            margin-left: 2em;
+            color: #b6b6c0;
+        }
         #logo
         {
             margin: 0.75em;
@@ -167,6 +176,24 @@
             font-weight: bold;
             font-size: 24px;
             color: #0099ff;
+        }
+        #logo a
+        {
+            color: inherit;
+            text-decoration: none;
+        }
+        #navbar
+        {
+            font-size: 10px;
+        }
+        #navbar a
+        {
+            color: #0055ee;
+        }
+        #search
+        {
+            border: 1px solid #0099ff;
+            color: #333333;
         }
     </style>
 
@@ -188,6 +215,23 @@
       $(".rating,.rating_small").disableTextSelect();
   });
 })(jQuery); 
+function get_item_id(self)
+{
+    item_id = $(self).parents(".user_opinion").attr("item")
+    return item_id
+}
+function rating_to_hint(r)
+{
+    switch (parseInt(r))
+    {
+        case 1: return 'Hate it'
+        case 2: return 'Dislike it'
+        case 3: return 'Don\'t care'
+        case 4: return 'Like it'
+        case 5: return 'Love it'
+    }
+    return '?'
+}
 $(document).ready(function(){
     $(".opinion").hover(
         function(e){
@@ -200,9 +244,15 @@ $(document).ready(function(){
     $(".user_rate .rating_small").hover(
         function(e){
             $(this).removeClass('rate')
+            item_id = get_item_id(this)
+            rsh = $("#rsh_"+item_id)
+            rsh.html(rating_to_hint($(this).html()))
         },
         function(e){
             $(this).addClass('rate')
+            item_id = get_item_id(this)
+            rsh = $("#rsh_"+item_id)
+            rsh.html('')
         }
     );
     $(".user_rate .rating_small").click(function(e){
@@ -210,7 +260,7 @@ $(document).ready(function(){
         {
             return false;
         }
-        item_id = $(this).parents(".user_opinion").attr("item")
+        item_id = get_item_id(this)
         rating = $(this).html()
         $.getJSON("/opinion/set/"+item_id+"/"+rating)
         $(this).siblings().removeClass("rated")
@@ -226,11 +276,10 @@ $(document).ready(function(){
 </head>
 <body>
     <div id="logo">
-        Archfinch
+        <a href="/">Archfinch</a>
     </div>
     <div id="navbar">
         <ul class="menu">
-            <li> <a href="/">index</a>
             <li> <a href="{% url account.views.signup %}">signup</a>
             <li> <a href="{% url django.contrib.auth.views.login %}">login</a>
             <li> <a href="{% url django.contrib.auth.views.logout %}">logout</a>
@@ -240,7 +289,7 @@ $(document).ready(function(){
             {% if user %}
             <li> <a href="{% url users.views.overview user.username %}">your profile</a>
             {% endif %}
-            <li> <form action="{% url search.views.query %}"><input type='text' name='q' value='Search...' onClick='this.value=""'></form>
+            <li> <form style="display:inline" action="{% url search.views.query %}"><input type='text' id='search' name='q' value='Search...' onClick='this.value=""'></form>
         </ul>
     </div>
 
