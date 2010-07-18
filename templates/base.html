@@ -192,12 +192,12 @@
         {
             color: #0055ee;
         }
-        #loginform
+        .ajaxform
         {
             margin-left: 10px;
             margin-top: 10px;
         }
-        #loginform input
+        .ajaxform input
         {
             width: 10em;
             margin-right: 1em;
@@ -206,6 +206,11 @@
         {
             border: 1px solid #0099ff;
             color: #333333;
+        }
+        .ajaxform .error
+        {
+            color: #ff0000;
+            margin-top: 1em;
         }
     </style>
 
@@ -296,6 +301,13 @@ $(document).ready(function(){
     $("#menu_login").click(function(e)
     {
         $("#loginform").toggle('fast')
+        $("#signupform").hide('fast')
+        e.preventDefault()
+    })
+    $("#menu_signup").click(function(e)
+    {
+        $("#signupform").toggle('fast')
+        $("#loginform").hide('fast')
         e.preventDefault()
     })
     $("#loginform").submit(function(e)
@@ -317,9 +329,35 @@ $(document).ready(function(){
                 }
                 else
                 {
-                    $("#loginform_error").html(data['error_msg'])
+                    $("#loginform_error").html(data['error_msg']).show().delay(2000).fadeOut('slow')
                 }
             }
+        })
+        e.preventDefault()
+    })
+    $("#signupform").submit(function(e)
+    {
+        $.ajax({
+            url: "/account/signup/ajax",
+            dataType: "json",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(data)
+            {
+                if (data['success'])
+                {
+                    username = data['username']
+                    $("#menu_user").html(username).attr("href", "/user/"+username)
+                    $("#menu_loggedin").removeClass("nodisplay")
+                    $("#menu_notloggedin").addClass("nodisplay")
+                    $("#signupform").hide('fast')
+                }
+                else
+                {
+                    $("#signupform_error").html(data['error_msg']).show().delay(2000).fadeOut('slow')
+                }
+            }
+            /* TODO: error */
         })
         e.preventDefault()
     })
@@ -348,7 +386,7 @@ $(document).ready(function(){
             <li> <a href="{% url users.views.similar %}">similar users</a>
             <li> <a href="{% url main.views.recommend %}">things you might like</a>
             <li> <form style="display:inline" action="{% url search.views.query %}"><input type='text' id='search' name='q' value='Search...' onClick='this.value=""'></form>
-            <form method="post" id="loginform" action="{% url login-ajax %}" class="nodisplay">
+            <form method="post" id="loginform" action="{% url login-ajax %}" class="nodisplay ajaxform">
                 <label for="id_username">Username:</label>
                 <input id="id_username" type="text" name="username" maxlength="30" />
                 <label for="id_password">Password:</label>
@@ -356,7 +394,18 @@ $(document).ready(function(){
                 {% csrf_token %}
                 <input type="hidden" name="next" value="" />
                 <div class="nodisplay"><input type="submit" value="Login"></div>
-                <div class="loginform_error"></div>
+                <div id="loginform_error" class="error"></div>
+            </form>
+            <form method="post" id="signupform" action="{% url signup-ajax %}" class="nodisplay ajaxform">
+                <label for="id_username">Username:</label>
+                <input id="id_username" type="text" name="username" maxlength="30" />
+                <label for="id_password1">Password:</label>
+                <input type="password" name="password1" id="id_password1" />
+                <label for="id_password2">Password verification:</label>
+                <input type="password" name="password2" id="id_password2" />
+                {% csrf_token %}
+                <div class="nodisplay"><input type="submit" value="Sign up!"></div>
+                <div id="signupform_error" class="error"></div>
             </form>
         </ul>
     </div>

@@ -21,6 +21,32 @@ def signup(request):
         {'form': form},
         context_instance=RequestContext(request))
 
+
+@csrf_protect
+def signup_ajax(request):
+    """Handles AJAX signups."""
+
+    data = {'success': False}
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            new_user.backend = 'hive.users.auth_backends.ModelBackend'
+            auth_login(request, new_user)
+
+            data['success'] = True
+            data['username'] = new_user.username
+
+        else:
+            #TODO: make this human readable
+            data['error_msg'] = repr(form.errors)
+    else:
+        data['error_msg'] = 'Wrong request method'
+
+    json = simplejson.dumps(data)
+    return HttpResponse(json, mimetype='application/json')
+
+
 def logout_ajax(request):
     from django.contrib.auth import logout
     logout(request)
@@ -44,6 +70,7 @@ def login_ajax(request):
             data['username'] = form.cleaned_data['username']
 
         else:
+            #TODO: make this human readable
             data['error_msg'] = repr(form.errors)
 
     else:

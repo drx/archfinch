@@ -9,6 +9,7 @@ urlpatterns = patterns('hive.account.views',
 
     url(r'^logout/ajax$', 'logout_ajax', name='logout-ajax'),
     url(r'^login/ajax$', 'login_ajax', name='login-ajax'),
+    url(r'^signup/ajax$', 'signup_ajax', name='signup-ajax'),
 
     (r'^debug/updatesim$', 'update_similarities'),
 )
