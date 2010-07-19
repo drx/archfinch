@@ -11,20 +11,28 @@ def overview(request, username):
     viewed_user = get_object_or_404(User, username=username)
 
     if request.user.is_authenticated():
-        opinions = Opinion.objects.opinions_of(viewed_user, request.user)
+        if request.user==viewed_user:
+            your_profile = True
 
-        # this is only for testing and should be removed
-        Similarity.objects.update_user_pair(viewed_user, request.user)
-        #Similarity.objects.update_user(viewed_user)
-
-        try:
-            similarity_value = viewed_user.similarity_set.get(
-                user2=request.user.id).value
-        except ObjectDoesNotExist:
+            opinions = Opinion.objects.filter(user__exact=request.user).order_by('-rating')
             similarity_value = None
+        else:
+            your_profile = False
+            opinions = Opinion.objects.opinions_of(viewed_user, request.user)
+
+            # this is only for testing and should be removed
+            Similarity.objects.update_user_pair(viewed_user, request.user)
+            #Similarity.objects.update_user(viewed_user)
+
+            try:
+                similarity_value = viewed_user.similarity_set.get(
+                    user2=request.user.id).value
+            except ObjectDoesNotExist:
+                similarity_value = None
         return render_to_response('user/overview.html',
             {'viewed_user': viewed_user, 'opinions': opinions,
-            'similarity': similarity_value},
+            'similarity': similarity_value,
+            'your_profile': your_profile},
              context_instance=RequestContext(request))
     else:
         opinions = []  # TODO: fix this

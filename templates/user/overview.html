@@ -6,7 +6,7 @@
 {% for opinion in opinions %}
 
 <div class="opinion">
-    <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
+    <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id }}"{% endif %}>{{ opinion.rating }}</div>
     <div class="title"><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></div>
 
         {# change this later, only temporary! #}
@@ -16,10 +16,13 @@
 
         {% endfor %}
     <div class="user_opinion" item="{{ opinion.item.id }}">
+
+    {% if not your_profile %}
     <div class="your_opinion {% if not opinion.your_rating %}nodisplay{% endif %}">
         <span class="rating_label">Your opinion:</span> <div id="yr_{{ opinion.item.id }}" class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
-
     </div>
+    {% endif %}
+
     <div class="user_rate">
         <span class="rating_label">Rate:</span>
         <span class="rating_small rate {% if opinion.your_rating == 1 %}rated{% endif %} rating1">1</span>
