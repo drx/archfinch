@@ -25,11 +25,14 @@
 
     <div class="user_rate">
         <span class="rating_label">Rate:</span>
-        <span class="rating_small rate {% if opinion.your_rating == 1 %}rated{% endif %} rating1">1</span>
-        <span class="rating_small rate {% if opinion.your_rating == 2 %}rated{% endif %} rating2">2</span>
-        <span class="rating_small rate {% if opinion.your_rating == 3 %}rated{% endif %} rating3">3</span>
-        <span class="rating_small rate {% if opinion.your_rating == 4 %}rated{% endif %} rating4">4</span>
-        <span class="rating_small rate {% if opinion.your_rating == 5 %}rated{% endif %} rating5">5</span>
+        <span class="rating_small rate {% if opinion.your_rating == 1 or your_profile and opinion.rating == 1 %}rated{% endif %} rating1">1</span>
+        <span class="rating_small rate {% if opinion.your_rating == 2 or your_profile and opinion.rating == 2 %}rated{% endif %} rating2">2</span>
+        <span class="rating_small rate {% if opinion.your_rating == 3 or your_profile and opinion.rating == 3 %}rated{% endif %} rating3">3</span>
+        <span class="rating_small rate {% if opinion.your_rating == 4 or your_profile and opinion.rating == 4 %}rated{% endif %} rating4">4</span>
+        <span class="rating_small rate {% if opinion.your_rating == 5 or your_profile and opinion.rating == 5 %}rated{% endif %} rating5">5</span>
+        {% if your_profile %}
+        <span class="rating_small rate delete">x</span>
+        {% endif %}
     </div>
     <div class="rating_small_hint" id="rsh_{{ opinion.item.id }}"></div>
     <br />
