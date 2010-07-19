@@ -34,26 +34,16 @@ class Action(models.Model):
 
 
 class OpinionManager(models.Manager):
-
     # get opinions of a user (viewed) on items that the viewer also rated
     def opinions_of(self, viewed, viewer):
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT m1.id, m1.item_id, m1.rating, m2.rating
+        return self.raw("""
+            SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating
             FROM main_opinion m1
             LEFT JOIN main_opinion m2
             ON (m1.item_id=m2.item_id AND m2.user_id=%s)
             WHERE m1.user_id = %s
             ORDER BY m2.rating IS NULL, m1.rating DESC""",
-                [viewer.id, viewed.id])  # Perhaps %d should be used here,
-                                         #  instead of %s
-        result_list = []
-        for row in cursor.fetchall():
-            p = self.model(id=row[0], item_id=row[1], rating=row[2])
-            p.your_rating = row[3]
-            result_list.append(p)
-        return result_list
+                [viewer.id, viewed.id])
 
 
 class Opinion(models.Model):

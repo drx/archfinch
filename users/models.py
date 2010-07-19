@@ -18,14 +18,13 @@ class User(BaseUser):
 
     def recommend(self):
         '''
-        Fetches items recommended for the user.
+        Fetches items recommended for the user, and returns an iterator.
 
         The algorithms needs work.
         '''
+        from itertools import takewhile
 
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execute("""
+        recommended = Item.objects.raw("""
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM((mo.rating-3)*ms.value) AS rating_sum
             FROM main_similarity ms
@@ -42,12 +41,8 @@ class User(BaseUser):
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name
             ORDER BY rating_sum DESC""",
             [self.id, self.id, self.id])
-        result_list = []
-        for row in cursor.fetchall():
-            if row[4] <= 0:
-                break
-            p = Item(id=row[0], category_id=row[1], parent_id=row[2],
-                name=row[3])
-            p.rating_sum = row[4]
-            result_list.append(p)
-        return result_list
+
+        # have to do it this way -- RawQuerySet doesn't have filter, etc.
+        recommended = takewhile(lambda x: x.rating_sum > 0, recommended)
+
+        return recommended
