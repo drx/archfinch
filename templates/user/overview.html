@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div style='float: left'>
+<div id="content_left">
 {% for opinion in opinions %}
 
 <div class="opinion">
@@ -42,7 +42,7 @@
 {% endfor %}
 
 </div>
-<div style='float: right;'>
+<div id="content_right">
 User profile of <b>{{ viewed_user.username }}</b>.
 
 <br /><br />

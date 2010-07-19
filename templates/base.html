@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title>{% block title %}Archfinch{% endblock %}</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
     <!-- temporary, put in style.css later -->
     <style>
         body
@@ -21,6 +21,15 @@
         #content
         {
             margin: 10px;
+        }
+        #content_left
+        {
+            float: left;
+            width: 45em;
+        }
+        #content_right
+        {
+            margin-left: 45em;
         }
         ul.menu
         {
@@ -196,6 +205,10 @@
         {
             color: #0055ee;
         }
+        #navbar a:hover
+        {
+            color: #0099ff;
+        }
         .ajaxform
         {
             margin-left: 10px;
@@ -247,7 +260,7 @@ function rating_to_hint(r)
     {
         case '1': return 'Hate it'
         case '2': return 'Dislike it'
-        case '3': return 'Don\'t care'
+        case '3': return 'Neutral to it'
         case '4': return 'Like it'
         case '5': return 'Love it'
         case 'x': return 'Delete this opinion'
@@ -392,7 +405,6 @@ $(document).ready(function(){
             <li> <a href="" id="menu_user"></a>
             {% endif %}
             <li> <a href="{% url logout %}" id="menu_logout">logout</a>
-            <li> <a href="{% url account.views.preferences %}">preferences</a>
             </span>
             <span id="menu_notloggedin" {% if user.is_authenticated %}class="nodisplay"{% endif %}>
             <li> <a href="{% url account.views.signup %}" id="menu_signup">signup</a>
