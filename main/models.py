@@ -34,13 +34,21 @@ class Action(models.Model):
 
 
 class OpinionManager(models.Manager):
-    # get opinions of a user (viewed) on items that the viewer also rated
     def opinions_of(self, viewed, viewer):
+        '''
+        Fetches opinions of a user (viewed) on items
+         that the viewer also rated.
+        '''
         return self.raw("""
-            SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating
+            SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,
+             mc.element_singular AS category_singular
             FROM main_opinion m1
             LEFT JOIN main_opinion m2
-            ON (m1.item_id=m2.item_id AND m2.user_id=%s)
+             ON (m1.item_id=m2.item_id AND m2.user_id=%s)
+            INNER JOIN main_item mi
+             ON (m1.item_id=mi.id)
+            INNER JOIN main_category mc
+             ON (mi.category_id=mc.id)
             WHERE m1.user_id = %s
             ORDER BY m2.rating IS NULL, m1.rating DESC""",
                 [viewer.id, viewed.id])

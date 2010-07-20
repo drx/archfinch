@@ -6,6 +6,16 @@
 {% for opinion in opinions %}
 
 <div class="opinion">
+
+    <div class="category">
+        <span class="category_element">
+            {% if your_profile %}
+            {{ opinion.item.category.element_singular }}
+            {% else %}
+            {{ opinion.category_singular }}
+            {% endif %}
+        </span>
+    </div>
     <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id }}"{% endif %}>{{ opinion.rating }}</div>
     <div class="title"><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></div>
 

@@ -14,7 +14,8 @@ def overview(request, username):
         if request.user==viewed_user:
             your_profile = True
 
-            opinions = Opinion.objects.filter(user__exact=request.user).order_by('-rating')
+            opinions = Opinion.objects.filter(
+                user__exact=request.user).select_related('item__category').order_by('-rating')
             similarity_value = None
         else:
             your_profile = False
