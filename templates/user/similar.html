@@ -6,13 +6,21 @@ Ten users most similar to you.
 
 <br /><br />
 
+<table>
 {% for similarity in similar_users %}
-
-<div class="userlist">
-    <div class="user"><a href="{% url users.views.overview similarity.user2 %}">{{ similarity.user2 }}</a></div>
-    <div class="similarity">{{ similarity.value }}</div>
-</div>
-
+<tbody class='box'>
+<tr><td><div class="user"><a href="{% url users.views.overview similarity.user2 %}">{{ similarity.user2 }}</a></div></td>
+<td style='padding-left: 50px'><div>
+{% with similarity.value as similarity %}
+{% include "includes/similarity_bar.html" %}
+{% endwith %}
+</div></td></tr>
+<tr><td colspan='2' style='padding-bottom: 10px; font-size: 10px; color: #aaaaaa;'>
+<span class='likes'>Likes {{ likes.next }}
+</td></tr>
+</tbody>
 {% endfor %}
+
+</table>
 
 {% endblock %}

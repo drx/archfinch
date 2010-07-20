@@ -3,17 +3,12 @@
 {% block content %}
 
 <div id="content_left">
-{% for opinion in opinions %}
 
-<div class="opinion">
+{% for opinion in opinions|slice:":100" %} {# fix this slice #}
 
+<div class="box opinion">
     <div class="category">
         <span class="category_element">
-            {% if your_profile %}
-            {{ opinion.item.category.element_singular }}
-            {% else %}
-            {{ opinion.category_singular }}
-            {% endif %}
         </span>
     </div>
     <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id }}"{% endif %}>{{ opinion.rating }}</div>
@@ -44,6 +39,13 @@
         <span class="rating_small rate delete">x</span>
         {% endif %}
     </div>
+    <div class="category_element">
+        {% if your_profile %}
+        {{ opinion.item.category.element_singular|capfirst }}
+        {% else %}
+        {{ opinion.category_singular|capfirst }}
+        {% endif %}
+    </div>
     <div class="rating_small_hint" id="rsh_{{ opinion.item.id }}"></div>
     <br />
     </div>
@@ -53,13 +55,23 @@
 
 </div>
 <div id="content_right">
-User profile of <b>{{ viewed_user.username }}</b>.
 
+<table>
+<tr><th style='padding: 0 10px 2em 0; text-align: left;' colspan='2'>{{ viewed_user.username }}</th></tr>
+{% if not your_profile and user.is_authenticated %}
+<tr><td style='font-size: 12px; padding: 0 10px 4px 0;'>Similarity:</td><td> {% include "includes/similarity_bar.html" %}</td></tr>
+{% endif %}
+</table>
 <br /><br />
 
-Your similarity to {{ viewed_user.username }}: <b>{{ similarity }}</b>.
-
-<br /><br />
+{% if categories|length > 1 %}
+<div class="category_filter">
+Show only {{ viewed_user.username }}'s
+{% for id, repr in categories %}
+{{ forloop.last|yesno:"or ," }}<a href="/{{ id }}">{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
+{% endfor %}
+</div>
+{% endif %}
 
 </div>
 

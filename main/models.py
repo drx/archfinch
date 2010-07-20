@@ -50,7 +50,7 @@ class OpinionManager(models.Manager):
             INNER JOIN main_category mc
              ON (mi.category_id=mc.id)
             WHERE m1.user_id = %s
-            ORDER BY m2.rating IS NULL, m1.rating DESC""",
+            ORDER BY m2.rating IS NULL, m1.rating DESC, mi.name""",
                 [viewer.id, viewed.id])
 
 

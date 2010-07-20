@@ -63,7 +63,7 @@
         {
             display: block;
         }
-        .opinion
+        .box
         {
             padding-bottom: 3px;
             width: 40em;
@@ -73,14 +73,50 @@
             font-size: 10px;
             margin-bottom: 15px;
         }
-        .opinion.highlight
+        .box.highlight
         {
             background-color: #f8f8ff;
+        }
+        table
+        {
+            border-spacing: 0;
+        }
+        td
+        {
+            padding: 5px;
+        }
+        .likes 
+        {
+            color: #ffffff;
+        }
+        .highlight .likes
+        {
+            color: #aaaaaa;
+            font-size: 10px;
+        }
+        .category_filter
+        {
+            font-size: 11px;
+            margin-bottom: 10px;
+            color: #cccccc;
+        }
+        .category_filter a
+        {
+            color: #aaaaaa;
         }
         .category_element
         {
             font-size: 11px;
             color: #aaaaaa;
+        }
+        .opinion .category_element
+        {
+            color: #bbbbbb;
+            float: left;
+        }
+        .opinion.highlight .category_element
+        {
+            display: none;
         }
         .rating, .rating_small
         {
@@ -240,9 +276,22 @@
             color: #ff0000;
             margin-top: 1em;
         }
+        .similarity .bar
+        {
+            height: 10px;
+            float: left;
+            background-color: #c0eeff;
+        }
+        .similarity
+        {
+            width: 120px;
+            float: left;
+            border: 1px solid #80ccff;
+            background-color: #ffffff;
+        }
     </style>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
 (function($) {
   $.fn.disableTextSelect = function() {
@@ -279,7 +328,7 @@ function rating_to_hint(r)
     return '?'
 }
 $(document).ready(function(){
-    $(".opinion").hover(
+    $(".box").hover(
         function(e){
             $(this).addClass('highlight')
         },
