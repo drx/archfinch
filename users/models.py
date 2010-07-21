@@ -13,7 +13,7 @@ class User(BaseUser):
          similarity.
         '''
         similar_users = Similarity.objects.filter(user1__exact=self).exclude(
-            user2__exact=self).order_by('-value')
+            user2__exact=self).filter(value__gt=0).order_by('-value')
         return similar_users
 
     def recommend(self):
