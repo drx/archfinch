@@ -7,6 +7,18 @@ from main.models import Opinion, Similarity, Item
 class User(BaseUser):
     objects = BaseUserManager()
 
+    def categories(self, opinions=None):
+        '''
+        Fetches categories the user has rated in.
+        '''
+        if opinions is None:
+            opinions = Opinion.objects.filter(user=self).select_related('item__category')
+        categories = opinions.values_list('item__category__id', 'item__category__element_plural')
+        categories = set(categories)
+
+        return categories
+
+
     def similar(self):
         '''
         Fetches users most similar to self.user, ordered by descending
@@ -15,6 +27,7 @@ class User(BaseUser):
         similar_users = Similarity.objects.filter(user1__exact=self).exclude(
             user2__exact=self).filter(value__gt=0).order_by('-value')
         return similar_users
+
 
     def recommend(self):
         '''

@@ -55,6 +55,18 @@ def query(request):
         results = results.filter(name__icontains=word)
 
     count = results.count()
+    if request.user.is_authenticated():
+        categories = set()
+        for id, cat in request.user.categories():
+            if ' ' in cat:
+                link = '"'+cat+'"'
+            else:
+                link = cat
+            categories.add((id, cat, link))
+
+    else:
+        categories = set()
+    
     results = results.annotate(Count('opinion')).extra(
         select={'is_exact': "name ILIKE %s"},
         select_params=(title,)

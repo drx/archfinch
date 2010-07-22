@@ -24,8 +24,7 @@ def overview(request, username):
 
             opinions = Opinion.objects.filter(user__exact=request.user
                 ).select_related('item__category').order_by('-rating','item__name')
-            categories = opinions.values_list('item__category__id', 'item__category__element_plural')
-            categories = set(categories)
+            categories = request.user.categories()
             similarity = None
             similarity_max = 10
         else:
