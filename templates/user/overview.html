@@ -12,8 +12,17 @@
         </span>
     </div>
     <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id }}"{% endif %}>{{ opinion.rating }}</div>
-    <div class="title"><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></div>
+    <div class="title">
+    <span><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></span>
 
+    <span class="category_element" style="">
+        {% if your_profile %}
+        {{ opinion.item.category.element_singular|capfirst }}
+        {% else %}
+        {{ opinion.category_singular|capfirst }}
+        {% endif %}
+    </span>
+    </div>
         {# change this later, only temporary! #}
         {% for tag in opinion.item.tag_set.all %}
 
@@ -37,13 +46,6 @@
         <span class="rating_small rate {% if opinion.your_rating == 5 or your_profile and opinion.rating == 5 %}rated{% endif %} rating5">5</span>
         {% if your_profile %}
         <span class="rating_small rate delete">x</span>
-        {% endif %}
-    </div>
-    <div class="category_element">
-        {% if your_profile %}
-        {{ opinion.item.category.element_singular|capfirst }}
-        {% else %}
-        {{ opinion.category_singular|capfirst }}
         {% endif %}
     </div>
     <div class="rating_small_hint" id="rsh_{{ opinion.item.id }}"></div>

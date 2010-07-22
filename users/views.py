@@ -57,7 +57,7 @@ def likes_gen(users):
     for user in users:
         likes = user.user2.opinion_set.filter(rating__gte=4).order_by('-rating')[:5]
         items = likes.values_list('item__name', flat=True)
-        out = ', '.join(items)
+        out = ', '.join(items[:4])
         out += '.' if len(items) < 5 else '...'
 
         yield out

@@ -117,11 +117,7 @@
         .opinion .category_element
         {
             color: #bbbbbb;
-            float: left;
-        }
-        .opinion.highlight .category_element
-        {
-            display: none;
+            margin-left: 1em;
         }
         .rating, .rating_small
         {
@@ -275,6 +271,7 @@
         {
             border: 1px solid #0099ff;
             color: #333333;
+            background-color: #ffffff;
         }
         .ajaxform .error
         {
@@ -293,6 +290,11 @@
             float: left;
             border: 1px solid #80ccff;
             background-color: #ffffff;
+        }
+        .smalltext
+        {
+            font-size: 11px;
+            color: #aaaaaa;
         }
     </style>
 
@@ -475,8 +477,10 @@ $(document).ready(function(){
             <li> <a href="{% url account.views.signup %}" id="menu_signup">signup</a>
             <li> <a href="{% url login %}" id="menu_login">login</a>
             </span>
+            <li>
             <li> <a href="{% url users.views.similar %}">similar users</a>
             <li> <a href="{% url main.views.recommend %}">things you might like</a>
+            <li>
             <li> <form style="display:inline" action="{% url search.views.query %}"><input type='text' id='search' name='q' value='Search...' onClick='this.value=""'></form>
             <form method="post" id="loginform" action="{% url login-ajax %}" class="nodisplay ajaxform">
                 <label for="id_username">Username:</label>
