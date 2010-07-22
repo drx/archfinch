@@ -2,7 +2,7 @@
 
 {% block content %}
 
-Search results for <b>{{ query }}</b>.
+Search results for <b>{{ query }}</b>:
 
 {% for result in results %}
 <p>
@@ -14,14 +14,12 @@ Search results for <b>{{ query }}</b>.
 {% if left > 0 %}
 <span class="smalltext">There are {{ left }} more results.
 {% if left <= 10 %}
-<a href="/search?q={{ query }}&s={{ start|add:n }}&n=10">Show them</a>.
+<a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">Show them</a>.
 {% else %}
 {# Sorry for the long line, this is for great justice^W^Wproper punctuation #}
-Show the next <a href="/search?q={{ query }}&s={{ start|add:n }}&n=10">10</a>{% if left > 10 %}, <a href="/search?q={{ query }}&s={{ start|add:n }}&n=25">{% if left < 25 %}{{ left }}{% else %}25{% endif %}</a>{% endif %}{% if left > 25 %}, <a href="/search?q={{ query }}&s={{ start|add:n }}&n=100">{% if left < 100 %}{{ left }}{% else %}100{% endif %}</a>{% endif %}.
+Show the next <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">10</a>{% if left > 10 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=25">{% if left < 25 %}{{ left }}{% else %}25{% endif %}</a>{% endif %}{% if left > 25 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=100">{% if left < 100 %}{{ left }}{% else %}100{% endif %}</a>{% endif %}.
 {% endif %}
 </span>
 {% endif %}
-
-{{ words }}
 
 {% endblock %}
