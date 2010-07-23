@@ -55,17 +55,22 @@ def query(request):
         results = results.filter(name__icontains=word)
 
     count = results.count()
-    if request.user.is_authenticated():
-        categories = set()
-        for id, cat in request.user.categories():
-            if ' ' in cat:
-                link = '"'+cat+'"'
-            else:
-                link = cat
-            categories.add((id, cat, link))
 
+    def linkify(cat):
+        id, repr = cat
+        if ' ' in repr:
+            link = '"'+repr+'"'
+        else:
+            link = repr
+        return (id, repr, link)
+
+    categories = Category.objects.order_by('name').values_list('id', 'element_plural')
+    categories = map(linkify, categories)
+
+    if request.user.is_authenticated():
+        user_categories = map(linkify, request.user.categories())
     else:
-        categories = set()
+        user_categories = set()
     
     results = results.annotate(Count('opinion')).extra(
         select={'is_exact': "name ILIKE %s"},

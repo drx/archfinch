@@ -5,29 +5,39 @@
 Search results for <b>{{ query }}</b>:
 
 {% for result in results %}
-<p>
-<div class="title"><a href="{% url main.views.item result.id result.name|slugify %}">{{ result }}</a></div>
-<div class="category_element">{{ result.category.element_singular|capfirst }}</div>
-</p>
+    <p>
+    <div class="title"><a href="{% url main.views.item result.id result.name|slugify %}">{{ result }}</a></div>
+    <div class="category_element">{{ result.category.element_singular|capfirst }}</div>
+    </p>
 {% endfor %}
 
+<span class="smalltext">
 {% if left > 0 %}
-<span class="smalltext"><p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
-{% if left <= 10 %}
-<a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">Show {{ left|pluralize:"it,them" }}</a>.
-{% else %}
-{# Sorry for the long line, this is for great justice^W^Wproper punctuation #}
-Show the next <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">10</a>{% if left > 10 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=25">{% if left < 25 %}{{ left }}{% else %}25{% endif %}</a>{% endif %}{% if left > 25 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=100">{% if left < 100 %}{{ left }}{% else %}100{% endif %}</a>{% endif %}.
+    <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
+    {% if left <= 10 %}
+        <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">Show {{ left|pluralize:"it,them" }}</a>.
+    {% else %}
+        {# Sorry for the long line, this is for great justice^W^Wproper punctuation #}
+        Show the next <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">10</a>{% if left > 10 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=25">{% if left < 25 %}{{ left }}{% else %}25{% endif %}</a>{% endif %}{% if left > 25 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=100">{% if left < 100 %}{{ left }}{% else %}100{% endif %}</a>{% endif %}.
+    {% endif %}
+    </p>
+    {% if user_categories %}
+        <p id="user_cats">Show only 
+        {% for id, repr, link in user_categories %}
+            <a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
+        {% endfor %}
+        (<a href="#" id="user_cats_more">more</a>)
+        </p>
+
+        <p id="global_cats">Show only 
+        {% for id, repr, link in categories %}
+            {{ forloop.last|yesno:"or ," }}<a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
+        {% endfor %}
+        </p>
+
+    {% endif %}
 {% endif %}
-</p>
-{% if categories and not modifiers.in %}
-<p>Show only 
-{% for id, repr, link in categories %}
-{{ forloop.last|yesno:"or ," }}<a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
-{% endfor %}
-</p>
-{% endif %}
+<p>Are we missing something? Please <a href="/">add it</a>!</p>
 </span>
-{% endif %}
 
 {% endblock %}
