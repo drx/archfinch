@@ -52,9 +52,12 @@ def overview(request, username):
             context_instance=RequestContext(request))
 
 
-def likes_gen(users):
+def likes_gen(users, request_user):
     for user in users:
-        likes = user.user2.opinion_set.filter(rating__gte=4).order_by('-rating')[:5]
+        likes = user.user2.opinion_set.filter(rating__gte=4).extra(
+            where=['EXISTS (SELECT 1 FROM main_opinion mo WHERE mo.user_id=%s AND mo.item_id=main_opinion.item_id AND mo.rating >= 4)'],
+            params=[request_user.id]
+        ).order_by('-rating')[:5]
         items = likes.values_list('item__name', flat=True)
         out = ', '.join(items[:4])
         out += '.' if len(items) < 5 else '...'
@@ -71,7 +74,7 @@ def similar(request):
         length = 10
         similarity_max = get_max_similarity(request.user)
         similar_users = request.user.similar()[start:length]
-        likes = likes_gen(similar_users)
+        likes = likes_gen(similar_users, request.user)
         return render_to_response('user/similar.html',
             {'similar_users': similar_users,
             'similarity_max': similarity_max,
