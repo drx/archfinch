@@ -7,6 +7,13 @@
 {% for opinion in opinions|slice:":100" %} {# fix this slice #}
 
 <div class="box opinion">
+    <div class="category_element">
+        {% if your_profile %}
+        {{ opinion.item.category.element_singular|capfirst }}
+        {% else %}
+        {{ opinion.category_singular|capfirst }}
+        {% endif %}
+    </div>
     <div class="category">
         <span class="category_element">
         </span>
@@ -15,13 +22,6 @@
     <div class="title">
     <span><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></span>
 
-    <span class="category_element" style="">
-        {% if your_profile %}
-        {{ opinion.item.category.element_singular|capfirst }}
-        {% else %}
-        {{ opinion.category_singular|capfirst }}
-        {% endif %}
-    </span>
     </div>
         {# change this later, only temporary! #}
         {% for tag in opinion.item.tag_set.all %}
