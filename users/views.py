@@ -19,11 +19,16 @@ def overview(request, username, start=None, n=None, category_slug=None):
     viewed_user = get_object_or_404(User, username=username)
 
     if start is None:
-       start = 0
-    if n is None or not 0 < n < 100:
-       n = 100
+        start = 0
+    else:
+        start = int(start)
+    
+    if n is None or not 0 < int(n) < 100:
+        n = 100
+    else:
+        n = int(n)
 
-    if category_slug is not None:
+    if category_slug is not None and category_slug:
         category_id = Category.objects.get(slug=category_slug).id
     else:
         category_id = None
@@ -37,6 +42,7 @@ def overview(request, username, start=None, n=None, category_slug=None):
                 ).select_related('item__category').order_by('-rating','item__name')
             if category_id is not None:
                 opinions = opinions.filter(item__category=category_id)
+
             similarity = None
             similarity_max = 10
         else:
@@ -54,6 +60,11 @@ def overview(request, username, start=None, n=None, category_slug=None):
                     user2=request.user.id).value
             except ObjectDoesNotExist:
                 similarity = None
+
+        count = len(list(opinions))
+        left = count-(start+n)
+        opinions = opinions[start:start+n]
+
         return render_to_response('user/overview.html',
             locals(), context_instance=RequestContext(request))
     else:
