@@ -22,6 +22,15 @@ def signup(request):
         context_instance=RequestContext(request))
 
 
+def error_msg(errors):
+    msg = ''
+    for field, error_list in errors.iteritems():
+        if field != '__all__':
+            msg += field.capitalize() + ': '
+        msg += ' '.join(error_list) + ' '
+    return msg
+
+
 @csrf_protect
 def signup_ajax(request):
     """Handles AJAX signups."""
@@ -39,7 +48,7 @@ def signup_ajax(request):
 
         else:
             #TODO: make this human readable
-            data['error_msg'] = repr(form.errors)
+            data['error_msg'] = error_msg(form.errors)
     else:
         data['error_msg'] = 'Wrong request method'
 
@@ -71,7 +80,7 @@ def login_ajax(request):
 
         else:
             #TODO: make this human readable
-            data['error_msg'] = repr(form.errors)
+            data['error_msg'] = error_msg(form.errors)
 
     else:
         data['error_msg'] = 'Wrong request method'
