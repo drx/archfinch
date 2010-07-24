@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
-from main.models import Opinion, Similarity
+from main.models import Opinion, Similarity, Category
 from users.models import User
 from django.db.models import Max
 
@@ -15,22 +15,33 @@ def get_max_similarity(user):
 
     return locals()
 
-def overview(request, username):
+def overview(request, username, start=None, n=None, category_slug=None):
     viewed_user = get_object_or_404(User, username=username)
 
+    if start is None:
+       start = 0
+    if n is None or not 0 < n < 100:
+       n = 100
+
+    if category_slug is not None:
+        category_id = Category.objects.get(slug=category_slug).id
+    else:
+        category_id = None
+
     if request.user.is_authenticated():
+        categories = viewed_user.categories()
         if request.user==viewed_user:
             your_profile = True
 
             opinions = Opinion.objects.filter(user__exact=request.user
                 ).select_related('item__category').order_by('-rating','item__name')
-            categories = request.user.categories()
+            if category_id is not None:
+                opinions = opinions.filter(item__category=category_id)
             similarity = None
             similarity_max = 10
         else:
             your_profile = False
-            opinions = Opinion.objects.opinions_of(viewed_user, request.user)
-            categories = []
+            opinions = Opinion.objects.opinions_of(viewed_user, request.user, category_id=category_id)
 
             # this is only for testing and should be removed
             Similarity.objects.update_user_pair(viewed_user, request.user)

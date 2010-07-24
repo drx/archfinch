@@ -23,14 +23,14 @@ Search results for <b>{{ query }}</b>:
     </p>
     {% if user_categories %}
         <p id="user_cats">Show only 
-        {% for id, repr, link in user_categories %}
+        {% for id, repr, slug, link in user_categories %}
             <a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
         {% endfor %}
         (<a href="#" id="user_cats_more">more</a>)
         </p>
 
         <p id="global_cats">Show only 
-        {% for id, repr, link in categories %}
+        {% for id, repr, slug, link in categories %}
             {{ forloop.last|yesno:"or ," }}<a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
         {% endfor %}
         </p>

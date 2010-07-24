@@ -13,7 +13,7 @@ class User(BaseUser):
         '''
         if opinions is None:
             opinions = Opinion.objects.filter(user=self).select_related('item__category')
-        categories = opinions.values_list('item__category__id', 'item__category__element_plural')
+        categories = opinions.values_list('item__category__id', 'item__category__element_plural', 'item__category__slug')
         categories = set(categories)
 
         return categories

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200)
     element_singular = models.CharField(max_length=200)
     element_plural = models.CharField(max_length=200)
 
@@ -34,11 +35,18 @@ class Action(models.Model):
 
 
 class OpinionManager(models.Manager):
-    def opinions_of(self, viewed, viewer):
+    def opinions_of(self, viewed, viewer, category_id=None):
         '''
         Fetches opinions of a user (viewed) on items
          that the viewer also rated.
         '''
+
+        where = ''
+        params = [viewer.id, viewed.id]
+        if category_id is not None:
+            where += ' AND mc.id = %s'
+            params.append(category_id)
+
         return self.raw("""
             SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,
              mc.element_singular AS category_singular
@@ -49,9 +57,9 @@ class OpinionManager(models.Manager):
              ON (m1.item_id=mi.id)
             INNER JOIN main_category mc
              ON (mi.category_id=mc.id)
-            WHERE m1.user_id = %s
+            WHERE m1.user_id = %s""" + where + """
             ORDER BY m2.rating IS NULL, m1.rating DESC, mi.name""",
-                [viewer.id, viewed.id])
+                params)
 
 
 class Opinion(models.Model):

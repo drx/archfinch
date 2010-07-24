@@ -57,14 +57,14 @@ def query(request):
     count = results.count()
 
     def linkify(cat):
-        id, repr = cat
+        id, repr, slug = cat
         if ' ' in repr:
             link = '"'+repr+'"'
         else:
             link = repr
-        return (id, repr, link)
+        return (id, repr, slug, link)
 
-    categories = Category.objects.order_by('name').values_list('id', 'element_plural')
+    categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
     categories = map(linkify, categories)
 
     if request.user.is_authenticated():

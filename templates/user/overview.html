@@ -58,20 +58,20 @@
 </div>
 <div id="content_right">
 
-<table>
-<tr><th style='padding: 0 10px 2em 0; text-align: left;' colspan='2'>{{ viewed_user.username }}</th></tr>
-{% if not your_profile and user.is_authenticated %}
-<tr><td style='font-size: 12px; padding: 0 10px 4px 0;'>Similarity:</td><td> {% include "includes/similarity_bar.html" %}</td></tr>
-{% endif %}
-</table>
+<b>{{ viewed_user.username }}</b>
+
 <br /><br />
+{% if not your_profile and user.is_authenticated %}
+<div style='float: left; font-size: 12px; padding: 0 1.5em 2em 0;'>Similarity:</div> <div style='float: left; margin-top: 3px'>{% include "includes/similarity_bar.html" %}</div>
+<br /><br />
+{% endif %}
+
 
 {% if categories|length > 1 %}
 <div class="category_filter">
 Show only {{ viewed_user.username }}'s
-{% for id, repr in categories %}
-{{ forloop.last|yesno:"or ," }}<a href="/{{ id }}">{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
-{% endfor %}
+{% for id, repr, slug in categories %}
+<a href="{% url user-overview-slugged viewed_user.username slug %}">{{ repr }}</a>{{ forloop.last|yesno:",&#44;"|safe}}{% endfor %}{% if category_id %} or <a href="{% url user-overview-simple viewed_user.username %}">everything</a>.{% else %}.{% endif %}
 </div>
 {% endif %}
 
