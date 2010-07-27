@@ -293,7 +293,7 @@
         }
     </style>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="/media/js/jquery.min.js"></script>
 <script type="text/javascript">
 (function($) {
   $.fn.disableTextSelect = function() {
@@ -411,11 +411,7 @@ $(document).ready(function(){
             {
                 if (data['success'])
                 {
-                    username = data['username']
-                    $("#menu_user").html(username).attr("href", "/user/"+username)
-                    $("#menu_loggedin").removeClass("nodisplay")
-                    $("#menu_notloggedin").addClass("nodisplay")
-                    $("#loginform").hide('fast')
+                    window.location.replace("/")
                 }
                 else
                 {
