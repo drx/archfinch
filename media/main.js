@@ -32,6 +32,10 @@ function rating_to_hint(r)
     }
     return '?'
 }
+function ajaxerror(selector, error_msg)
+{
+    $(selector).html(error_msg).show().delay(2000).fadeOut('slow')
+}
 $(document).ready(function(){
     $(".box").hover(
         function(e){
@@ -103,17 +107,29 @@ $(document).ready(function(){
             dataType: "json",
             type: "POST",
             data: $(this).serialize(),
+            timeout: 1000,
             success: function(data)
             {
                 $(self).children(".loading").hide()
+                if (!data)
+                {
+                    /* this is due to a bug(?) in jQuery 1.4.2 */
+                    ajaxerror("#loginform_error", 'Error: could not communicate with the server')
+                    return;
+                }
                 if (data['success'])
                 {
                     window.location.replace("/")
                 }
                 else
                 {
-                    $("#loginform_error").html(data['error_msg']).show().delay(2000).fadeOut('slow')
+                    ajaxerror("#loginform_error", data['error_msg'])
                 }
+            },
+            error: function(request, error)
+            {
+                $(self).children(".loading").hide()
+                ajaxerror("#loginform_error", 'Error: could not communicate with the server')
             }
         })
         e.preventDefault()
@@ -127,9 +143,16 @@ $(document).ready(function(){
             dataType: "json",
             type: "POST",
             data: $(this).serialize(),
+            timeout: 1000,
             success: function(data)
             {
                 $(self).children(".loading").hide()
+                if (!data)
+                {
+                    /* this is due to a bug(?) in jQuery 1.4.2 */
+                    ajaxerror("#signupform_error", 'Error: could not communicate with the server')
+                    return;
+                }
                 if (data['success'])
                 {
                     $("#signupform").hide('fast')
@@ -138,10 +161,14 @@ $(document).ready(function(){
                 }
                 else
                 {
-                    $("#signupform_error").html(data['error_msg']).show().delay(2000).fadeOut('slow')
+                    ajaxerror("#signupform_error", data['error_msg'])
                 }
+            },
+            error: function(request, error)
+            {
+                $(self).children(".loading").hide()
+                $("#signupform_error").html('Error: could not communicate with the server').show().delay(2000).fadeOut('slow')
             }
-            /* TODO: error */
         })
         e.preventDefault()
     })
