@@ -132,7 +132,9 @@ $(document).ready(function(){
                 $(self).children(".loading").hide()
                 if (data['success'])
                 {
-                    window.location.replace("/")
+                    $("#signupform").hide('fast')
+                    $("#signup_thankyou").show('fast') 
+                    setTimeout('window.location.replace("/")', 1000)
                 }
                 else
                 {
