@@ -82,15 +82,6 @@ $(document).ready(function(){
             yr.parent().removeClass("nodisplay")
         }
     })
-    $("#menu_logout").click(function(e)
-    {
-        $.getJSON("/account/logout/ajax", function(data)
-            {
-                $("#menu_loggedin").addClass("nodisplay") 
-                $("#menu_notloggedin").removeClass("nodisplay") 
-            })
-        e.preventDefault()
-    })
     $("#menu_login").click(function(e)
     {
         $("#loginform").toggle('fast')
@@ -105,6 +96,8 @@ $(document).ready(function(){
     })
     $("#loginform").submit(function(e)
     {
+        $(this).children(".loading").show()
+        self = this
         $.ajax({
             url: "/account/login/ajax",
             dataType: "json",
@@ -112,6 +105,7 @@ $(document).ready(function(){
             data: $(this).serialize(),
             success: function(data)
             {
+                $(self).children(".loading").hide()
                 if (data['success'])
                 {
                     window.location.replace("/")
@@ -126,6 +120,8 @@ $(document).ready(function(){
     })
     $("#signupform").submit(function(e)
     {
+        $(this).children(".loading").show()
+        self = this
         $.ajax({
             url: "/account/signup/ajax",
             dataType: "json",
@@ -133,13 +129,10 @@ $(document).ready(function(){
             data: $(this).serialize(),
             success: function(data)
             {
+                $(self).children(".loading").hide()
                 if (data['success'])
                 {
-                    username = data['username']
-                    $("#menu_user").html(username).attr("href", "/user/"+username)
-                    $("#menu_loggedin").removeClass("nodisplay")
-                    $("#menu_notloggedin").addClass("nodisplay")
-                    $("#signupform").hide('fast')
+                    window.location.replace("/")
                 }
                 else
                 {
