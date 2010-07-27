@@ -20,10 +20,10 @@ urlpatterns = patterns('',
 
     (r'^search$', 'hive.search.views.query'),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
-    # to INSTALLED_APPS to enable admin documentation:
-    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # TEMPORARY, FOR DEVELOPMENT ONLY
+    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': '/home/drx/hive/media'}),
 
-    # Uncomment the next line to enable the admin:
+    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 )
