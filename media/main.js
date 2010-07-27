@@ -59,7 +59,7 @@ $(document).ready(function(){
             rsh.html('')
         }
     )
-    $(".user_rate .rating_small").click(function(e)
+    $(".user_rate .rating_small").mousedown(function(e)
     {
         if ($(this).hasClass("rated"))
         {
@@ -67,25 +67,35 @@ $(document).ready(function(){
         }
         item_id = get_item_id(this)
         rating = $(this).html()
+        ld = $("#ld_"+item_id)
+        ld.show()
         if (rating == 'x')
         {
             opinion = $(this).parents(".opinion")
             $.getJSON("/opinion/remove/"+item_id, function(data){
                 opinion.hide('slow')
+                ld.hide()
             })
         }
         else
         {
-            $.getJSON("/opinion/set/"+item_id+"/"+rating)
-            $(this).siblings().removeClass("rated")
-            $(this).addClass("rated")
-            yr = $("#yr_"+item_id)
-            yr.removeClass("rating1 rating2 rating3 rating4 rating5")
-            yr.addClass("rating"+rating)
-            yr.html(rating)
-            yr.parent().removeClass("nodisplay")
+            self = this
+            $.getJSON("/opinion/set/"+item_id+"/"+rating, function(data){
+                ld.hide()
+                $(self).siblings().removeClass("rated")
+                $(self).addClass("rated")
+                yr = $("#yr_"+item_id)
+                yr.removeClass("rating1 rating2 rating3 rating4 rating5")
+                yr.addClass("rating"+rating)
+                yr.html(rating)
+                yr.parent().removeClass("nodisplay")
+            })
         }
     })
+
+
+    /* AJAX login forms */
+
     $("#menu_login").click(function(e)
     {
         $("#loginform").toggle('fast')
@@ -107,7 +117,7 @@ $(document).ready(function(){
             dataType: "json",
             type: "POST",
             data: $(this).serialize(),
-            timeout: 1000,
+            timeout: 2000,
             success: function(data)
             {
                 $(self).children(".loading").hide()
@@ -143,7 +153,7 @@ $(document).ready(function(){
             dataType: "json",
             type: "POST",
             data: $(this).serialize(),
-            timeout: 1000,
+            timeout: 2000,
             success: function(data)
             {
                 $(self).children(".loading").hide()

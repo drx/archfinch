@@ -56,7 +56,7 @@ ul.menu li
 }
 .box
 {
-    padding-bottom: 3px;
+    padding-bottom: 1.5em;
     width: 40em;
 }
 .user_opinion
@@ -281,4 +281,9 @@ input[type="text"], input[type="password"]
 {
     font-size: 11px;
     color: #aaaaaa;
+}
+.opinion .loading
+{
+    margin-left: 1em;
+    float: left;
 }
