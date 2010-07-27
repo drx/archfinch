@@ -14,7 +14,7 @@ def query(request):
     if not 0 < n <= 100:
         n = 10
 
-    words = re.findall(r'([\w:]*?"[\w: ]+"[\w:]*?|[\w:]+)', query)
+    words = re.findall(r'([\w:\-]*?"[\w:\- ]+"[\w:\-]*?|[\w:\-]+)', query)
     words = map(lambda w: w.replace('"',''), words)
 
     modifiers = {}
@@ -36,7 +36,13 @@ def query(request):
             words_cleaned.append(word)
 
     words = words_cleaned
-    title = ' '.join(words)
+
+    def escape_spaces(word):
+        if ' ' in word:
+            word = '"'+word+'"'
+        return word
+
+    title = ' '.join(map(escape_spaces, words))
 
     results = Item.objects.all()
 
@@ -47,7 +53,7 @@ def query(request):
         elif mod == 'in':
             cat_name = modifiers[mod]
             category = Category.objects.get(
-                Q(name__iexact=cat_name)|Q(element_singular__iexact=cat_name)|Q(element_plural__iexact=cat_name)
+                Q(name__iexact=cat_name)|Q(element_singular__iexact=cat_name)|Q(element_plural__iexact=cat_name)|Q(slug__iexact=cat_name)
             )
             results = results.filter(category=category)
 
@@ -56,19 +62,10 @@ def query(request):
 
     count = results.count()
 
-    def linkify(cat):
-        id, repr, slug = cat
-        if ' ' in repr:
-            link = '"'+repr+'"'
-        else:
-            link = repr
-        return (id, repr, slug, link)
-
     categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
-    categories = map(linkify, categories)
 
     if request.user.is_authenticated():
-        user_categories = map(linkify, request.user.categories())
+        user_categories = request.user.categories()
     else:
         user_categories = set()
     

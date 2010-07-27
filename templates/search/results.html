@@ -2,7 +2,11 @@
 
 {% block content %}
 
-Search results for <b>{{ query }}</b>:
+{% if results %}
+    Search results for <b>{{ query }}</b>
+{% else %}
+    No results for <b>{{ query }}</b>
+{% endif %}
 
 {% for result in results %}
     <p>
@@ -23,15 +27,15 @@ Search results for <b>{{ query }}</b>:
     </p>
     {% if user_categories %}
         <p id="user_cats">Show only 
-        {% for id, repr, slug, link in user_categories %}
-            <a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
+        {% for id, repr, slug in user_categories %}
+            <a href='/search?q={{ title|urlencode }}%20in:{{ slug|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
         {% endfor %}
         (<a href="#" id="user_cats_more">more</a>)
         </p>
 
         <p id="global_cats">Show only 
-        {% for id, repr, slug, link in categories %}
-            {{ forloop.last|yesno:"or ," }}<a href='/search?q={{ query|urlencode }}%20in:{{ link|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
+        {% for id, repr, slug in categories %}
+            {{ forloop.last|yesno:"or ," }}<a href='/search?q={{ title|urlencode }}%20in:{{ slug|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
         {% endfor %}
         </p>
 
