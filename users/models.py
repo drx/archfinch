@@ -29,13 +29,19 @@ class User(BaseUser):
         return similar_users
 
 
-    def recommend(self):
+    def recommend(self, category=None):
         '''
         Fetches items recommended for the user, and returns an iterator.
 
         The algorithms needs work.
         '''
         from itertools import takewhile
+
+        where = ''
+        params = [self.id, self.id, self.id]
+        if category is not None and category:
+            where += ' AND mi.category_id = %s'
+            params.append(category.id)
 
         recommended = Item.objects.raw("""
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
@@ -51,9 +57,10 @@ class User(BaseUser):
              AND NOT EXISTS
               (SELECT 1 FROM main_opinion mo2
                WHERE mo2.item_id=mi.id AND mo2.user_id=%s)
+             """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name
             ORDER BY rating_sum DESC""",
-            [self.id, self.id, self.id])
+            params)
 
         # have to do it this way -- RawQuerySet doesn't have filter, etc.
         recommended = takewhile(lambda x: x.rating_sum > 0, recommended)

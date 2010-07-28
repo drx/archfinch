@@ -2,14 +2,47 @@
 
 {% block content %}
 
-Things you might like.
+<div id="content_left">
+{% if category %}
+    {{ category.element_plural|capfirst }}
+{% else %}
+    Things
+{% endif %}
+ you might like.
 
 {% for item in recommendations %}
-<div class="recommendation">
-<div class="title"><a href="{% url main.views.item item.id item|slugify %}">{{ item }}</a></div>
-<div class="likeness">{{ item.rating_sum }}</div>
-</div>
-
+    <p>
+    <div class="title"><a href="{% url main.views.item item.id item|slugify %}">{{ item }}</a></div>
+    <div class="category_element">{{ item.category.element_singular|capfirst }}</div>
+    </p>
 {% endfor %}
+{% if left > 0 %}
+    <span class="smalltext">
+    There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
+    {% if left <= 100 %}
+        <a href="{% url recommend-paged category_slug|default:"" start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+    {% else %}
+        Show the next <a href="{% url recommend-paged category_slug|default:"" start|add:n 100 %}">100</a>.
+    {% endif %}
+    </span>
+{% endif %}
+
+</div>
+<div id="content_right">
+{% if user_categories %}
+    <p id="user_cats">Show only 
+    {% for id, repr, slug in user_categories %}
+        <a href='{% url recommend-slugged slug|urlencode %}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
+    {% endfor %}
+    (<a href="#" id="user_cats_more">more</a>)
+    </p>
+
+    <p id="global_cats">Show only 
+    {% for id, repr, slug in categories %}
+        {{ forloop.last|yesno:"or ," }}<a href='{% url recommend-slugged slug|urlencode %}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
+    {% endfor %}
+    </p>
+{% endif %}
+</div>
 
 {% endblock %}

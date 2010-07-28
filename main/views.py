@@ -2,7 +2,7 @@ from django.shortcuts import (render_to_response, get_object_or_404,
     HttpResponse)
 from django.template import RequestContext
 from django.utils import simplejson
-from main.models import Item, Opinion, Action, Similarity
+from main.models import Item, Opinion, Action, Similarity, Category
 
 
 def welcome(request):
@@ -35,16 +35,38 @@ def item(request, item_id):
         context_instance=RequestContext(request))
 
 
-def recommend(request):
+def recommend(request, category_slug=None, start=None, n=None):
     '''
     Shows a list of recommendations.
     '''
 
     if request.user.is_authenticated():
-        recommendations = request.user.recommend()
+        if start is None:
+            start = 0
+        else:
+            start = int(start)
+        
+        if n is None or not 0 < int(n) < 100:
+            n = 100
+        else:
+            n = int(n)
+
+        if category_slug is not None and category_slug:
+            category = Category.objects.get(slug=category_slug)
+        else:
+            category = None
+
+        user_categories = request.user.categories()
+        categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
+
+        recommendations = list(request.user.recommend(category=category))
+
+        count = len(recommendations)
+        left = count-(start+n)
+        recommendations = recommendations[start:start+n]
+
         return render_to_response("main/recommend.html",
-            {'recommendations': recommendations},
-            context_instance=RequestContext(request))
+            locals(), context_instance=RequestContext(request))
     else:
         return render_to_response("main/recommend_anonymous.html",
             context_instance=RequestContext(request))

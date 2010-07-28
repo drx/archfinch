@@ -35,7 +35,7 @@ class Action(models.Model):
 
 
 class OpinionManager(models.Manager):
-    def opinions_of(self, viewed, viewer, category_id=None):
+    def opinions_of(self, viewed, viewer, category=None):
         '''
         Fetches opinions of a user (viewed) on items
          that the viewer also rated.
@@ -43,9 +43,9 @@ class OpinionManager(models.Manager):
 
         where = ''
         params = [viewer.id, viewed.id]
-        if category_id is not None:
+        if category is not None and category:
             where += ' AND mc.id = %s'
-            params.append(category_id)
+            params.append(category.id)
 
         return self.raw("""
             SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,

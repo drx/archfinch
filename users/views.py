@@ -15,7 +15,7 @@ def get_max_similarity(user):
 
     return locals()
 
-def overview(request, username, start=None, n=None, category_slug=None):
+def overview(request, username, category_slug=None, start=None, n=None):
     viewed_user = get_object_or_404(User, username=username)
 
     if start is None:
@@ -29,9 +29,9 @@ def overview(request, username, start=None, n=None, category_slug=None):
         n = int(n)
 
     if category_slug is not None and category_slug:
-        category_id = Category.objects.get(slug=category_slug).id
+        category = Category.objects.get(slug=category_slug)
     else:
-        category_id = None
+        category = None
 
     if request.user.is_authenticated():
         categories = viewed_user.categories()
@@ -40,14 +40,14 @@ def overview(request, username, start=None, n=None, category_slug=None):
 
             opinions = Opinion.objects.filter(user__exact=request.user
                 ).select_related('item__category').order_by('-rating','item__name')
-            if category_id is not None:
-                opinions = opinions.filter(item__category=category_id)
+            if category is not None:
+                opinions = opinions.filter(item__category=category)
 
             similarity = None
             similarity_max = 10
         else:
             your_profile = False
-            opinions = Opinion.objects.opinions_of(viewed_user, request.user, category_id=category_id)
+            opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
 
             # this is only for testing and should be removed
             Similarity.objects.update_user_pair(viewed_user, request.user)
