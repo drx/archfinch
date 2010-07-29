@@ -14,6 +14,11 @@ def welcome(request):
             context_instance=RequestContext(request))
 
 
+def missing(request):
+    return render_to_response("main/missing.html",
+        context_instance=RequestContext(request))
+
+
 def item(request, item_id):
     '''
     Item page.

@@ -16,7 +16,7 @@ a:hover
 }
 #content
 {
-    margin: 10px;
+    margin: 1em;
 }
 #content_left
 {
@@ -25,7 +25,12 @@ a:hover
 }
 #content_right
 {
-    margin-left: 45em;
+    margin-left: 46em;
+}
+p
+{
+    font-size: 0.8em;
+    line-height: 1.5em;
 }
 ul.menu
 {

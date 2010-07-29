@@ -24,7 +24,7 @@ class Item(models.Model):
 class ItemProfile(models.Model):
     item = models.OneToOneField(Item, related_name='profile')
 
-    page = models.TextField()
+    page = models.ForeignKey('wiki.Page')
 
 
 class Action(models.Model):
