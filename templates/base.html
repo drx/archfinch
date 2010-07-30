@@ -29,6 +29,7 @@
             <li> <a href="{% url main.views.recommend %}">things you might like</a>
             <li>
             <li> <form style="display:inline" action="{% url search.views.query %}"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search...' onClick='this.value=""'{% endif %}></form>
+            {% if not user.is_authenticated %}
             <form method="post" id="loginform" action="{% url login-ajax %}" class="nodisplay ajaxform">
                 <label for="id_username">Username:</label>
                 <input id="id_username" type="text" name="username" maxlength="30" />
@@ -55,6 +56,7 @@
             <div id="signup_thankyou" class="ajaxform nodisplay">
                 Thank you for signing up. You will be logged in shortly.
             </div>
+            {% endif %}
         </ul>
     </div>
 
