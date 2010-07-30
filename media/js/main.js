@@ -195,5 +195,8 @@ $(document).ready(function(){
             e.preventDefault()
         })
     }
+
+    /* textarea resizer */
+    $('textarea.resizable:not(.processed)').TextAreaResizer();
 });
 
