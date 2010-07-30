@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load base36 %}
+
 {% block content %}
 
 <div id="content_left">
@@ -18,9 +20,9 @@
         <span class="category_element">
         </span>
     </div>
-    <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id }}"{% endif %}>{{ opinion.rating }}</div>
+    <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id|base36 }}"{% endif %}>{{ opinion.rating }}</div>
     <div class="title">
-    <span><a href="{% url main.views.item opinion.item.id opinion.item|slugify %}">{{ opinion.item }}</a></span>
+    <span><a href="{% url main.views.item opinion.item.id|base36 opinion.item|slugify %}">{{ opinion.item }}</a></span>
 
     </div>
         {# change this later, only temporary! #}
@@ -29,11 +31,11 @@
         <div>{{ tag.word }}</div>
 
         {% endfor %}
-    <div class="user_opinion" item="{{ opinion.item.id }}">
+    <div class="user_opinion" item="{{ opinion.item.id|base36 }}">
 
     {% if not your_profile %}
     <div class="your_opinion {% if not opinion.your_rating %}nodisplay{% endif %}">
-        <span class="rating_label">Your opinion:</span> <div id="yr_{{ opinion.item.id }}" class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
+        <span class="rating_label">Your opinion:</span> <div id="yr_{{ opinion.item.id|base36 }}" class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
     </div>
     {% endif %}
 
@@ -48,8 +50,8 @@
         <span class="rating_small rate delete">x</span>
         {% endif %}
     </div>
-    <div class="rating_small_hint" id="rsh_{{ opinion.item.id }}"></div>
-    <img src="/site_media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ opinion.item.id }}">
+    <div class="rating_small_hint" id="rsh_{{ opinion.item.id|base36 }}"></div>
+    <img src="/site_media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ opinion.item.id|base36 }}">
     </div>
 </div>
 

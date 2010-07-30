@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.utils.http import base36_to_int
 
 
 def edit(request, page_id=None, item_id=None):
@@ -17,11 +18,11 @@ def edit(request, page_id=None, item_id=None):
         raise SuspiciousOperation('Page id and item id were both empty')
 
     if page_id is None:
-        item = get_object_or_404(Item, pk=int(item_id))
+        item = get_object_or_404(Item, pk=base36_to_int(item_id))
         page = item.profile.page
         redirect_url = reverse('item', args=[item_id])
     else:
-        page = get_object_or_404(Page, pk=int(page_id))
+        page = get_object_or_404(Page, pk=base36_to_int(page_id))
         redirect_url = reverse('wiki-page', args=[page_id])
 
     if request.method == 'POST':

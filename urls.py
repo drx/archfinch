@@ -16,10 +16,10 @@ urlpatterns = patterns('',
     (r'^wiki/', include('hive.wiki.urls')),
     (r'^test/', include('hive.testdata.urls')),
 
-    url(r'^item/(?P<item_id>[0-9]+)(?:/(.*))?$', 'hive.main.views.item', name='item'),
-    (r'^opinion/set/(?P<item_id>[0-9]+)/(?P<rating>[1-5])$',
+    url(r'^item/(?P<item_id>[0-9a-z]+)(?:/(.*))?$', 'hive.main.views.item', name='item'),
+    (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$',
         'hive.main.views.opinion_set'),
-    (r'^opinion/remove/(?P<item_id>[0-9]+)$',
+    (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$',
         'hive.main.views.opinion_remove'),
 
     (r'^search$', 'hive.search.views.query'),

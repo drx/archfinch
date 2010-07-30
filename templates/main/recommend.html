@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load base36 %}
+
 {% block content %}
 
 <div id="content_left">
@@ -12,7 +14,7 @@
 
 {% for item in recommendations %}
     <p>
-    <div class="title"><a href="{% url main.views.item item.id item|slugify %}">{{ item }}</a></div>
+    <div class="title"><a href="{% url main.views.item item.id|base36 item|slugify %}">{{ item }}</a></div>
     <div class="category_element">{{ item.category.element_singular|capfirst }}</div>
     </p>
 {% endfor %}

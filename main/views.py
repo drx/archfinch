@@ -2,6 +2,7 @@ from django.shortcuts import (render_to_response, get_object_or_404,
     HttpResponse)
 from django.template import RequestContext
 from django.utils import simplejson
+from django.utils.http import base36_to_int
 from main.models import Item, Opinion, Action, Similarity, Category
 
 
@@ -24,7 +25,7 @@ def item(request, item_id):
     Item page.
     '''
 
-    item_id = int(item_id)
+    item_id = base36_to_int(item_id)
     item = get_object_or_404(Item, pk=item_id)
 
     if request.user.is_authenticated():
@@ -84,7 +85,7 @@ def opinion_set(request, item_id, rating):
     Note: this is temporary and should be ajaxified later.
     '''
 
-    item_id = int(item_id)
+    item_id = base36_to_int(item_id)
     rating = int(rating)
     item = get_object_or_404(Item, pk=item_id)
 
@@ -122,7 +123,7 @@ def opinion_remove(request, item_id):
     Note: this is temporary and should be ajaxified later.
     '''
 
-    item_id = int(item_id)
+    item_id = base36_to_int(item_id)
     item = get_object_or_404(Item, pk=item_id)
 
     if not request.user.is_authenticated():

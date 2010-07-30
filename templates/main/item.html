@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load markup %}
+{% load base36 %}
 
 {% block content %}
 
@@ -9,9 +10,9 @@
 
 {% if item.profile.page %}
     {{ item.profile.page.render|markdown }}
-    <span class="smalltext">(<a href='{% url wiki-edit-item item.id %}'>edit</a>)</span>
+    <span class="smalltext">(<a href='{% url wiki-edit-item item.id|base36 %}'>edit</a>)</span>
 {% else %}
-    <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id %}'>Add some.</a></p>
+    <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id|base36 %}'>Add some.</a></p>
 {% endif %}
 
 </div>
@@ -26,12 +27,12 @@
 {% endif %}
 </p>
     <br/><br/><span style="font-size: 10px" class="debug">{Debug: set to 
-     <a href="{% url hive.main.views.opinion_set item.id 1%}">1</a>,
-     <a href="{% url hive.main.views.opinion_set item.id 2%}">2</a>,
-     <a href="{% url hive.main.views.opinion_set item.id 3%}">3</a>,
-     <a href="{% url hive.main.views.opinion_set item.id 4%}">4</a>,
-     <a href="{% url hive.main.views.opinion_set item.id 5%}">5</a>,
-     <a href="{% url hive.main.views.opinion_remove item.id %}">remove</a>}
+     <a href="{% url hive.main.views.opinion_set item.id|base36 1%}">1</a>,
+     <a href="{% url hive.main.views.opinion_set item.id|base36 2%}">2</a>,
+     <a href="{% url hive.main.views.opinion_set item.id|base36 3%}">3</a>,
+     <a href="{% url hive.main.views.opinion_set item.id|base36 4%}">4</a>,
+     <a href="{% url hive.main.views.opinion_set item.id|base36 5%}">5</a>,
+     <a href="{% url hive.main.views.opinion_remove item.id|base36 %}">remove</a>}
     </span>
 
 </div>
