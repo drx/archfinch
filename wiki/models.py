@@ -42,4 +42,4 @@ class Revision(models.Model):
 
 
 class PageForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea)
+    text = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 20}))
