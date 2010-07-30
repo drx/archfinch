@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>Editing 
+{% if item %}
+    <b>{{ item }}</b>
+{% else %}
+    <b>{{ page }}</b>
+{% endif %}
+</p>
+
+<form method="post">
+{% csrf_token %}
+<p>{{ form.text }}</p>
+<input type="submit" value="Edit" />
+</form>
+
+{% endblock %}
+

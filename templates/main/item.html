@@ -9,8 +9,9 @@
 
 {% if item.profile.page %}
     {{ item.profile.page.render|markdown }}
+    <span class="smalltext">(<a href='{% url wiki-edit-item item.id %}'>edit</a>)</span>
 {% else %}
-    <p>There is no information on this {{ item.category.element_singular }}. <a>Add some.</a></p>
+    <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id %}'>Add some.</a></p>
 {% endif %}
 
 </div>

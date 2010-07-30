@@ -258,7 +258,7 @@ td
     width: 10em;
     margin-right: 1em;
 }
-input[type="text"], input[type="password"]
+input[type="text"], input[type="password"], input[type="submit"], textarea
 {
     border: 1px solid #0099ff;
     color: #333333;
