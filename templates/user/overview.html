@@ -25,21 +25,11 @@
         {{ opinion.category_singular|capfirst }}
         {% endif %}
     </div>
-    <div class="category">
-        <span class="category_element">
-        </span>
-    </div>
     <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id|base36 }}"{% endif %}>{{ opinion.rating }}</div>
     <div class="title">
     <span><a href="{% url main.views.item opinion.item.id|base36 opinion.item|slugify %}">{{ opinion.item }}</a></span>
 
     </div>
-        {# change this later, only temporary! #}
-        {% for tag in opinion.item.tag_set.all %}
-
-        <div>{{ tag.word }}</div>
-
-        {% endfor %}
     <div class="user_opinion" item="{{ opinion.item.id|base36 }}">
 
     {% if not your_profile %}

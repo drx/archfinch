@@ -89,6 +89,10 @@ $(document).ready(function(){
                 yr.addClass("rating"+rating)
                 yr.html(rating)
                 yr.parent().removeClass("nodisplay")
+                
+                /* item profile */
+                yr.siblings(".rating_verbose").html(rating_to_hint(rating))
+                yr.siblings(".user_opinion").children(".user_rate").children(".delete").show()
             })
         }
     })
@@ -197,6 +201,9 @@ $(document).ready(function(){
     }
 
     /* textarea resizer */
-    $('textarea.resizable:not(.processed)').TextAreaResizer();
+    if ($("textarea.resizable:not(.processed)").length > 0)
+    {
+        $('textarea.resizable:not(.processed)').TextAreaResizer();
+    }
 });
 

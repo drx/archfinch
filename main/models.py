@@ -73,8 +73,6 @@ class Opinion(models.Model):
         (3, 'Neutral to it'),
         (4, 'Like it'),
         (5, 'Love it'),
-        (6, 'Among my favorites'),
-        (0, 'No opinion'),
     )
     rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES,
         null=True, blank=True)

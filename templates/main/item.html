@@ -20,22 +20,30 @@
 </div>
 
 <div id="content_right">
-<p>If you like this {{ item.category.element_singular }}, you might like: [...]</p>
-<p>
+
+<div class="box opinion">
 {% if opinion %}
-    <span style="float: left; margin-top: 6px;">Your opinion:</span> <div class="rating rating{{ opinion.rating }}">{{ opinion.rating }}</div>
+    <div class="rating rating{{ opinion.rating }}" id="yr_{{ item.id|base36 }}">{{ opinion.rating }}</div>
+    <div class="rating_verbose">{{ opinion.get_rating_display }}</div>
 {% else %}
-    You have not rated this {{ item.category.element_singular }}. You might (like|love|hate|dislike) it.
+    <div class="rating" id="yr_{{ item.id|base36 }}"></div>
+    <div class="rating_verbose">You might (like) this {{ item.category.element_singular }}</div>
 {% endif %}
-</p>
-    <br/><br/><span style="font-size: 10px" class="debug">{Debug: set to 
-     <a href="{% url hive.main.views.opinion_set item.id|base36 1%}">1</a>,
-     <a href="{% url hive.main.views.opinion_set item.id|base36 2%}">2</a>,
-     <a href="{% url hive.main.views.opinion_set item.id|base36 3%}">3</a>,
-     <a href="{% url hive.main.views.opinion_set item.id|base36 4%}">4</a>,
-     <a href="{% url hive.main.views.opinion_set item.id|base36 5%}">5</a>,
-     <a href="{% url hive.main.views.opinion_remove item.id|base36 %}">remove</a>}
-    </span>
+    <div class="user_opinion" item="{{ item.id|base36 }}">
+
+    <div class="user_rate">
+        <span class="rating_label">Rate:</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 1 %}rated{% endif %} rating1">1</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 2 %}rated{% endif %} rating2">2</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 3 %}rated{% endif %} rating3">3</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 4 %}rated{% endif %} rating4">4</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 5 %}rated{% endif %} rating5">5</span>
+        <span class="rating_small rate delete {% if not opinion %}nodisplay{% endif %}">x</span>
+    </div>
+    <div class="rating_small_hint" id="rsh_{{ item.id|base36 }}"></div>
+    <img src="/site_media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item.id|base36 }}">
+    </div>
+</div>
 
 </div>
 

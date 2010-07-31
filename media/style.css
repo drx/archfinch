@@ -42,7 +42,7 @@ ul.menu li
     display: inline;
     margin-left: 5px;
 }
-.opinion .title
+.opinion .title, .opinion .rating_verbose
 {
     color: #333333;
     padding: 8px 4px 4px 4px;
