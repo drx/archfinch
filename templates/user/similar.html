@@ -18,7 +18,9 @@ Ten users most similar to you.
 {% endwith %}
 </div></td></tr>
 <tr><td colspan='2' style='padding-bottom: 10px; font-size: 10px; color: #aaaaaa;'>
-<span class='likes'>Likes {{ likes.next }}
+{% with likes.next as likelist %}
+<div class='likes'>{% if likelist %}Likes {{ likelist }}{% endif %}&nbsp;</div>
+{% endwith %}
 </td></tr>
 </tbody>
 {% endfor %}

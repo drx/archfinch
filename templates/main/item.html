@@ -10,8 +10,10 @@
 <b>{{ item.name }}</b>
 
 {% if item.profile.page %}
+    <div class="article">
     {{ item.profile.page.render|markdown }}
-    <span class="smalltext">(<a href='{% url wiki-edit-item item.id|base36 %}'>edit</a>)</span>
+    </div>
+    <span class="smalltext"><p>(<a href='{% url wiki-edit-item item.id|base36 %}'>edit</a>)</p></span>
 {% else %}
     <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id|base36 %}'>Add some.</a></p>
 {% endif %}
@@ -28,12 +30,12 @@
     <div class="rating" id="yr_{{ item.id|base36 }}"></div>
     <div class="rating_verbose">
     {% if recommendation %}
-        You might
+        <a class="nohover">You might
         {% if recommendation > 0 %}like{% else %}dislike{% endif %} 
-        this {{ item.category.element_singular }}
+        this {{ item.category.element_singular }}</a>
     {% endif %}
     {% if recommendation == 0 %}
-        Rate
+        <a class="nohover">Rate this {{ item.category.element_singular }}</a>
     {% endif %}
     </div>
 {% endif %}

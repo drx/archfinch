@@ -81,10 +81,12 @@ def likes_gen(users, request_user):
             params=[request_user.id]
         ).order_by('-rating')[:5]
         items = likes.values_list('item__name', flat=True)
-        out = ', '.join(items[:4])
-        out += '.' if len(items) < 5 else '...'
-
-        yield out
+        if items:
+            out = ', '.join(items[:4])
+            out += '.' if len(items) < 5 else '...'
+            yield out
+        else:
+            yield None
 
 def similar(request):
     '''
