@@ -2,11 +2,20 @@
 
 {% load base36 %}
 
+{% block title %}
+{% if category %}
+    {{ viewed_user.username }}'s {{ category.element_plural }}
+{% else %}
+    {{ viewed_user.username }}
+{% endif %}
+ - Archfinch
+{% endblock %}
+
 {% block content %}
 
 <div id="content_left">
 
-{% for opinion in opinions|slice:":100" %} {# fix this slice #}
+{% for opinion in opinions %}
 
 <div class="box opinion">
     <div class="category_element">

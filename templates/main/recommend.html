@@ -2,6 +2,14 @@
 
 {% load base36 %}
 
+{% block title %}
+    {% if category %}
+        {{ category.element_singular|capfirst }} recommendations - Archfinch
+    {% else %}
+        Recommendations - Archfinch
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 
 <div id="content_left">

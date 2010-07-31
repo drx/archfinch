@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 
+{% block title %}
+Editing 
+{% if item %}
+    {{ item }}
+{% else %}
+    {{ page }}
+{% endif %}
+ - Archfinch
+{% endblock %}
+
 {% block media %}
 {{ form.media }}
 {% endblock %}
