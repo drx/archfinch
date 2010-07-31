@@ -33,12 +33,11 @@ def item(request, item_id):
             opinion = request.user.opinion_set.get(item=item)
         except Opinion.DoesNotExist:
             opinion = None
+            recommendation = request.user.recommendation(item)
     else:
         opinion = None
 
-    return render_to_response("main/item.html",
-        {'item': item, 'opinion': opinion},
-        context_instance=RequestContext(request))
+    return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
 
 
 def recommend(request, category_slug=None, start=None, n=None):

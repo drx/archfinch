@@ -6,7 +6,6 @@
 {% block title %}{{ item.name }} - Archfinch{% endblock %}
 
 {% block content %}
-
 <div id="content_left">
 <b>{{ item.name }}</b>
 
@@ -27,7 +26,16 @@
     <div class="rating_verbose">{{ opinion.get_rating_display }}</div>
 {% else %}
     <div class="rating" id="yr_{{ item.id|base36 }}"></div>
-    <div class="rating_verbose">You might (like) this {{ item.category.element_singular }}</div>
+    <div class="rating_verbose">
+    {% if recommendation %}
+        You might
+        {% if recommendation > 0 %}like{% else %}dislike{% endif %} 
+        this {{ item.category.element_singular }}
+    {% endif %}
+    {% if recommendation == 0 %}
+        Rate
+    {% endif %}
+    </div>
 {% endif %}
     <div class="user_opinion" item="{{ item.id|base36 }}">
 

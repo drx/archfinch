@@ -29,11 +29,41 @@ class User(BaseUser):
         return similar_users
 
 
+    def recommendation(self, item):
+        '''
+        Returns the recommendation value for an item for the user.
+
+        Please take extra care to ensure the algorithm is the same as in User.recommend.
+        '''
+        items = Item.objects.raw("""
+            SELECT mi.id, SUM((mo.rating-3)*ms.value) AS recommendation
+            FROM main_similarity ms
+             INNER JOIN main_opinion mo
+              ON ms.user2_id=mo.user_id
+             INNER JOIN main_item mi
+              ON mo.item_id=mi.id
+            WHERE ms.user1_id=%s
+             AND ms.user2_id!=%s
+             AND ms.value > 0
+             AND mi.id = %s
+            GROUP BY mi.id
+            """,
+            [self.id, self.id, item.id])
+
+        items = list(items)
+        if items:
+            return items[0].recommendation
+        else:
+            return 0
+
+
     def recommend(self, category=None):
         '''
-        Fetches items recommended for the user, and returns an iterator.
+        Fetches items recommended for the user (which the user has not already rated)
+         and returns an iterator.
 
-        The algorithms needs work.
+        The algorithm should cut off at a certain amount of similar users,
+         as potentially it's millions of similar users.
         '''
         from itertools import takewhile
 
@@ -43,9 +73,17 @@ class User(BaseUser):
             where += ' AND mi.category_id = %s'
             params.append(category.id)
 
+        # Select items in order of their recommendation to self
+        # 
+        # recommendation =
+        #    sum (rating-3)*similarity for all similar users
+        # 
+        #    where 
+        #      rating: what the user has rated the item
+        #      similarity: similarity between the user and self
         recommended = Item.objects.raw("""
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
-             SUM((mo.rating-3)*ms.value) AS rating_sum
+             SUM((mo.rating-3)*ms.value) AS recommendation
             FROM main_similarity ms
              INNER JOIN main_opinion mo
               ON ms.user2_id=mo.user_id
@@ -59,10 +97,10 @@ class User(BaseUser):
                WHERE mo2.item_id=mi.id AND mo2.user_id=%s)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name
-            ORDER BY rating_sum DESC""",
+            ORDER BY recommendation DESC""",
             params)
 
         # have to do it this way -- RawQuerySet doesn't have filter, etc.
-        recommended = takewhile(lambda x: x.rating_sum > 0, recommended)
+        recommended = takewhile(lambda x: x.recommendation > 0, recommended)
 
         return recommended
