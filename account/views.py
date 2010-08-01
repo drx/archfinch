@@ -1,4 +1,4 @@
-﻿from hive.account.models import SignupForm
+﻿from hive.account.models import SignupForm, AuthenticationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -6,7 +6,6 @@ from main.models import Similarity
 from django.contrib.auth import login as auth_login
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
-from django.contrib.auth.forms import AuthenticationForm
 from django.utils import simplejson
 
 def signup(request):
@@ -25,8 +24,6 @@ def signup(request):
 def error_msg(errors):
     msg = ''
     for field, error_list in errors.iteritems():
-        if field != '__all__':
-            msg += field.capitalize() + ': '
         msg += ' '.join(error_list) + ' '
     return msg
 

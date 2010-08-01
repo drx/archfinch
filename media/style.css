@@ -30,6 +30,10 @@ html, body
 {
     color: #0099ff;
 }
+#navbar a.selected, #navbar a.selected:hover
+{
+    color: #004c80;
+}
 a
 {
     text-decoration: none;
@@ -188,26 +192,6 @@ td
     background-color: #00a020;
     color: #ffffff;
 }
-/*.rating1.rate
-{
-    background-color: #fec0c0;
-}
-.rating2.rate
-{
-    background-color: #fceec0;
-}
-.rating3.rate
-{
-    background-color: #fcfacd;
-}
-.rating4.rate
-{
-    background-color: #eefcc0;
-}
-.rating5.rate
-{
-    background-color: #c0e8c8;
-}*/
 .rating_label
 {
     float: left;
@@ -294,10 +278,15 @@ input[type="text"], input[type="password"], input[type="submit"], textarea
     color: #333333;
     background-color: #ffffff;
 }
-.ajaxform .error
+.error
 {
     color: #ff0000;
     margin-top: 1em;
+}
+.big .error
+{
+    font-size: 16px;
+    font-family: Verdana;
 }
 .similarity .bar
 {
@@ -335,4 +324,30 @@ div.grippie
     cursor: s-resize;
     height: 9px;
     overflow: hidden;
+}
+
+.big
+{
+    margin: 1em;
+    font-family: Arial;
+    font-weight: bold;
+    color: #0072cc;
+    font-size: 20px;
+    line-height: 15px;
+}
+.big input
+{
+    font-size: 20px;
+    font-family: Arial;
+    font-weight: bold;
+    color: #0099ff;
+    padding: 10px 20px;
+}
+.big input[type="submit"]
+{
+    border-width: 2px;
+}
+.big label
+{
+    margin-right: 20px;
 }

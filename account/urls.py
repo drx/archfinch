@@ -2,10 +2,10 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('hive.account.views',
 
-    (r'^signup$', 'signup'),
+    url(r'^signup$', 'signup', name='signup'),
     # (r'^login$', 'login'),
     # (r'^logout$', 'logout'),
-    (r'^prefs$', 'preferences'),
+    url(r'^prefs$', 'preferences'),
 
     url(r'^logout/ajax$', 'logout_ajax', name='logout-ajax'),
     url(r'^login/ajax$', 'login_ajax', name='login-ajax'),

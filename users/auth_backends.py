@@ -7,7 +7,7 @@ from django.db.models import get_model
 class ModelBackend(BaseModelBackend):
     def authenticate(self, username=None, password=None):
         try:
-            user = self.user_class.objects.get(username=username)
+            user = self.user_class.objects.get(username__iexact=username)
             if user.check_password(password):
                 return user
         except self.user_class.DoesNotExist:

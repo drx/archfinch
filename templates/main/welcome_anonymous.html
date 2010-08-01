@@ -1,5 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-Welcome!
+<div class="big">
+    Rate things you love or hate. <br /><br />
+    Get recommendations based on what <i>you</i> like. <br /><br /><br /><br />
+    <form method="post" id="signupform_big" action="{% url signup %}">
+    <table>
+        <tr>
+        <td><label for="id_username">Username:</label></td>
+        <td><input id="id_username" type="text" name="username" maxlength="30" /></td>
+        </tr>
+        <tr> 
+        <td><label for="id_password">Password:</label></td>
+        <td><input type="password" name="password" id="id_password" /></td>
+        </tr>
+    </table><br />
+    {% csrf_token %}
+    <input type="submit" value="Create an account" >
+    <img src="/site_media/images/ajax-loader.gif" class="nodisplay loading">
+    <div id="signupform_big_error" class="error"></div>
+    </form>
+    <div id="signupform_big_thankyou" class="ajaxform nodisplay">
+        Thank you for signing up. You will be logged in shortly.
+    </div>
+</div>
+
 {% endblock %}

@@ -32,9 +32,9 @@ function rating_to_hint(r)
     }
     return '?'
 }
-function ajaxerror(selector, error_msg)
+function ajaxerror(obj, error_msg)
 {
-    $(selector).html(error_msg).show().delay(2000).fadeOut('slow')
+    obj.html(error_msg).show().delay(4000).fadeOut('slow')
 }
 $(document).ready(function(){
     $(".box").hover(
@@ -104,12 +104,16 @@ $(document).ready(function(){
     {
         $("#loginform").toggle('fast')
         $("#signupform").hide('fast')
+        $("#menu_login").toggleClass('selected')
+        $("#menu_signup").removeClass('selected')
         e.preventDefault()
     })
     $("#menu_signup").click(function(e)
     {
         $("#signupform").toggle('fast')
         $("#loginform").hide('fast')
+        $("#menu_login").removeClass('selected')
+        $("#menu_signup").toggleClass('selected')
         e.preventDefault()
     })
     $("#loginform").submit(function(e)
@@ -128,7 +132,7 @@ $(document).ready(function(){
                 if (!data)
                 {
                     /* this is due to a bug(?) in jQuery 1.4.2 */
-                    ajaxerror("#loginform_error", 'Error: could not communicate with the server')
+                    ajaxerror($("#loginform_error"), 'Error: could not communicate with the server')
                     return;
                 }
                 if (data['success'])
@@ -137,19 +141,20 @@ $(document).ready(function(){
                 }
                 else
                 {
-                    ajaxerror("#loginform_error", data['error_msg'])
+                    ajaxerror($("#loginform_error"), data['error_msg'])
                 }
             },
             error: function(request, error)
             {
                 $(self).children(".loading").hide()
-                ajaxerror("#loginform_error", 'Error: could not communicate with the server')
+                ajaxerror($("#loginform_error"), 'Error: could not communicate with the server')
             }
         })
         e.preventDefault()
     })
-    $("#signupform").submit(function(e)
+    $("#signupform,#signupform_big").submit(function(e)
     {
+        id = $(this).attr("id")
         $(this).children(".loading").show()
         self = this
         $.ajax({
@@ -164,24 +169,24 @@ $(document).ready(function(){
                 if (!data)
                 {
                     /* this is due to a bug(?) in jQuery 1.4.2 */
-                    ajaxerror("#signupform_error", 'Error: could not communicate with the server')
+                    ajaxerror($("#signupform_error"), 'Error: could not communicate with the server')
                     return;
                 }
                 if (data['success'])
                 {
-                    $("#signupform").hide('fast')
-                    $("#signup_thankyou").show('fast') 
-                    setTimeout('window.location.replace("/")', 1000)
+                    $('#'+id).hide('fast')
+                    $('#'+id+"_thankyou").show('fast') 
+                    setTimeout('window.location.replace("/")', 2000)
                 }
                 else
                 {
-                    ajaxerror("#signupform_error", data['error_msg'])
+                    ajaxerror($('#'+id+"_error"), data['error_msg'])
                 }
             },
             error: function(request, error)
             {
                 $(self).children(".loading").hide()
-                $("#signupform_error").html('Error: could not communicate with the server').show().delay(2000).fadeOut('slow')
+                ajaxerror($("#"+id+"_error"), 'Error: could not communicate with the server')
             }
         })
         e.preventDefault()
