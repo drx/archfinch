@@ -13,12 +13,14 @@
 {% block content %}
 
 <div id="content_left">
+<h1>
 {% if category %}
     {{ category.element_plural|capfirst }}
 {% else %}
     Things
 {% endif %}
  you might like.
+</h1>
 
 {% for item in recommendations %}
     <p>

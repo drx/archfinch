@@ -9,9 +9,10 @@ html, body
 {
     height: 100%;
 }
-#nf
+#wrap
 {
     min-height: 100%;
+    width: 1000px;
 }
 #footer
 {
@@ -70,11 +71,12 @@ ul.menu
 {
     list-style-type: none;
     padding: 0;
+    margin-bottom: 0.5em;
 }
 ul.menu li
 {
     display: inline;
-    margin-left: 5px;
+    margin-left: 1em;
 }
 .opinion .title, .opinion .rating_verbose
 {
@@ -242,6 +244,8 @@ td
     font-weight: bold;
     font-size: 24px;
     color: #0099ff;
+    width: 500px;
+    float: left;
 }
 #logo a
 {
@@ -250,9 +254,11 @@ td
 }
 #navbar
 {
-    font-size: 10px;
+    font-size: 20px;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
     margin-bottom: 30px;
-    margin-left: 1.5em;
+    clear: both;
+    border-bottom: 1px solid #0099ff;
 }
 #navbar a
 {
@@ -261,6 +267,15 @@ td
 #navbar a:hover
 {
     color: #0099ff;
+}
+#search
+{
+    border: 2px solid #0099ff;
+    font-weight: bold;
+}
+#topnav
+{
+    float: right;
 }
 .ajaxform
 {
@@ -325,15 +340,23 @@ div.grippie
     height: 9px;
     overflow: hidden;
 }
-
+.big .left
+{
+    width: 55%;
+    float: left;
+}
+.big .right
+{
+    width: 45%;
+    float: right;
+}
 .big
 {
     margin: 1em;
-    font-family: Arial;
-    font-weight: bold;
+    font-family: Helvetica, Arial;
     color: #0072cc;
     font-size: 20px;
-    line-height: 15px;
+    line-height: 30px;
 }
 .big input
 {
@@ -350,4 +373,12 @@ div.grippie
 .big label
 {
     margin-right: 20px;
+}
+h1
+{
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    color: #0072cc;
+    font-size: 20px;
+    line-height: 30px;
+    margin-top: 0;
 }

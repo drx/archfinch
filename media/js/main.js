@@ -99,23 +99,6 @@ $(document).ready(function(){
 
 
     /* AJAX login forms */
-
-    $("#menu_login").click(function(e)
-    {
-        $("#loginform").toggle('fast')
-        $("#signupform").hide('fast')
-        $("#menu_login").toggleClass('selected')
-        $("#menu_signup").removeClass('selected')
-        e.preventDefault()
-    })
-    $("#menu_signup").click(function(e)
-    {
-        $("#signupform").toggle('fast')
-        $("#loginform").hide('fast')
-        $("#menu_login").removeClass('selected')
-        $("#menu_signup").toggleClass('selected')
-        e.preventDefault()
-    })
     $("#loginform").submit(function(e)
     {
         $(this).children(".loading").show()
@@ -152,7 +135,7 @@ $(document).ready(function(){
         })
         e.preventDefault()
     })
-    $("#signupform,#signupform_big").submit(function(e)
+    $("#signupform").submit(function(e)
     {
         id = $(this).attr("id")
         $(this).children(".loading").show()

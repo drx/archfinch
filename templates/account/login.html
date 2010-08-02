@@ -4,19 +4,20 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-<form method="post" action="{% url login %}">
-{% csrf_token %}
-<table>
-{{ form.as_table }}
-</table>
-
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+<div class="big">
+    Log in to your account <br /><br />
+    <form method="post" action="{% url login %}" id="loginform">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <br />
+    <input type="submit" value="Log in" >
+    <input type="hidden" name="next" value="{{ next }}" />
+    <img src="/site_media/images/ajax-loader.gif" class="nodisplay loading">
+    <div id="loginform_error" class="error"></div>
+    </form>
+</div>
 
 {% endblock %}
 
