@@ -88,22 +88,31 @@ def likes_gen(users, request_user):
         else:
             yield None
 
-def similar(request):
+def similar(request, start=None, n=None):
     '''
     Show users most similar to the logged in user.
     '''
 
     if request.user.is_authenticated():
-        start = 0
-        length = 10
+        if start is None:
+            start = 0
+        else:
+            start = int(start)
+        
+        if n is None or not 0 < int(n) < 10:
+            n = 10
+        else:
+            n = int(n)
+
         similarity_max = get_max_similarity(request.user)
-        similar_users = request.user.similar()[start:length]
+        similar_users = request.user.similar()
+        count = similar_users.count()
+        similar_users = similar_users[start:start+n]
         likes = likes_gen(similar_users, request.user)
-        return render_to_response('user/similar.html',
-            {'similar_users': similar_users,
-            'similarity_max': similarity_max,
-            'likes': likes},
-            context_instance=RequestContext(request))
+
+        left = count-(start+n)
+
+        return render_to_response('user/similar.html', locals(), context_instance=RequestContext(request))
     else:
         return render_to_response('user/similar_anonymous.html',
             context_instance=RequestContext(request))

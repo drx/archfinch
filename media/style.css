@@ -100,6 +100,11 @@ ul.menu li
     padding-bottom: 1.5em;
     width: 40em;
 }
+.box.itembox
+{
+    width: 100%;
+    padding: 4px;
+}
 .user_opinion
 {
     font-size: 10px;
@@ -168,6 +173,10 @@ td
     width: 30px;
     height: 30px;
     line-height: 27px;
+}
+.itembox .rating
+{
+    margin-bottom: 40px;
 }
 .rating1
 {

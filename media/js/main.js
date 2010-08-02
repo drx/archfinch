@@ -87,7 +87,7 @@ $(document).ready(function(){
                 yr = $("#yr_"+item_id)
                 yr.removeClass("rating1 rating2 rating3 rating4 rating5")
                 yr.addClass("rating"+rating)
-                yr.html(rating)
+                yr.html(rating).show()
                 yr.parent().removeClass("nodisplay")
                 
                 /* item profile */

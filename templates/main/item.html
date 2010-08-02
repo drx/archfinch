@@ -22,7 +22,7 @@
 
 <div id="content_right">
 
-<div class="box opinion" style="width: 100%; padding: 4px;">
+<div class="box opinion itembox">
 {% if opinion %}
     <div class="rating rating{{ opinion.rating }}" id="yr_{{ item.id|base36 }}">{{ opinion.rating }}</div>
     <div class="rating_verbose">{{ opinion.get_rating_display }}</div>
@@ -32,7 +32,7 @@
     {% if recommendation %}
         <a class="nohover">You might
         {% if recommendation > 0 %}like{% else %}dislike{% endif %} 
-        this {{ item.category.element_singular }}</a>
+        it</a>
     {% endif %}
     {% if recommendation == 0 %}
         <a class="nohover">Rate this {{ item.category.element_singular }}</a>
@@ -50,7 +50,7 @@
         <span class="rating_small rate {% if opinion and opinion.rating == 5 %}rated{% endif %} rating5">5</span>
         <span class="rating_small rate delete {% if not opinion %}nodisplay{% endif %}">x</span>
     </div><br /><br />
-    <div class="rating_small_hint" id="rsh_{{ item.id|base36 }}" style="margin: 0 0 0 43px;"></div><br />
+    <div class="rating_small_hint" id="rsh_{{ item.id|base36 }}" style="margin-left: 0;"></div><br />
     <img src="/site_media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item.id|base36 }}">
     </div>
 </div>

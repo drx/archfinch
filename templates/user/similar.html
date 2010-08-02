@@ -4,27 +4,37 @@
 
 {% block content %}
 
-Ten users most similar to you.
-
-<br /><br />
+<h1>People most similar to you.</h1>
 
 <table>
 {% for similarity in similar_users %}
 <tbody class='box'>
-<tr><td><div class="user"><a href="{% url users.views.overview similarity.user2 %}">{{ similarity.user2 }}</a></div></td>
-<td style='padding-left: 10em'><div>
-{% with similarity.value as similarity %}
-{% include "includes/similarity_bar.html" %}
-{% endwith %}
-</div></td></tr>
-<tr><td colspan='2' style='padding-bottom: 10px; font-size: 10px; color: #aaaaaa;'>
-{% with likes.next as likelist %}
-<div class='likes'>{% if likelist %}Likes {{ likelist }}{% endif %}&nbsp;</div>
-{% endwith %}
-</td></tr>
+    <tr><td><div class="user"><a href="{% url users.views.overview similarity.user2 %}">{{ similarity.user2 }}</a></div></td>
+    <td style='padding-left: 10em'><div>
+    {% with similarity.value as similarity %}
+        {% include "includes/similarity_bar.html" %}
+    {% endwith %}
+    </div></td></tr>
+    <tr><td colspan='2' style='padding-bottom: 10px; font-size: 10px; color: #aaaaaa;'>
+    {% with likes.next as likelist %}
+        <div class='likes'>{% if likelist %}Likes {{ likelist }}{% endif %}&nbsp;</div>
+    {% endwith %}
+    </td></tr>
 </tbody>
 {% endfor %}
 
 </table>
+
+{% if left > 0 %}
+    <span class="smalltext">
+    <p>There {{ left|pluralize:"is,are" }} {{ left }} more {{ left|pluralize:"person,people" }}.
+    {% if left <= 10 %}
+        <a href="{% url similar-paged start|add:n 10 %}">Show them</a>.
+    {% else %}
+        Show the next <a href="{% url similar-paged start|add:n 10 %}">10</a>.
+    {% endif %}
+    </p></span>
+{% endif %}
+
 
 {% endblock %}
