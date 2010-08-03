@@ -14,10 +14,14 @@ def query(request):
     if not 0 < n <= 100:
         n = 10
 
-    words = re.findall(r'([\w:\-]*?"[\w:\- ]+"[\w:\-]*?|[\w:\-]+)', query)
+    words = re.findall(r'([\w:!\-]*?"[\w:!\- ]+"[\w:!\-]*?|[\w:!\-]+)', query)
     words = map(lambda w: w.replace('"',''), words)
 
     modifiers = {}
+
+    if len(words) > 1 and words[0] == '!':
+        modifiers['bang'] = True
+        words = words[1:]
 
     words_cleaned = []
     for word in words:
@@ -59,6 +63,18 @@ def query(request):
 
     for word in words:
         results = results.filter(name__icontains=word)
+
+    if 'bang' in modifiers:
+        try:
+            result = results[0]
+            from django.shortcuts import redirect
+            from django.utils.http import int_to_base36
+            from django.core.urlresolvers import reverse
+            from django.template.defaultfilters import slugify
+            return redirect(reverse('item', args=[int_to_base36(result.id), slugify(result.name)]))
+        except IndexError:
+            from django.http import Http404
+            raise Http404
 
     count = results.count()
 
