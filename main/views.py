@@ -1,9 +1,10 @@
-from django.shortcuts import (render_to_response, get_object_or_404,
-    HttpResponse)
+from django.shortcuts import render_to_response, get_object_or_404, HttpResponse, redirect
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.http import base36_to_int
 from main.models import Item, Opinion, Action, Similarity, Category
+from hive.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
+from django.contrib.auth.decorators import login_required
 
 
 def welcome(request):
@@ -15,9 +16,10 @@ def welcome(request):
             context_instance=RequestContext(request))
 
 
+@login_required
 def missing(request):
-    return render_to_response("main/missing.html",
-        context_instance=RequestContext(request))
+    wiz = AddItemWizard([AddItemForm1, AddItemForm2])
+    return wiz(request)
 
 
 def item(request, item_id):

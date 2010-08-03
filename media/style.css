@@ -297,7 +297,7 @@ td
     width: 10em;
     margin-right: 1em;
 }
-input[type="text"], input[type="password"], input[type="submit"], textarea
+input[type="text"], input[type="password"], input[type="submit"], textarea, select
 {
     border: 1px solid #0099ff;
     color: #333333;
@@ -312,6 +312,11 @@ input[type="text"], input[type="password"], input[type="submit"], textarea
 {
     font-size: 16px;
     font-family: Verdana;
+}
+.big th
+{
+    text-align: left;
+    font-weight: normal;
 }
 .similarity .bar
 {
@@ -368,13 +373,18 @@ div.grippie
     font-size: 20px;
     line-height: 30px;
 }
-.big input
+.big input, .big select
 {
     font-size: 20px;
     font-family: Arial;
     font-weight: bold;
     color: #0099ff;
     padding: 10px 20px;
+}
+.big select
+{
+    padding: 0;
+    font-weight: normal;
 }
 .big input[type="submit"]
 {

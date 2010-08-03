@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^$',     'hive.main.views.welcome'),
     (r'^user/', include('hive.users.urls')),
     url(r'^missing$', 'hive.main.views.missing', name='missing'),
+
     url(r'^similar$', 'hive.users.views.similar', name='similar'),
     url(r'^similar/(?P<start>\d+)/(?P<n>\d+)$', 'hive.users.views.similar', name='similar-paged'),
     url(r'^recommend$', 'hive.main.views.recommend', name='recommend'),
