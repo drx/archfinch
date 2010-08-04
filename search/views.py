@@ -14,10 +14,8 @@ def query(request):
     if not 0 < n <= 100:
         n = 10
 
-    words = re.findall(r'([\w:!\-]*?"[\w:!\- ]+"[\w:!\-]*?|[\w:!\-]+)', query)
-    words = map(lambda w: w.replace('"',''), words)
-
     modifiers = {}
+    words = query.split()
 
     if len(words) > 1 and words[0] == '!':
         modifiers['bang'] = True
@@ -33,36 +31,20 @@ def query(request):
         if mod == 'in':
             modifiers['in'] = arg
 
-        elif mod == 'exact':
-            modifiers['exact'] = arg
-
         else:
             words_cleaned.append(word)
 
     words = words_cleaned
+    title = ' '.join(words)
 
-    def escape_spaces(word):
-        if ' ' in word:
-            word = '"'+word+'"'
-        return word
+    results = Item.search.query(title).order_by('-opinion_count', '@weight')
 
-    title = ' '.join(map(escape_spaces, words))
-
-    results = Item.objects.all()
-
-    for mod in modifiers:
-        if mod == 'exact':
-            results = results.filter(name__iexact=modifiers[mod])
-
-        elif mod == 'in':
-            cat_name = modifiers[mod]
-            category = Category.objects.get(
-                Q(name__iexact=cat_name)|Q(element_singular__iexact=cat_name)|Q(element_plural__iexact=cat_name)|Q(slug__iexact=cat_name)
-            )
-            results = results.filter(category=category)
-
-    for word in words:
-        results = results.filter(name__icontains=word)
+    if 'in' in modifiers:
+        cat_name = modifiers['in']
+        category = Category.objects.get(
+            Q(name__iexact=cat_name)|Q(element_singular__iexact=cat_name)|Q(element_plural__iexact=cat_name)|Q(slug__iexact=cat_name)
+        )
+        results = results.filter(category_id=category.id)
 
     if 'bang' in modifiers:
         try:
@@ -85,10 +67,12 @@ def query(request):
     else:
         user_categories = set()
     
-    results = results.annotate(Count('opinion')).extra(
-        select={'is_exact': "name ILIKE %s"},
-        select_params=(title,)
-        ).order_by('-is_exact', '-opinion__count', 'name')[start:start+n]
+    #results = results.annotate(Count('opinion')).extra(
+    #    select={'is_exact': "name ILIKE %s"},
+    #    select_params=(title,)
+    #    ).order_by('-is_exact', '-opinion__count', 'name')[start:start+n]
+
+    results = results[start:start+n]
 
     left = count-(start+n)
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from djangosphinx.models import SphinxSearch
 
 
 class Category(models.Model):
@@ -16,6 +17,13 @@ class Item(models.Model):
     category = models.ForeignKey(Category)
     parent = models.ForeignKey('Item', null=True, blank=True)
     name = models.CharField(max_length=1000)
+
+    search = SphinxSearch(
+        mode='SPH_MATCH_EXTENDED2',
+        rankmode='SPH_RANK_SPH04',
+        weights={'name': 1},
+        index='main_item',
+    )
 
     def __unicode__(self):
         return self.name
