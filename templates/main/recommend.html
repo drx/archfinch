@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load base36 %}
+{% load nbsp %}
 
 {% block title %}
     {% if category %}
@@ -43,16 +44,16 @@
 </div>
 <div id="content_right">
 {% if user_categories %}
-    <p id="user_cats">Show only 
+    <p id="user_cats">Show  
     {% for id, repr, slug in user_categories %}
-        <a href='{% url recommend-slugged slug|urlencode %}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
+        <a href='{% url recommend-slugged slug|urlencode %}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
     {% endfor %}
     (<a href="#" id="user_cats_more">more</a>)
     </p>
 
-    <p id="global_cats">Show only 
+    <p id="global_cats">Show 
     {% for id, repr, slug in categories %}
-        {{ forloop.last|yesno:"or ," }}<a href='{% url recommend-slugged slug|urlencode %}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
+        {{ forloop.last|yesno:"or ," }}<a href='{% url recommend-slugged slug|urlencode %}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
     {% endfor %}
     </p>
 {% endif %}
