@@ -30,10 +30,10 @@ class AddItemWizard(FormWizard):
             return
 
         if form.is_valid():
-            potential_conflicts = Item.objects.filter(category=form.cleaned_data['category']).filter(name__icontains=form.cleaned_data['name'])
+            potential_conflicts = Item.search.query('"'+form.cleaned_data['name']+'"').filter(category_id=form.cleaned_data['category'].id)
 
             if potential_conflicts.count() > 0:
-                potential_conflicts = potential_conflicts[:100]
+                potential_conflicts = potential_conflicts[0:100]
                 self.extra_context = locals()
 
             else:

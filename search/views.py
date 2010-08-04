@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.db.models import Count, Q
+from djangosphinx.apis import current as djangosphinx_api
 from main.models import Item, Category
 import re
 
@@ -60,7 +61,17 @@ def query(request):
 
     count = results.count()
 
-    categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
+    results_categories = Item.search.query(title).group_by('category_id', djangosphinx_api.SPH_GROUPBY_ATTR)
+    cats = map(lambda x: x._sphinx['attrs']['@groupby'], results_categories)
+    categories = Category.objects.in_bulk(cats)
+
+    category_counts = []
+    for r in results_categories:
+        cat_id = r._sphinx['attrs']['@groupby']
+        cat_count = r._sphinx['attrs']['@count']
+        category_counts.append({'category': categories[cat_id], 'count': cat_count})
+
+    category_counts.sort(key=lambda x: x['count'], reverse=True)
 
     if request.user.is_authenticated():
         user_categories = request.user.categories()

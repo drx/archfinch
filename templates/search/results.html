@@ -6,6 +6,7 @@
 
 {% block content %}
 
+<div id="content_left">
 {% if results %}
     Search results for <b>{{ query }}</b>
 {% else %}
@@ -29,23 +30,19 @@
         Show the next <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">10</a>{% if left > 10 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=25">{% if left < 25 %}{{ left }}{% else %}25{% endif %}</a>{% endif %}{% if left > 25 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=100">{% if left < 100 %}{{ left }}{% else %}100{% endif %}</a>{% endif %}.
     {% endif %}
     </p>
-    {% if user_categories %}
-        <p id="user_cats">Show only 
-        {% for id, repr, slug in user_categories %}
-            <a href='/search?q={{ title|urlencode }}%20in:{{ slug|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
-        {% endfor %}
-        (<a href="#" id="user_cats_more">more</a>)
-        </p>
-
-        <p id="global_cats">Show only 
-        {% for id, repr, slug in categories %}
-            {{ forloop.last|yesno:"or ," }}<a href='/search?q={{ title|urlencode }}%20in:{{ slug|urlencode }}'>{{ repr }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
-        {% endfor %}
-        </p>
-
-    {% endif %}
 {% endif %}
 <p>Are we missing something? Please <a href="{% url missing %}">add it</a>!</p>
 </span>
+</div>
+<div id="content_right">
+    {% if category_counts|length > 1 %}
+        <p>Show:</p>
+        <p>
+        {% for c in category_counts %}
+            <a href='/search?q={{ title|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
+        {% endfor %}
+        </p>
+    {% endif %}
+</div>
 
 {% endblock %}
