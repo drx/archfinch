@@ -13,6 +13,9 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             new_user = form.save()
+            new_user.backend = 'hive.users.auth_backends.ModelBackend'
+            auth_login(request, new_user)
+
             return HttpResponseRedirect("/")
     else:
         form = SignupForm()

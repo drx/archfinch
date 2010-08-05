@@ -26,7 +26,7 @@ urlpatterns = patterns('',
 
     # TEMPORARY, FOR DEVELOPMENT ONLY
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/drx/hive/media'}),
-    (r'^favicon.ico$', 'django.views.generic.simple.redirect_to', {'url': '/site_media/favicon.ico', 'permanent': False}),
+    (r'^favicon.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/favicon.ico', 'permanent': False}),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),

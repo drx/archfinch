@@ -26,7 +26,7 @@
 {% for item in recommendations %}
     <p>
     <div class="title"><a href="{% url main.views.item item.id|base36 item|slugify %}">{{ item }}</a></div>
-    <div class="category_element">{{ item.category.element_singular|capfirst }}</div>
+    <div class="category_element">{{ item.category_element|capfirst }}</div>
     </p>
 {% empty %}
     {% if not category %}

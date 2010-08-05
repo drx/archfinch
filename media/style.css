@@ -13,15 +13,21 @@ html, body
 {
     min-height: 100%;
     width: 1000px;
+    margin-bottom: -25px;
+    position: relative;
 }
 #footer
 {
-    clear: both;
-    margin-top: -25px;
+    height: 25px;
     margin-left: 12px;
-    margin-bottom: 7px;
     font-size: 12px;
     color: #aaaaaa;
+    position: relative;
+}
+.clearfooter
+{
+    clear: both;
+    height: 25px;
 }
 #footer a
 {

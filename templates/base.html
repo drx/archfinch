@@ -45,8 +45,9 @@
     <div id="content">
         {% block content %}{% endblock %}
     </div>
-    </div>
-    <div id="footer">
+    <div class="clearfooter"></div>
+</div>
+<div id="footer">
         {% if user.is_authenticated %}
         Drop us a line. We care <b>a lot</b>. <a href="mailto:luke@archfinch.com">luke@archfinch.com</a>
         {% endif %}

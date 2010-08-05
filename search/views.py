@@ -38,7 +38,7 @@ def query(request):
     words = words_cleaned
     title = ' '.join(words)
 
-    results = Item.search.query(title).order_by('-opinion_count', '@weight')
+    results = Item.search.query(title).order_by('-opinion_count', '@weight').select_related('category')
 
     if 'in' in modifiers:
         cat_name = modifiers['in']

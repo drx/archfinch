@@ -37,6 +37,12 @@ class ItemProfile(models.Model):
 
 class Action(models.Model):
     time = models.DateTimeField(auto_now_add=True, unique=False)
+    opinion = models.ForeignKey('Opinion', null=True, blank=True)
+
+    TYPE_CHOICES = (
+        (1, 'rating'),
+    )
+    type = models.IntegerField(choices=TYPE_CHOICES)
 
     def __unicode__(self):
         return self.time.ctime()
@@ -57,7 +63,8 @@ class OpinionManager(models.Manager):
 
         return self.raw("""
             SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,
-             mc.element_singular AS category_singular
+             mc.element_singular AS category_singular,
+             mi.name AS item_name
             FROM main_opinion m1
             LEFT JOIN main_opinion m2
              ON (m1.item_id=m2.item_id AND m2.user_id=%s)
@@ -73,7 +80,6 @@ class OpinionManager(models.Manager):
 class Opinion(models.Model):
     user = models.ForeignKey(User)
     item = models.ForeignKey(Item)
-    action = models.OneToOneField(Action)
 
     RATING_CHOICES = (
         (1, 'Hate it'),
@@ -82,8 +88,7 @@ class Opinion(models.Model):
         (4, 'Like it'),
         (5, 'Love it'),
     )
-    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES,
-        null=True, blank=True)
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, db_index=True)
 
     objects = OpinionManager()
 
@@ -160,7 +165,7 @@ class SimilarityManager(models.Manager):
 class Similarity(models.Model):
     user1 = models.ForeignKey(User)
     user2 = models.ForeignKey(User, related_name="similarity_set2")
-    value = models.IntegerField()
+    value = models.IntegerField(db_index=True)
 
     objects = SimilarityManager()
 

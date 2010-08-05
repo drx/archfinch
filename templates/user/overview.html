@@ -36,17 +36,21 @@
         {{ opinion.category_singular|capfirst }}
         {% endif %}
     </div>
-    <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item.id|base36 }}"{% endif %}>{{ opinion.rating }}</div>
+    <div class="rating rating{{ opinion.rating }}" {% if your_profile %}id="yr_{{ opinion.item_id|base36 }}"{% endif %}>{{ opinion.rating }}</div>
     <div class="title">
-    <span><a href="{% url main.views.item opinion.item.id|base36 opinion.item|slugify %}">{{ opinion.item }}</a></span>
+    {% if your_profile or not user.is_authenticated %}
+    <span><a href="{% url main.views.item opinion.item_id|base36 opinion.item|slugify %}">{{ opinion.item }}</a></span>
+    {% else %}
+    <span><a href="{% url main.views.item opinion.item_id|base36 opinion.item_name|slugify %}">{{ opinion.item_name }}</a></span>
+    {% endif %}
 
     </div>
     {% if user.is_authenticated %}
-    <div class="user_opinion" item="{{ opinion.item.id|base36 }}">
+    <div class="user_opinion" item="{{ opinion.item_id|base36 }}">
 
     {% if not your_profile %}
     <div class="your_opinion {% if not opinion.your_rating %}nodisplay{% endif %}">
-        <span class="rating_label">Your opinion:</span> <div id="yr_{{ opinion.item.id|base36 }}" class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
+        <span class="rating_label">Your opinion:</span> <div id="yr_{{ opinion.item_id|base36 }}" class="rating_small rating{{ opinion.your_rating }}">{{ opinion.your_rating }}</div>
     </div>
     {% endif %}
 
@@ -61,8 +65,8 @@
         <span class="rating_small rate delete">x</span>
         {% endif %}
     </div>
-    <div class="rating_small_hint" id="rsh_{{ opinion.item.id|base36 }}"></div>
-    <img src="/site_media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ opinion.item.id|base36 }}">
+    <div class="rating_small_hint" id="rsh_{{ opinion.item_id|base36 }}"></div>
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ opinion.item_id|base36 }}">
     </div>
     {% endif %}
 </div>

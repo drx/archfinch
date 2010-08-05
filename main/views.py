@@ -27,7 +27,7 @@ def item(request, item_id):
     '''
 
     item_id = base36_to_int(item_id)
-    item = get_object_or_404(Item, pk=item_id)
+    item = get_object_or_404(Item.objects.select_related('category', 'profile'), pk=item_id)
 
     if request.user.is_authenticated():
         try:
@@ -95,13 +95,13 @@ def opinion_set(request, item_id, rating):
     # this should be forwarded to a server which does this kind of work
     #  and not done during the client request
     # also, this should update similarities
-    action = Action()
-    action.save()
-    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item, defaults={'action': action})
+    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item)
     old_rating = opinion.rating
     opinion.rating = rating
-    opinion.action = action
     opinion.save()
+
+    action = Action(type=1, opinion=opinion)
+    action.save()
 
     if created or rating != old_rating:
         delta = {item_id: ('set', old_rating, rating)}

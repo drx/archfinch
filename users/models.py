@@ -82,12 +82,15 @@ class User(BaseUser):
         #      similarity: similarity between the user and self
         recommended = Item.objects.raw("""
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
-             SUM((mo.rating-3)*ms.value) AS recommendation
+             SUM((mo.rating-3)*ms.value) AS recommendation,
+             mc.element_singular AS category_element
             FROM main_similarity ms
              INNER JOIN main_opinion mo
               ON ms.user2_id=mo.user_id
              INNER JOIN main_item mi
               ON mo.item_id=mi.id
+             INNER JOIN main_category mc
+              ON mc.id=mi.category_id
             WHERE ms.user1_id=%s
              AND ms.user2_id!=%s
              AND ms.value > 0
@@ -95,7 +98,7 @@ class User(BaseUser):
               (SELECT 1 FROM main_opinion mo2
                WHERE mo2.item_id=mi.id AND mo2.user_id=%s)
              """+where+"""
-            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name
+            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
             ORDER BY recommendation DESC""",
             params)
 
