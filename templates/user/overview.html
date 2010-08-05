@@ -14,13 +14,23 @@
 
 {% block content %}
 
+{% if your_profile %}
+<h1>Welcome {{ viewed_user.username }}</h1><br />
+{% endif %}
+
+{% if not user.is_authenticated %}
+<div class="big" style="color: #000000">
+    <p>See how similar you are to {{ viewed_user.username }}. <a href="/">Get an account</a> on Archfinch.</p>
+</div>
+{% endif %}
+
 <div id="content_left">
 
 {% for opinion in opinions %}
 
 <div class="box opinion">
     <div class="category_element">
-        {% if your_profile %}
+        {% if your_profile or not user.is_authenticated %}
         {{ opinion.item.category.element_singular|capfirst }}
         {% else %}
         {{ opinion.category_singular|capfirst }}
@@ -31,6 +41,7 @@
     <span><a href="{% url main.views.item opinion.item.id|base36 opinion.item|slugify %}">{{ opinion.item }}</a></span>
 
     </div>
+    {% if user.is_authenticated %}
     <div class="user_opinion" item="{{ opinion.item.id|base36 }}">
 
     {% if not your_profile %}
@@ -53,8 +64,14 @@
     <div class="rating_small_hint" id="rsh_{{ opinion.item.id|base36 }}"></div>
     <img src="/site_media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ opinion.item.id|base36 }}">
     </div>
+    {% endif %}
 </div>
-
+{% empty %}
+    <div class="big">
+        <p>Rate some things!</p>
+        <form action="{% url search.views.query %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input type='submit' value='Search'></form>
+        <p>The more you rate, the more accurately we can recommend you new things.</p>
+    </div>
 {% endfor %}
 {% if left > 0 %}
     <span class="smalltext">

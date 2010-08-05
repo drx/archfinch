@@ -72,26 +72,9 @@ def query(request):
         category_counts.append({'category': categories[cat_id], 'count': cat_count})
 
     category_counts.sort(key=lambda x: x['count'], reverse=True)
-
-    if request.user.is_authenticated():
-        user_categories = request.user.categories()
-    else:
-        user_categories = set()
     
-    #results = results.annotate(Count('opinion')).extra(
-    #    select={'is_exact': "name ILIKE %s"},
-    #    select_params=(title,)
-    #    ).order_by('-is_exact', '-opinion__count', 'name')[start:start+n]
-
     results = results[start:start+n]
 
     left = count-(start+n)
 
-    if request.user.is_authenticated():
-        return render_to_response('search/results.html', locals(),
-            context_instance=RequestContext(request))
-
-    else:
-        return render_to_response('search/results_anonymous.html',
-            {'query': q, 'results': results},
-            context_instance=RequestContext(request))
+    return render_to_response('search/results.html', locals(), context_instance=RequestContext(request))

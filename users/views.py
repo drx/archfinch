@@ -15,6 +15,7 @@ def get_max_similarity(user):
 
     return locals()
 
+
 def overview(request, username, category_slug=None, start=None, n=None):
     viewed_user = get_object_or_404(User, username=username)
 
@@ -33,45 +34,41 @@ def overview(request, username, category_slug=None, start=None, n=None):
     else:
         category = None
 
-    if request.user.is_authenticated():
-        categories = viewed_user.categories()
+    categories = viewed_user.categories()
+    your_profile = False
+    if request.user==viewed_user or not request.user.is_authenticated():
         if request.user==viewed_user:
             your_profile = True
 
-            opinions = Opinion.objects.filter(user__exact=request.user
-                ).select_related('item__category').order_by('-rating','item__name')
-            if category is not None:
-                opinions = opinions.filter(item__category=category)
+        opinions = Opinion.objects.filter(user__exact=viewed_user
+            ).select_related('item__category').order_by('-rating','item__name')
+        if category is not None:
+            opinions = opinions.filter(item__category=category)
 
-            similarity = None
-            similarity_max = 10
-        else:
-            your_profile = False
-            opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
+        similarity = None
+        similarity_max = 10
 
-            # this is only for testing and should be removed
-            Similarity.objects.update_user_pair(viewed_user, request.user)
-            #Similarity.objects.update_user(viewed_user)
-
-            similarity_max = get_max_similarity(request.user)
-
-            try:
-                similarity = viewed_user.similarity_set.get(
-                    user2=request.user.id).value
-            except ObjectDoesNotExist:
-                similarity = None
-
-        count = len(list(opinions))
-        left = count-(start+n)
-        opinions = opinions[start:start+n]
-
-        return render_to_response('user/overview.html',
-            locals(), context_instance=RequestContext(request))
     else:
-        opinions = []  # TODO: fix this
-        return render_to_response('user/overview_anonymous.html',
-            {'viewed_user': viewed_user, 'opinions': opinions},
-            context_instance=RequestContext(request))
+        opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
+
+        # this is only for testing and should be removed
+        Similarity.objects.update_user_pair(viewed_user, request.user)
+        #Similarity.objects.update_user(viewed_user)
+
+        similarity_max = get_max_similarity(request.user)
+
+        try:
+            similarity = viewed_user.similarity_set.get(
+                user2=request.user.id).value
+        except ObjectDoesNotExist:
+            similarity = None
+
+    count = len(list(opinions))
+    left = count-(start+n)
+    opinions = opinions[start:start+n]
+
+    return render_to_response('user/overview.html',
+        locals(), context_instance=RequestContext(request))
 
 
 def likes_gen(users, request_user):
@@ -114,5 +111,4 @@ def similar(request, start=None, n=None):
 
         return render_to_response('user/similar.html', locals(), context_instance=RequestContext(request))
     else:
-        return render_to_response('user/similar_anonymous.html',
-            context_instance=RequestContext(request))
+        return render_to_response('user/similar_anonymous.html', context_instance=RequestContext(request))

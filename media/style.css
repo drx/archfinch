@@ -278,10 +278,19 @@ td
 {
     color: #0099ff;
 }
-#search
+#search, #search_inline
 {
     border: 2px solid #0099ff;
+}
+#search
+{
     font-weight: bold;
+}
+#search_inline
+{
+    margin-right: 5px;
+    font-weight: normal;
+    height: 26px;
 }
 #topnav
 {

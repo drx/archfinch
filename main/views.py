@@ -5,15 +5,14 @@ from django.utils.http import base36_to_int
 from main.models import Item, Opinion, Action, Similarity, Category
 from hive.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
 
 def welcome(request):
     if request.user.is_authenticated():
-        return render_to_response("main/welcome.html",
-            context_instance=RequestContext(request))
+        return redirect(reverse('user-overview-simple', args=[request.user.username]))
     else:
-        return render_to_response("main/welcome_anonymous.html",
-            context_instance=RequestContext(request))
+        return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
 
 
 @login_required
@@ -72,11 +71,9 @@ def recommend(request, category_slug=None, start=None, n=None):
         left = count-(start+n)
         recommendations = recommendations[start:start+n]
 
-        return render_to_response("main/recommend.html",
-            locals(), context_instance=RequestContext(request))
+        return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
     else:
-        return render_to_response("main/recommend_anonymous.html",
-            context_instance=RequestContext(request))
+        return render_to_response("main/recommend_anonymous.html", context_instance=RequestContext(request))
 
 
 def opinion_set(request, item_id, rating):
@@ -91,8 +88,6 @@ def opinion_set(request, item_id, rating):
     item = get_object_or_404(Item, pk=item_id)
 
     if not request.user.is_authenticated():
-        # perhaps this is an opportunity to capture a yet unregistered user
-        #  and shouldn't be an error
         json = simplejson.dumps({'success': False,
             'error_msg': 'You need to be logged in to set a rating.'})
         return HttpResponse(json, mimetype='application/json')
@@ -102,8 +97,7 @@ def opinion_set(request, item_id, rating):
     # also, this should update similarities
     action = Action()
     action.save()
-    opinion, created = Opinion.objects.get_or_create(user=request.user,
-        item=item, defaults={'action': action})
+    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item, defaults={'action': action})
     old_rating = opinion.rating
     opinion.rating = rating
     opinion.action = action

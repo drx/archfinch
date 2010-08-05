@@ -28,6 +28,13 @@
     <div class="title"><a href="{% url main.views.item item.id|base36 item|slugify %}">{{ item }}</a></div>
     <div class="category_element">{{ item.category.element_singular|capfirst }}</div>
     </p>
+{% empty %}
+    {% if not category %}
+        <div class="big">
+            <p>We don't know you well enough to recommend you anything.
+            <p>We would like to, though, so please consider rating more stuff.</p>
+        </div>
+    {% endif %}
 {% endfor %}
 {% if left > 0 %}
     <span class="smalltext">

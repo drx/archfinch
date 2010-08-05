@@ -44,7 +44,6 @@ def signup_ajax(request):
             data['username'] = new_user.username
 
         else:
-            #TODO: make this human readable
             data['error_msg'] = error_msg(form.errors)
     else:
         data['error_msg'] = 'Wrong request method'
@@ -76,7 +75,6 @@ def login_ajax(request):
             data['username'] = form.cleaned_data['username']
 
         else:
-            #TODO: make this human readable
             data['error_msg'] = error_msg(form.errors)
 
     else:
@@ -84,10 +82,6 @@ def login_ajax(request):
     
     json = simplejson.dumps(data)
     return HttpResponse(json, mimetype='application/json')
-
-
-def preferences(request):
-    pass
 
 
 def update_similarities(request):

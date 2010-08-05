@@ -73,7 +73,7 @@ class OpinionManager(models.Manager):
 class Opinion(models.Model):
     user = models.ForeignKey(User)
     item = models.ForeignKey(Item)
-    action = models.ForeignKey(Action, unique=True)
+    action = models.OneToOneField(Action)
 
     RATING_CHOICES = (
         (1, 'Hate it'),
@@ -88,27 +88,7 @@ class Opinion(models.Model):
     objects = OpinionManager()
 
     def __unicode__(self):
-        return "%s gave %s a rating of %d." % (self.user.username,
-            self.item.name, self.rating)
-
-
-class Word(models.Model):
-    word = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return self.word
-
-
-class Tag(models.Model):
-    user = models.ForeignKey(User)
-    item = models.ForeignKey(Item)
-    action = models.ForeignKey(Action, unique=True)
-
-    word = models.ForeignKey(Word)
-
-    def __unicode__(self):
-        return "%s tagged %s %s." % (self.user.username,
-            self.item.name, self.word.word)
+        return "%s gave %s a rating of %d." % (self.user.username, self.item.name, self.rating)
 
 
 class SimilarityManager(models.Manager):
@@ -126,11 +106,12 @@ class SimilarityManager(models.Manager):
         '''
 
         items = list(delta.iterkeys())
-        users = Opinion.objects.filter(item__in=items).values_list('user',
-            flat=True)
+        users = Opinion.objects.filter(item__in=items).values_list('user', flat=True)
 
         for user2_id in users:
             user2 = User.objects.get(pk=user2_id)
+
+            # improve this
             self.update_user_pair(user, user2)
 
     def update_user_pair(self, user1, user2):

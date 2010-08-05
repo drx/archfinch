@@ -6,6 +6,13 @@
 
 <h1>People most similar to you.</h1>
 
+{% if not similar_users %}
+<div class="big">
+    <p>We couldn't find anyone similar to you.</p>
+    <p>Perhaps you should rate more stuff?</p>
+</div>
+{% endif %}
+
 <table>
 {% for similarity in similar_users %}
 <tbody class='box'>

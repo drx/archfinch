@@ -120,7 +120,12 @@ $(document).ready(function(){
                 }
                 if (data['success'])
                 {
-                    window.location.replace("/")
+                    src = "/"
+                    if (next)
+                    {
+                        src = next
+                    }
+                    window.location.replace(src)
                 }
                 else
                 {

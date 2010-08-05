@@ -5,8 +5,10 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.utils.http import base36_to_int
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def edit(request, page_id=None, item_id=None):
     '''
     Lets the user edit a wiki page.

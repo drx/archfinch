@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import (User as BaseUser,
-    UserManager as BaseUserManager)
+from django.contrib.auth.models import User as BaseUser, UserManager as BaseUserManager
 from main.models import Opinion, Similarity, Item
 
 
@@ -25,7 +24,7 @@ class User(BaseUser):
          similarity.
         '''
         similar_users = Similarity.objects.filter(user1__exact=self).exclude(
-            user2__exact=self).filter(value__gt=0).order_by('-value')
+            user2__exact=self).filter(value__gt=0).order_by('-value', 'user2')
         return similar_users
 
 
