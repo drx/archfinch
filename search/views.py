@@ -3,11 +3,15 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.db.models import Count, Q
 from djangosphinx.apis import current as djangosphinx_api
+from djangosphinx.models import SearchError
 from archfinch.main.models import Item, Category
 import re
 
 
 def query(request):
+    def invalid_search():
+        return render_to_response('search/invalid.html', locals(), context_instance=RequestContext(request))
+
     query = request.GET['q']
     start = int(request.GET.get('s', 0))
     n = int(request.GET.get('n', 10))
@@ -58,8 +62,13 @@ def query(request):
         except IndexError:
             from django.http import Http404
             raise Http404
+        except SearchError:
+            return invalid_search()
 
-    count = results.count()
+    try:
+        count = results.count()
+    except SearchError:
+        return invalid_search()
 
     results_categories = Item.search.query(title).group_by('category_id', djangosphinx_api.SPH_GROUPBY_ATTR)
     cats = map(lambda x: x._sphinx['attrs']['@groupby'], results_categories)

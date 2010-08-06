@@ -95,7 +95,8 @@ def opinion_set(request, item_id, rating):
     # this should be forwarded to a server which does this kind of work
     #  and not done during the client request
     # also, this should update similarities
-    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item)
+    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item,
+        defaults={'rating': rating})
     old_rating = opinion.rating
     opinion.rating = rating
     opinion.save()

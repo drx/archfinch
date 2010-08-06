@@ -47,7 +47,7 @@ def overview(request, username, category_slug=None, start=None, n=None):
         if category is not None:
             opinions = opinions.filter(item__category=category)
 
-        similarity = None
+        similarity = 0
         similarity_max = 10
 
     else:
@@ -59,7 +59,7 @@ def overview(request, username, category_slug=None, start=None, n=None):
             similarity = viewed_user.similarity_set.get(
                 user2=request.user.id).value
         except ObjectDoesNotExist:
-            similarity = None
+            similarity = 0
 
     count = len(list(opinions))
     left = count-(start+n)
