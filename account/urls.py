@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('hive.account.views',
+urlpatterns = patterns('account.views',
 
     url(r'^signup$', 'signup', name='signup'),
 

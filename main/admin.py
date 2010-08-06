@@ -1,4 +1,4 @@
-from hive.main.models import Category, Item, ItemProfile, Opinion, Action, Similarity
+from main.models import Category, Item, ItemProfile, Opinion, Action, Similarity
 from django.contrib import admin
 
 

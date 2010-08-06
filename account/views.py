@@ -1,4 +1,4 @@
-﻿from hive.account.models import SignupForm, AuthenticationForm
+﻿from account.models import SignupForm, AuthenticationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -13,7 +13,7 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            new_user.backend = 'hive.users.auth_backends.ModelBackend'
+            new_user.backend = 'users.auth_backends.ModelBackend'
             auth_login(request, new_user)
 
             return HttpResponseRedirect("/")
@@ -40,7 +40,7 @@ def signup_ajax(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            new_user.backend = 'hive.users.auth_backends.ModelBackend'
+            new_user.backend = 'users.auth_backends.ModelBackend'
             auth_login(request, new_user)
 
             data['success'] = True

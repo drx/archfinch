@@ -1,4 +1,4 @@
-from hive.wiki.models import Page, Revision, RevisionText
+from wiki.models import Page, Revision, RevisionText
 from django.contrib import admin
 
 admin.site.register(Page)
