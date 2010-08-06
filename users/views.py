@@ -51,10 +51,6 @@ def overview(request, username, category_slug=None, start=None, n=None):
     else:
         opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
 
-        # this is only for testing and should be removed
-        Similarity.objects.update_user_pair(viewed_user, request.user)
-        #Similarity.objects.update_user(viewed_user)
-
         similarity_max = get_max_similarity(request.user)
 
         try:

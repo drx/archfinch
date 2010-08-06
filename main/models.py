@@ -104,24 +104,28 @@ class SimilarityManager(models.Manager):
         for user2 in User.objects.all():
             self.update_user_pair(user, user2)
 
-    def update_user_delta(self, user, delta):
+    def update_item_delta(self, user, delta):
         '''
         Update similarity values for a user against all other users after
          an opinion set update, represented by a delta dict.
         '''
+        from django.db import connection, transaction
+
+        cursor = connection.cursor()
 
         items = list(delta.iterkeys())
-        users = Opinion.objects.filter(item__in=items).values_list('user', flat=True)
+        for item in items:
+            cursor.execute("SELECT update_item_rated(%s, %s);", [user.id, item])
 
-        for user2_id in users:
-            user2 = User.objects.get(pk=user2_id)
+        transaction.commit_unless_managed()
 
-            # improve this
-            self.update_user_pair(user, user2)
 
     def update_user_pair(self, user1, user2):
         '''
         Update similarity values for a pair of users.
+
+        NOTE: This has been superseded by update_item_delta.
+         Never use this for production.
         '''
         from django.db import connection
         if user1 == user2:

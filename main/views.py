@@ -105,7 +105,7 @@ def opinion_set(request, item_id, rating):
 
     if created or rating != old_rating:
         delta = {item_id: ('set', old_rating, rating)}
-        Similarity.objects.update_user_delta(request.user, delta)
+        Similarity.objects.update_item_delta(request.user, delta)
 
     json = simplejson.dumps({'success': True})
     return HttpResponse(json, mimetype='application/json')
@@ -132,7 +132,7 @@ def opinion_remove(request, item_id):
     opinion.delete()
 
     delta = {item_id: ('remove', old_rating)}
-    Similarity.objects.update_user_delta(request.user, delta)
+    Similarity.objects.update_item_delta(request.user, delta)
 
     json = simplejson.dumps({'success': True})
     return HttpResponse(json, mimetype='application/json')
