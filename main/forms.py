@@ -3,7 +3,7 @@ from django.template.defaultfilters import slugify
 from django.utils.http import int_to_base36
 from django.contrib.formtools.wizard import FormWizard
 from django import forms
-from main.models import Item
+from archfinch.main.models import Item
 from django.shortcuts import redirect
 
 

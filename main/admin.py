@@ -1,4 +1,4 @@
-from main.models import Category, Item, ItemProfile, Opinion, Action, Similarity
+from archfinch.main.models import Category, Item, ItemProfile, Opinion, Action, Similarity
 from django.contrib import admin
 
 

@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('account.views',
+urlpatterns = patterns('archfinch.account.views',
 
     url(r'^signup$', 'signup', name='signup'),
 

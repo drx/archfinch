@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from users.models import User
 from django import forms
+from archfinch.users.models import User
 
 
 class SignupForm(forms.ModelForm):

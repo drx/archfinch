@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User as BaseUser, UserManager as BaseUserManager
-from main.models import Opinion, Similarity, Item
+from archfinch.main.models import Opinion, Similarity, Item
 
 
 class User(BaseUser):

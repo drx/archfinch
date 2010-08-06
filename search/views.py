@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.db.models import Count, Q
 from djangosphinx.apis import current as djangosphinx_api
-from main.models import Item, Category
+from archfinch.main.models import Item, Category
 import re
 
 

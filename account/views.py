@@ -1,12 +1,12 @@
-﻿from account.models import SignupForm, AuthenticationForm
-from django.http import HttpResponse, HttpResponseRedirect
+﻿from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from main.models import Similarity
 from django.contrib.auth import login as auth_login
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.utils import simplejson
+from archfinch.main.models import Similarity
+from archfinch.account.models import SignupForm, AuthenticationForm
 
 def signup(request):
     if request.method == 'POST':

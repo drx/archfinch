@@ -1,16 +1,18 @@
 from django.http import HttpResponse
-#from django.contrib.auth.models import User
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
-from main.models import Opinion, Similarity, Category
-from users.models import User
+from archfinch.main.models import Opinion, Similarity, Category
+from archfinch.users.models import User
 from django.db.models import Max
 
 
 def get_max_similarity(user):
     this_user = User.objects.filter(pk=user).annotate(Max('similarity__value')).values_list('similarity__value__max', flat=True)[0]
-    all_users = Similarity.objects.order_by('-value')[0].value
+    try:
+        all_users = Similarity.objects.order_by('-value')[0].value
+    except IndexError:
+        all_users = 0
     potential = user.opinion_set.count()
 
     return locals()

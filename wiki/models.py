@@ -1,6 +1,6 @@
 from django import forms
 from django.db import models
-from users.models import User
+from archfinch.users.models import User
 
 
 class Page(models.Model):

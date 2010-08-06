@@ -2,8 +2,8 @@ from django.shortcuts import render_to_response, get_object_or_404, HttpResponse
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.http import base36_to_int
-from main.models import Item, Opinion, Action, Similarity, Category
-from main.forms import AddItemForm1, AddItemForm2, AddItemWizard
+from archfinch.main.models import Item, Opinion, Action, Similarity, Category
+from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
