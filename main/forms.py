@@ -3,7 +3,7 @@ from django.template.defaultfilters import slugify
 from django.utils.http import int_to_base36
 from django.contrib.formtools.wizard import FormWizard
 from django import forms
-from archfinch.main.models import Item
+from archfinch.main.models import Item, ItemProfile
 from django.shortcuts import redirect
 
 
@@ -20,6 +20,10 @@ class AddItemForm2(forms.Form):
 class AddItemWizard(FormWizard):
     def done(self, request, form_list):
         item = form_list[0].save()
+        item_profile = ItemProfile(item=item)
+        item_profile.save()
+        item.profile = item_profile
+        item.save()
         return redirect(reverse('item', args=[int_to_base36(item.id), slugify(item.name)]))
 
     def get_template(self, step):
