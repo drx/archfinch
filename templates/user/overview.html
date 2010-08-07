@@ -52,19 +52,35 @@
 {% endwith %}
 {% endwith %}
 {% empty %}
+{% if your_profile %}
+    {% if not start %}
     <div class="big">
         <p>Rate some things!</p>
         <form action="{% url search.views.query %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input type='submit' value='Search'></form>
         <p>The more you rate, the more accurately we can recommend you new things.</p>
     </div>
+    {% endif %}
+{% else %}
+    <div class="big">
+        <p>This user has not rated anything yet.</p>
+    </div>
+{% endif %}
 {% endfor %}
 {% if left > 0 %}
     <span class="smalltext">
     <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
     {% if left <= 100 %}
-        <a href="{% url user-overview-paged viewed_user.username category_slug|default:"" start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% if category_slug %}
+            <a href="{% url user-overview-slugged-paged viewed_user.username category_slug start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% else %}
+            <a href="{% url user-overview-paged viewed_user.username start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% endif %}
     {% else %}
-        Show the next <a href="{% url user-overview-paged viewed_user.username category_slug|default:"" start|add:n 100 %}">100</a>.
+        {% if category_slug %}
+            Show the next <a href="{% url user-overview-slugged-paged viewed_user.username category_slug|default:"" start|add:n 100 %}">100</a>.
+        {% else %}
+            Show the next <a href="{% url user-overview-paged viewed_user.username start|add:n 100 %}">100</a>.
+        {% endif %}
     {% endif %}
     </p></span>
 {% endif %}
