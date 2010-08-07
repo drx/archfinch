@@ -79,7 +79,7 @@ $(document).ready(function(){
         }
         else
         {
-            self = this
+            var self = this
             $.getJSON("/opinion/set/"+item_id+"/"+rating, function(data){
                 ld.hide()
                 if ($(self).parents(".terse").length)
@@ -108,7 +108,7 @@ $(document).ready(function(){
     $("#loginform").submit(function(e)
     {
         $(this).children(".loading").show()
-        self = this
+        var self = this
         $.ajax({
             url: "/account/login/ajax",
             dataType: "json",
@@ -150,7 +150,7 @@ $(document).ready(function(){
     {
         id = $(this).attr("id")
         $(this).children(".loading").show()
-        self = this
+        var self = this
         $.ajax({
             url: "/account/signup/ajax",
             dataType: "json",

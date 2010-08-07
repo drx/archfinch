@@ -1,1 +1,1 @@
-production = True
+production = False
