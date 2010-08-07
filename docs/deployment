@@ -6,4 +6,6 @@ Note: things change. This list will get incomplete the second I deploy.
 2. Install mod_wsgi
 3. Install postgresql
 4. Install django
-
+5. Install psycopg2
+6. Install sphinx
+7. Install django-sphinx

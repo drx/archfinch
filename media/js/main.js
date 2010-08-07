@@ -69,9 +69,9 @@ $(document).ready(function(){
         rating = $(this).html()
         ld = $("#ld_"+item_id)
         ld.show()
+        opinion = $(this).parents(".opinion")
         if (rating == 'x')
         {
-            opinion = $(this).parents(".opinion")
             $.getJSON("/opinion/remove/"+item_id, function(data){
                 opinion.hide('slow')
                 ld.hide()
@@ -82,6 +82,12 @@ $(document).ready(function(){
             self = this
             $.getJSON("/opinion/set/"+item_id+"/"+rating, function(data){
                 ld.hide()
+                if ($(self).parents(".terse").length)
+                {
+                    $(self).parent().hide()
+                    opinion.hide('slow')
+                    return true;
+                }
                 $(self).siblings().removeClass("rated")
                 $(self).addClass("rated")
                 yr = $("#yr_"+item_id)

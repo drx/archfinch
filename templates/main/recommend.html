@@ -24,10 +24,17 @@
 </h1>
 
 {% for item in recommendations %}
-    <p>
-    <div class="title"><a href="{% url main.views.item item.id|base36 item|slugify %}">{{ item }}</a></div>
-    <div class="category_element">{{ item.category_element|capfirst }}</div>
-    </p>
+    {% with item.id as item_id %} 
+    {% with 1 as yr_big %}
+    {% with 1 as terse_layout %}
+    {% with item.name as item_name %}
+    {% with item.category_element as category_singular %}
+        {% include "includes/opinionbox.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
 {% empty %}
     {% if not category %}
         <div class="big">

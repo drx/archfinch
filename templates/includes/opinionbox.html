@@ -1,0 +1,46 @@
+{% load base36 %}
+<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %}">
+    {% if terse_layout %}
+        <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div>
+        <div class="category_element" style="width: 100px">{{ category_singular|capfirst }}</div>
+    {% else %}    
+    <div class="category_element">
+        {{ category_singular|capfirst }}
+    </div>
+    <div class="rating rating{{ rating }}" {% if yr_big %}id="yr_{{ item_id|base36 }}"{% endif %}>{{ rating }}</div>
+    <div class="title">
+    <span><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></span>
+
+    </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <div class="user_opinion" item="{{ item_id|base36 }}">
+
+    {% if not yr_big %}
+    <div class="your_opinion {% if not your_rating %}nodisplay{% endif %}">
+        <span class="rating_label">Your opinion:</span> <div id="yr_{{ item_id|base36 }}" class="rating_small rating{{ your_rating }}">{{ your_rating }}</div>
+    </div>
+    {% endif %}
+
+    {% if terse_layout %}
+    <div class="rating_small_hint" id="rsh_{{ item_id|base36 }}"></div>
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item_id|base36 }}">
+    {% endif %}
+    <div class="user_rate" {% if terse_layout %}style="float: right"{% endif %}>
+        <span class="rating_label">Rate:</span>
+        <span class="rating_small rate {% if your_rating == 1 %}rated{% endif %} rating1">1</span>
+        <span class="rating_small rate {% if your_rating == 2 %}rated{% endif %} rating2">2</span>
+        <span class="rating_small rate {% if your_rating == 3 %}rated{% endif %} rating3">3</span>
+        <span class="rating_small rate {% if your_rating == 4 %}rated{% endif %} rating4">4</span>
+        <span class="rating_small rate {% if your_rating == 5 %}rated{% endif %} rating5">5</span>
+        {% if your_rating %}
+        <span class="rating_small rate delete">x</span>
+        {% endif %}
+    </div>
+    {% if not terse_layout %}
+    <div class="rating_small_hint" id="rsh_{{ item_id|base36 }}"></div>
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item_id|base36 }}">
+    {% endif %}
+    </div>
+    {% endif %}
+</div>

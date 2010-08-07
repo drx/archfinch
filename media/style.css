@@ -84,18 +84,18 @@ ul.menu li
     display: inline;
     margin-left: 1em;
 }
-.opinion .title, .opinion .rating_verbose
+.widebox .title, .widebox .rating_verbose
 {
     color: #333333;
     padding: 8px 4px 4px 4px;
     margin: 2px;
 }
-.opinion .title a
+.widebox .title a
 {
     color: #333333;
     text-decoration: none;
 }
-.opinion .category_element
+.widebox .category_element
 {
     float: right;
     padding: 4px 8px 4px 4px;
@@ -153,7 +153,7 @@ td
     font-size: 11px;
     color: #aaaaaa;
 }
-.opinion .category_element
+.widebox .category_element
 {
     color: #bbbbbb;
     margin-left: 1em;
@@ -238,6 +238,28 @@ td
 .user_rate
 {
     display: none;
+}
+.terse .user_rate
+{
+    float: right;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+.terse .user_opinion
+{
+    float: right;
+}
+.terse .category_element
+{
+    float: left;
+}
+.terse .title, .terse .category_element
+{
+    margin-left: 5px;
+}
+.terse
+{
+    padding: 2px 2px 30px 2px;
 }
 .highlight .user_rate
 {
