@@ -2,6 +2,10 @@
 <div class="similarity">
 <div class="bar" style="width: {% widthratio similarity similarity_max.this_user 60 %}px"></div>
 <div class="bar" style="width: {% widthratio similarity similarity_max.all_users 40 %}px"></div>
+{% if similarity > similarity_max.potential %}
+<div class="bar" style="width: 20px"></div>
+{% else %}
 <div class="bar" style="width: {% widthratio similarity similarity_max.potential 20 %}px"></div>
+{% endif %}
 </div>
 </div>

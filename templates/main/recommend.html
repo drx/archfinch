@@ -40,9 +40,17 @@
     <span class="smalltext">
     <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
     {% if left <= 100 %}
-        <a href="{% url recommend-paged category_slug|default:"" start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% if category_slug %}
+            <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% else %}
+            <a href="{% url recommend-paged start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% endif %}
     {% else %}
-        Show the next <a href="{% url recommend-paged category_slug|default:"" start|add:n 100 %}">100</a>.
+        {% if category_slug %}
+            Show the next <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">100</a>.
+        {% else %}
+            Show the next <a href="{% url recommend-paged start|add:n 100 %}">100</a>.
+        {% endif %}
     {% endif %}
     </p>
     </span>
