@@ -23,6 +23,10 @@
     {% endif %}
 
     {% if terse_layout %}
+    {% if your_rating %}
+    <div class="your_opinion"><div id="yr_{{ item_id|base36 }}" class="rating_small rating{{ your_rating }}" style='margin-top: -10px'>{{ your_rating }}</div></div>
+    {% endif %}
+
     <div class="rating_small_hint" id="rsh_{{ item_id|base36 }}"></div>
     <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item_id|base36 }}">
     {% endif %}

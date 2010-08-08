@@ -82,12 +82,6 @@ $(document).ready(function(){
             var self = this
             $.getJSON("/opinion/set/"+item_id+"/"+rating, function(data){
                 ld.hide()
-                if ($(self).parents(".terse").length)
-                {
-                    $(self).parent().hide()
-                    opinion.hide('slow')
-                    return true;
-                }
                 $(self).siblings().removeClass("rated")
                 $(self).addClass("rated")
                 yr = $("#yr_"+item_id)
@@ -95,6 +89,12 @@ $(document).ready(function(){
                 yr.addClass("rating"+rating)
                 yr.html(rating).show()
                 yr.parent().removeClass("nodisplay")
+                if ($(self).parents(".terse").length)
+                {
+                    $(self).parent().hide()
+                    opinion.hide('slow')
+                    return true;
+                }
                 
                 /* item profile */
                 yr.siblings(".rating_verbose").html(rating_to_hint(rating))

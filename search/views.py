@@ -43,6 +43,10 @@ def query(request):
     title = ' '.join(words)
 
     results = Item.search.query(title).order_by('-opinion_count', '@weight').select_related('category')
+    if request.user.is_authenticated():
+        results = results.extra(
+            select={'rating': 'SELECT COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%s AND mo.item_id=main_item.id))'},
+            select_params=[request.user.id])
 
     if 'in' in modifiers:
         cat_name = modifiers['in']
