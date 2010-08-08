@@ -101,10 +101,14 @@ ul.menu li
     padding: 4px 8px 4px 4px;
     margin: 2px;
 }
+.widebox
+{
+    height: 64px;
+}
 .box
 {
-    padding-bottom: 1.5em;
     width: 40em;
+    clear: both;
 }
 .box.itembox
 {
@@ -267,7 +271,7 @@ td
 }
 .terse
 {
-    padding: 2px 2px 30px 2px;
+    padding: 2px 2px 0px 2px;
 }
 .highlight .user_rate
 {
