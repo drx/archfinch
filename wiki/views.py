@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.utils.http import base36_to_int
 from django.contrib.auth.decorators import login_required
+from django.template.defaultfilters import slugify
 
 
 @login_required
@@ -22,7 +23,7 @@ def edit(request, page_id=None, item_id=None):
     if page_id is None:
         item = get_object_or_404(Item, pk=base36_to_int(item_id))
         page = item.profile.page
-        redirect_url = reverse('item', args=[item_id])
+        redirect_url = reverse('item', args=[item_id, slugify(item.name)])
     else:
         page = get_object_or_404(Page, pk=base36_to_int(page_id))
         redirect_url = reverse('wiki-page', args=[page_id])
