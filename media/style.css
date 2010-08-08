@@ -114,6 +114,7 @@ ul.menu li
 {
     width: 100%;
     padding: 4px;
+    clear: none;
 }
 .user_opinion
 {
