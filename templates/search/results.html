@@ -53,6 +53,25 @@
         {% endfor %}
         </p>
     {% endif %}
+    <div class="smalltext">
+        <br />
+        <div class="show">
+            <p>(<a href="#" class="showhide">search help</a>)</p>
+        </div>
+        <div class="hide" style='color: black'>
+            <p><b>Search help</b></p>
+            <p>
+            Phrases: <a href="/search?q={{ "\"lion king\""|urlencode }}">"lion king"</a> <br />
+            Filter by category: <a href="/search?q={{ "angel in:tv-shows"|urlencode }}">angel in:tv-shows</a> <br />
+            Exclude words: <a href="/search?q={{ "dexter -laboratory"|urlencode }}">dexter -laboratory</a> <br />
+            One OR the other: <a href="/search?q={{ "sonic | mario"|urlencode }}">sonic | mario</a> <br />
+            Title start: <a href="/search?q={{ "^hannibal"|urlencode }}">^hannibal</a><br />
+            Title end: <a href="/search?q={{ "of doom$"|urlencode }}">of doom$</a><br />
+            Word wildcards: <a href="/search?q={{ "alumin*"|urlencode }}">alumin*</a><br />
+            </p>
+            <p>(<a href="#" class="showhide">hide</a>)</p>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

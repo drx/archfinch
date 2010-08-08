@@ -199,6 +199,16 @@ $(document).ready(function(){
         })
     }
 
+    /* show hide */
+    $("a.showhide").click(function(e)
+    {
+        shown = $(this).parents(".show")
+        hidden = shown.siblings(".hide")
+        shown.removeClass('show').addClass('hide')
+        hidden.removeClass('hide').addClass('show')
+        e.preventDefault()  
+    })
+
     /* textarea resizer */
     if ($("textarea.resizable:not(.processed)").length > 0)
     {

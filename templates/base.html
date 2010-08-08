@@ -9,6 +9,7 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="/media/js/main.js"></script>
     {% block media %}{% endblock %}
+    {% if not debug %}
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -22,6 +23,7 @@
       })();
 
     </script>
+    {% endif %}
 </head>
 <body>
 <div id="wrap">
