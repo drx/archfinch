@@ -257,7 +257,7 @@ td
 {
     float: right;
 }
-.terse .category_element
+.terse .category_element, .terse .title
 {
     float: left;
 }
