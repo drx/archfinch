@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from djangosphinx.models import SphinxSearch
 
 
@@ -35,13 +34,24 @@ class ItemProfile(models.Model):
     page = models.ForeignKey('wiki.Page', null=True)
 
 
-class Action(models.Model):
-    time = models.DateTimeField(auto_now_add=True, unique=False)
-    opinion = models.ForeignKey('Opinion', null=True, blank=True)
+class Review(models.Model):
+    item = models.ForeignKey(Item)
+    user = models.ForeignKey('users.User')
+    text = models.TextField()
 
-    TYPE_CHOICES = (
-        (1, 'rating'),
-    )
+
+class Action(models.Model):
+    time = models.DateTimeField(auto_now=True, unique=False)
+    opinion = models.ForeignKey('Opinion', null=True, blank=True)
+    review = models.ForeignKey('Review', null=True, blank=True)
+    user = models.ForeignKey('users.User')
+
+    types = {
+        'rating': 1,
+        'review': 2,
+    }
+    types_reverse = dict((v,k) for k, v in types.items())
+    TYPE_CHOICES = types_reverse.items()
     type = models.IntegerField(choices=TYPE_CHOICES)
 
     def __unicode__(self):
@@ -56,7 +66,7 @@ class OpinionManager(models.Manager):
         '''
 
         where = ''
-        params = [viewer.id, viewed.id]
+        params = [viewed.id, viewer.id, viewed.id]
         if category is not None and category:
             where += ' AND mc.id = %s'
             params.append(category.id)
@@ -64,7 +74,8 @@ class OpinionManager(models.Manager):
         return self.raw("""
             SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,
              mc.element_singular AS category_singular,
-             mi.name AS item_name
+             mi.name AS item_name,
+             (EXISTS (SELECT 1 FROM main_review WHERE main_review.user_id = %s AND main_review.item_id = mi.id)) AS review
             FROM main_opinion m1
             LEFT JOIN main_opinion m2
              ON (m1.item_id=m2.item_id AND m2.user_id=%s)
@@ -78,7 +89,7 @@ class OpinionManager(models.Manager):
 
 
 class Opinion(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey('users.User')
     item = models.ForeignKey(Item)
 
     RATING_CHOICES = (
@@ -94,6 +105,16 @@ class Opinion(models.Model):
 
     def __unicode__(self):
         return "%s gave %s a rating of %d." % (self.user.username, self.item.name, self.rating)
+
+    def get_third_person(self):
+        third_person_choices = {
+            1: 'hates',
+            2: 'dislikes',
+            3: 'is neutral to',
+            4: 'likes',
+            5: 'loves',
+        }
+        return third_person_choices[self.rating]
 
 
 class SimilarityManager(models.Manager):
@@ -167,8 +188,8 @@ class SimilarityManager(models.Manager):
 
 
 class Similarity(models.Model):
-    user1 = models.ForeignKey(User)
-    user2 = models.ForeignKey(User, related_name="similarity_set2")
+    user1 = models.ForeignKey('users.User')
+    user2 = models.ForeignKey('users.User', related_name="similarity_set2")
     value = models.IntegerField(db_index=True)
 
     objects = SimilarityManager()

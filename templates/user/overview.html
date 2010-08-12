@@ -31,6 +31,7 @@
 {% with opinion.rating as rating %}
 {% with opinion.item_id as item_id %} 
 {% with your_profile as yr_big %}
+{% with opinion.review as review %}
 {% if your_profile or not user.is_authenticated %}
     {% with rating as your_rating %}
     {% with opinion.item.name as item_name %} {# opinion.item_name #}
@@ -48,6 +49,7 @@
     {% endwith %}
     {% endwith %}
 {% endif %}
+{% endwith %}
 {% endwith %}
 {% endwith %}
 {% endwith %}
@@ -104,6 +106,12 @@ Show only {{ viewed_user.username }}'s
 {% if not category_id %}{{ forloop.last|yesno:"or ," }}{% endif %}<a href="{% url user-overview-slugged viewed_user.username slug %}">{{ repr|nbsp }}</a>{{ forloop.last|yesno:",&#44;"|safe}}{% endfor %}{% if category_id %} or <a href="{% url user-overview-simple viewed_user.username %}">everything</a>.{% else %}.{% endif %}
 </div>
 {% endif %}
+
+{% with viewed_user.review_set.count as review_count %}
+    {% if review_count > 0 %}
+    <span style='font-size: 11px'>{{ viewed_user.username }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;them</a>.</span>
+    {% endif %}
+{% endwith %}
 
 </div>
 

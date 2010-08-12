@@ -45,6 +45,3 @@ class PageForm(forms.Form):
     text = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 100, 'rows': 20, 'class': 'resizable'})
     )
-
-    class Media:
-        js = ('js/textarea.js',)

@@ -1,13 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Editing 
-{% if item %}
-    {{ item }}
-{% else %}
-    {{ page }}
-{% endif %}
- - Archfinch
+Editing review on {{ item }} - Archfinch
 {% endblock %}
 
 {% block media %}
@@ -16,20 +10,13 @@ Editing
 
 {% block content %}
 
-<p>Editing 
-{% if item %}
-    <b>{{ item }}</b>
-{% else %}
-    <b>{{ page }}</b>
-{% endif %}
-</p>
+<p>Editing review on <b>{{ item }}</b></p>
 
 <form method="post">
 {% csrf_token %}
 <p>{{ form.text }}</p>
 <input type="submit" value="Edit" />
 </form>
-
 
 {% endblock %}
 

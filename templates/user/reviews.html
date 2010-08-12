@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load markup %}
+{% load base36 %}
+
+{% block title %}
+{% if single %}
+    {{ review_user.username }}'s review of {{ item.name }} - Archfinch
+{% else %}
+    {{ review_user.username }}'s reviews - Archfinch
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="content">
+
+{% for review in reviews %}
+    <h1><a href="{% url user-overview review_user.username %}">{{ review_user.username }}</a>'s review of <a href="{% url item review.item.id|base36 review.item.name|slugify %}">{{ review.item.name }}</a></h1>
+
+    {% if review.rating %}
+    <div style='float: left; width: 75%'>
+        <div class="rating rating{{ review.rating }}" id="yr_{{ review.item.id|base36 }}">{{ review.rating }}</div>
+        <div class="rating_verbose">{{ review_user.username }} {{ review.rating_verbose }} {{ review.item.name }}</div>
+        <div style="clear: both"></div>
+    </div>
+    {% endif %}
+    <p style='float: right'>{{ review.time|date }}</p>
+    <div class="article" style='clear: both'>
+    {{ review.text|markdown }}
+    </div>
+    <br /><br />
+{% endfor %}
+
+{% if not single and left > 0 %}
+    <span class="smalltext">
+    <p>There {{ left|pluralize:"is,are" }} {{ left }} more review{{ left|pluralize }}.
+    {% if left <= 10 %}
+        <a href="{% url user-reviews-paged review_user.username start|add:n 10 %}">Show {{ left|pluralize:"it,them" }}</a>.
+    {% else %}
+        Show the next <a href="{% url user-reviews-paged review_user.username start|add:n 10 %}">10</a>.
+    {% endif %}
+    </p></span>
+{% endif %}
+
+
+</div>
+
+{% endblock %}

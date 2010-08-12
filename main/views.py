@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 
 def welcome(request):
     if request.user.is_authenticated():
-        return redirect(reverse('user-overview-simple', args=[request.user.username]))
+        return redirect(reverse('user-overview', args=[request.user.username]))
     else:
         return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
 
@@ -101,7 +101,7 @@ def opinion_set(request, item_id, rating):
     opinion.rating = rating
     opinion.save()
 
-    action = Action(type=1, opinion=opinion)
+    action, created = Action.objects.get_or_create(type=Action.types['rating'], opinion=opinion, user=request.user)
     action.save()
 
     if created or rating != old_rating:
@@ -128,7 +128,7 @@ def opinion_remove(request, item_id):
         return HttpResponse(json, mimetype='application/json')
 
     # see a similar comment for opinion_set
-    opinion = Opinion.objects.get(user=request.user, item=item)
+    opinion = Opinion.objects.get(user=request.user, item=item, type=Action.types['rating'])
     old_rating = opinion.rating
     opinion.delete()
 

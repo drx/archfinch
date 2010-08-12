@@ -12,7 +12,8 @@
     </div>
     <div class="rating rating{{ rating }}" {% if yr_big %}id="yr_{{ item_id|base36 }}"{% endif %}>{{ rating }}</div>
     <div class="title">
-    <span><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></span>
+    <span><a href="{% url main.views.item item_id|base36 item_name|slugify %}" class="title">{{ item_name }}</a></span>
+    {% if review %}<span class="review"><a href="{% url review viewed_user.username item_id|base36 item_name|slugify %}">review</a></span>{% endif %}
 
     </div>
     {% endif %}
@@ -28,6 +29,14 @@
     {% if terse_layout %}
     <div class="rating_small_hint" id="rsh_{{ item_id|base36 }}"></div>
     <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item_id|base36 }}">
+    {% else %}
+    <div class="reviewthis"><a href="{% url review-edit item_id|base36 %}">
+        {% if your_profile and review %}
+        edit your review
+        {% else %}
+        write a review
+        {% endif %}
+    </a></div>
     {% endif %}
     <div class="user_rate" {% if terse_layout %}style="float: right"{% endif %}>
         <span class="rating_label">Rate:</span>

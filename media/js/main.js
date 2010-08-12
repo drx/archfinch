@@ -210,9 +210,7 @@ $(document).ready(function(){
     })
 
     /* textarea resizer */
-    if ($("textarea.resizable:not(.processed)").length > 0)
-    {
-        $('textarea.resizable:not(.processed)').TextAreaResizer();
-    }
+    $(".resizable").resizable({handles: "s"});
+
 });
 

@@ -84,13 +84,13 @@ ul.menu li
     display: inline;
     margin-left: 1em;
 }
-.widebox .title, .widebox .rating_verbose
+.widebox div.title, .rating_verbose
 {
     color: #333333;
     padding: 8px 4px 4px 4px;
     margin: 2px;
 }
-.widebox .title a
+.widebox .title a.title
 {
     color: #333333;
     text-decoration: none;
@@ -100,6 +100,26 @@ ul.menu li
     float: right;
     padding: 4px 8px 4px 4px;
     margin: 2px;
+}
+.widebox .reviewthis
+{
+    float: right;
+    padding: 4px 8px 4px 4px;
+    margin: 2px;
+    font-size: 11px;
+}
+.widebox .review
+{
+    margin-left: 10px;
+    font-size: 11px;
+}
+.widebox .reviewthis
+{
+    display: none;
+}
+.widebox.highlight .reviewthis
+{
+    display: block;
 }
 .widebox
 {
@@ -401,13 +421,6 @@ input[type="text"], input[type="password"], input[type="submit"], textarea, sele
 }
 div.grippie
 {
-    background: #c0eeff no-repeat scroll center 2px;
-    border-color: #0099ff;
-    border-style: solid;
-    border-width: 0pt 1px 1px;
-    cursor: s-resize;
-    height: 9px;
-    overflow: hidden;
 }
 .big .left
 {
@@ -464,4 +477,14 @@ h2
 .hide
 {
     display: none;
+}
+.ui-resizable-s
+{
+    background: #c0eeff no-repeat scroll center 2px;
+    border-color: #0099ff;
+    border-style: solid;
+    border-width: 0pt 1px 1px;
+    cursor: s-resize;
+    height: 9px;
+    overflow: hidden;
 }
