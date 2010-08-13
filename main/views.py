@@ -128,7 +128,7 @@ def opinion_remove(request, item_id):
         return HttpResponse(json, mimetype='application/json')
 
     # see a similar comment for opinion_set
-    opinion = Opinion.objects.get(user=request.user, item=item, type=Action.types['rating'])
+    opinion = Opinion.objects.get(user=request.user, item=item)
     old_rating = opinion.rating
     opinion.delete()
 
