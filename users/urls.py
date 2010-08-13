@@ -12,6 +12,6 @@ urlpatterns = patterns('archfinch.users.views',
 
     url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)$', 'overview', name='user-overview-slugged'),
     url(r'^(?P<username>[\w@\+\.-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'overview', name='user-overview-paged'),
-    url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'overview', name='user-overview-slugged-aged'),
+    url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'overview', name='user-overview-slugged-paged'),
 
 )
