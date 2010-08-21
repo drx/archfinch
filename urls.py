@@ -18,12 +18,17 @@ urlpatterns = patterns('',
     (r'^account/', include('archfinch.account.urls')),
     (r'^wiki/', include('archfinch.wiki.urls')),
     (r'^user/', include('archfinch.users.urls')),
+    (r'^list/', include('archfinch.lists.urls')),
+
+    url(r'^lists$', 'archfinch.lists.views.overview', name='lists-overview'),
+    url(r'^utils/markdown$', 'archfinch.main.views.process_markdown', name='utils-markdown'),
 
     url(r'^item/(?P<item_id>[0-9a-z]+)(?:/(.*))?$', 'archfinch.main.views.item', name='item'),
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 
-    (r'^search$', 'archfinch.search.views.query'),
+    url(r'^search$', 'archfinch.search.views.query', name='search'),
+    url(r'^search.json$', 'archfinch.search.views.query', {'json': True}, name='search-json'),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),

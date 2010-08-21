@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load base36 %}
+{% load markup %}
+
+{% block title %}
+{{ list.name }} - Archfinch
+{% endblock %}
+
+{% block content %}
+
+<div id="content_left">
+<h1>Editing <span class='editable noremove' id="list_title">{{ list.name }}</span></h1>
+
+<div class="sortable" id="list" list_id="{{ list.id|base36 }}">
+</div>
+
+<form id="list_add">
+    <p>Add
+    <select name="what" id="add_select">
+        <option value="item" selected="selected">an item</option>
+        <option value="heading">a heading</option>
+        <option value="text">just text</option>
+    </select>
+    <input type="text" name="text" id="add_text">
+    <input type="text" name="item" id="add_item">
+    <textarea name="text2" id="add_textarea"></textarea>
+    <input type="submit" id="add_submit" value="&nbsp;&nbsp;">
+    </p>
+    <img src='/media/images/ajax-loader.gif' class='nodisplay loading'>
+
+    <div id="item_selector">
+    </div>
+    <div class="error" id="item_selector_error"></div>
+</form>
+
+
+</div>
+<div id="content_right">
+
+<script>
+{% for entry in list.entries.all %}
+{% if entry.get_type_display == 'item' %}
+    additem("{{ entry.item_id|base36 }}", "{{ entry.item.name|escapejs }}", "{% url item entry.item_id|base36 entry.item.name|slugify %}", "{{ entry.text|escapejs }}", "{{ entry.text|markdown|escapejs }}");
+{% endif %}
+{% if entry.get_type_display == 'heading' %}
+    addheading("{{ entry.text|escapejs }}", false);
+{% endif %}
+{% if entry.get_type_display == 'text' %}
+    addtext("{{ entry.text|escapejs }}", "{{ entry.text|markdown|escapejs }}", false);
+{% endif %}
+{% endfor %}
+</script>
+<div class="big">
+<p><input type="button" id="list_save" value="Save this list"></p>
+<p><div id="list_save_info"></div>
+<div class="error" id="list_save_error"></div>
+</p>
+<img src="/media/images/ajax-loader.gif" class="nodisplay loading">
+</div>
+
+</div>
+
+{% endblock %}

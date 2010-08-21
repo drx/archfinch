@@ -29,7 +29,9 @@
     {% with 1 as terse_layout %}
     {% with item.name as item_name %}
     {% with item.category_element as category_singular %}
+    {% with forloop.counter as seq_term %}
         {% include "includes/opinionbox.html" %}
+    {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endwith %}
@@ -81,4 +83,7 @@
 {% endif %}
 </div>
 
+{% endblock %}
+{% block media %}
+{% include "includes/generate_lists_tip.html" %}
 {% endblock %}

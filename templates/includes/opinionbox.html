@@ -1,8 +1,9 @@
 {% load base36 %}
+{% load markup %}
 <div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %}">
     {% if terse_layout %}
         {% if your_rating %}
-        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ item_id|base36 }}"{% endif %}>{{ your_rating }}</div>
+        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
         {% endif %}
         <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
         <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
@@ -10,7 +11,7 @@
     <div class="category_element">
         {{ category_singular|capfirst }}
     </div>
-    <div class="rating rating{{ rating }}" {% if yr_big %}id="yr_{{ item_id|base36 }}"{% endif %}>{{ rating }}</div>
+    <div class="rating rating{{ rating }} {% if not rating %}notrated{% endif %}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{% if rating %}{{ rating }}{% endif %}</div>
     <div class="title">
     <span><a href="{% url main.views.item item_id|base36 item_name|slugify %}" class="title">{{ item_name }}</a></span>
     {% if review %}<span class="review"><a href="{% url review viewed_user.username item_id|base36 item_name|slugify %}">review</a></span>{% endif %}
@@ -18,17 +19,17 @@
     </div>
     {% endif %}
     {% if user.is_authenticated %}
-    <div class="user_opinion" item="{{ item_id|base36 }}">
+    <div class="user_opinion" item="{{ item_id|base36 }}" seq_term="{{ seq_term }}">
 
     {% if not yr_big %}
     <div class="your_opinion {% if not your_rating %}nodisplay{% endif %}">
-        <span class="rating_label">Your opinion:</span> <div id="yr_{{ item_id|base36 }}" class="rating_small rating{{ your_rating }}">{{ your_rating }}</div>
+        <span class="rating_label">Your opinion:</span> <div id="yr_{{ seq_term }}" class="rating_small rating{{ your_rating }}">{{ your_rating }}</div>
     </div>
     {% endif %}
 
     {% if terse_layout %}
-    <div class="rating_small_hint" id="rsh_{{ item_id|base36 }}"></div>
-    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item_id|base36 }}">
+    <div class="rating_small_hint" id="rsh_{{ seq_term }}"></div>
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}">
     {% else %}
     <div class="reviewthis"><a href="{% url review-edit item_id|base36 %}">
         {% if your_profile and review %}
@@ -48,12 +49,18 @@
         {% if your_rating %}
         <span class="rating_small rate delete">x</span>
         {% endif %}
+        <img src="/media/list.png" class="rating_small rate add_to_list">
     </div>
     {% if not terse_layout %}
-    <div class="rating_small_hint" id="rsh_{{ item_id|base36 }}"></div>
-    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item_id|base36 }}">
+    <div class="rating_small_hint" id="rsh_{{ seq_term }}"></div>
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}">
     {% endif %}
     </div>
     {% endif %}
     <div style='clear: both'></div>
+    {% if annotation %}
+    <div class="annotation">
+    {{ annotation|markdown }}
+    </div>
+    {% endif %}
 </div>

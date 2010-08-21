@@ -22,6 +22,7 @@
 
 <div id="content_right">
 
+{% if user.is_authenticated %}
 <div class="box opinion itembox">
 {% if opinion %}
     <div class="rating rating{{ opinion.rating }}" id="yr_{{ item.id|base36 }}">{{ opinion.rating }}</div>
@@ -54,6 +55,7 @@
     <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ item.id|base36 }}">
     </div>
 </div>
+{% endif %}
 
 </div>
 

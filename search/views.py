@@ -8,9 +8,12 @@ from archfinch.main.models import Item, Category
 import re
 
 
-def query(request):
+def query(request, json=False):
     def invalid_search():
-        return render_to_response('search/invalid.html', locals(), context_instance=RequestContext(request))
+        if json:
+            return render_to_response('search/invalid.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
+        else:
+            return render_to_response('search/invalid.html', locals(), context_instance=RequestContext(request))
 
     query = request.GET['q']
     start = int(request.GET.get('s', 0))
@@ -43,7 +46,7 @@ def query(request):
     title = ' '.join(words)
 
     results = Item.search.query(title).order_by('-opinion_count', '@weight').select_related('category')
-    if request.user.is_authenticated():
+    if request.user.is_authenticated() and not json:
         results = results.extra(
             select={'rating': 'SELECT COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%s AND mo.item_id=main_item.id))'},
             select_params=[request.user.id])
@@ -55,7 +58,7 @@ def query(request):
         )
         results = results.filter(category_id=category.id)
 
-    if 'bang' in modifiers:
+    if 'bang' in modifiers and not json:
         try:
             result = results[0]
             from django.shortcuts import redirect
@@ -90,4 +93,7 @@ def query(request):
 
     left = count-(start+n)
 
-    return render_to_response('search/results.html', locals(), context_instance=RequestContext(request))
+    if json:
+        return render_to_response('search/results.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
+    else:
+        return render_to_response('search/results.html', locals(), context_instance=RequestContext(request))

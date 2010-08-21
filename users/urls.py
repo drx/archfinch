@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('archfinch.users.views',
-    url(r'^(?P<username>[\w@\+\.-]+)$', 'overview', name='user-overview'),
+    url(r'^(?P<username>[\w@\+\.-]+)(?P<json>/json)?$', 'overview', name='user-overview'),
 
     url(r'^(?P<username>[\w@\+\.-]+)/review/(?P<item_id>[0-9a-z]+)(?:/(.*))?', 'review_show', name='review'),
     url(r'^review/(?P<item_id>[0-9a-z]+)/edit$', 'review_edit', name='review-edit'),

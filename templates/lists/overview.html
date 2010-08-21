@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load base36 %}
+
+{% block title %}
+Lists - Archfinch
+{% endblock %}
+
+{% block content %}
+
+{% if your_lists %}
+<h1>Your lists</h1>
+{% for list in your_lists %}
+    <p>
+        <a href="{% url list-view list.id|base36 list.name|slugify %}">{{ list.name }}</a>
+        &nbsp; {{ list.n }} thing{{ list.n|pluralize }}
+        &nbsp; <a href="{% url list-edit list.id|base36 %}">edit</a>    
+    </p>
+{% endfor %}
+<br />
+{% endif %}
+
+{% if recommended %}
+<h1>Lists recommended for you</h1>
+{% for list in recommended %}
+    <p>
+        <a href="{% url list-view list.id|base36 list.name|slugify %}">{{ list.name }}</a>
+        &nbsp; {{ list.n }} thing{{ list.n|pluralize }}
+    </p>
+{% empty %}
+    <p>We don't know you well enough to recommend you anything.</p>
+{% endfor %}
+<br />
+{% endif %}
+
+{% if user.is_authenticated %}
+<form method="post" action="{% url list-create %}">{% csrf_token %}<input name="name" type='text'> <input type='submit' value='Create a new list'></form>
+{% endif %}
+
+
+{% endblock %}

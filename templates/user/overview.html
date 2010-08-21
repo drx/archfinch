@@ -32,6 +32,7 @@
 {% with opinion.item_id as item_id %} 
 {% with your_profile as yr_big %}
 {% with opinion.review as review %}
+{% with forloop.counter as seq_term %}
 {% if your_profile or not user.is_authenticated %}
     {% with rating as your_rating %}
     {% with opinion.item.name as item_name %} {# opinion.item_name #}
@@ -53,12 +54,13 @@
 {% endwith %}
 {% endwith %}
 {% endwith %}
+{% endwith %}
 {% empty %}
 {% if your_profile %}
-    {% if not start %}
+    {% if not start and not category %}
     <div class="big">
         <p>Rate some things!</p>
-        <form action="{% url search.views.query %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input type='submit' value='Search'></form>
+        <form action="{% url search %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input class="search_inline" type='submit' value='Search' style='padding: 1px 10px 1px 10px'></form>
         <p>The more you rate, the more accurately we can recommend you new things.</p>
     </div>
     {% endif %}
@@ -115,4 +117,9 @@ Show only {{ viewed_user.username }}'s
 
 </div>
 
+
+{% endblock %}
+
+{% block media %}
+{% include "includes/generate_lists_tip.html" %}
 {% endblock %}

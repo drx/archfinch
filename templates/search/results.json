@@ -1,0 +1,19 @@
+{% load base36 %}
+
+{
+    "success": true,
+    "results": [
+{% for result in results %}
+        {
+            "id": "{{ result.id|base36 }}",
+            "name": "{{ result.name }}",
+            "url": "{% url item result.id|base36 result.name|slugify %}",
+            "category": "{{ result.category.element_singular }}"
+        }
+        {% if not forloop.last %},{% endif %}
+{% endfor %}        
+    ],
+    "start": {{ start }},
+    "n": {{ n }},
+    "left": {{ left }}
+}

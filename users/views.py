@@ -112,8 +112,10 @@ def review_edit(request, item_id):
     return render_to_response('user/review_edit.html', locals(), context_instance=RequestContext(request))
 
 
-def overview(request, username, category_slug=None, start=None, n=None):
+def overview(request, username, category_slug=None, start=None, n=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
+
+    print json
 
     if start is None:
         start = 0
@@ -142,6 +144,8 @@ def overview(request, username, category_slug=None, start=None, n=None):
         )
         if category is not None:
             opinions = opinions.filter(item__category=category)
+        else:
+            opinions = opinions.filter(item__category__hide=False)
 
         similarity = 0
         similarity_max = 10

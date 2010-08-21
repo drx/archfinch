@@ -8,6 +8,8 @@ class Category(models.Model):
     element_singular = models.CharField(max_length=200)
     element_plural = models.CharField(max_length=200)
 
+    hide = models.BooleanField()
+
     def __unicode__(self):
         return self.name
 
@@ -70,6 +72,9 @@ class OpinionManager(models.Manager):
         if category is not None and category:
             where += ' AND mc.id = %s'
             params.append(category.id)
+
+        else:
+            where += " AND mc.hide = 'f'"
 
         return self.raw("""
             SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,

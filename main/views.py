@@ -1,12 +1,14 @@
 from django.shortcuts import render_to_response, get_object_or_404, HttpResponse, redirect
 from django.template import RequestContext
 from django.utils import simplejson
-from django.utils.http import base36_to_int
+from django.utils.http import base36_to_int, int_to_base36
+from django.template.defaultfilters import slugify
 from archfinch.main.models import Item, Opinion, Action, Similarity, Category
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-
+from django.contrib.markup.templatetags.markup import markdown
+from django.views.decorators.csrf import csrf_exempt
 
 def welcome(request):
     if request.user.is_authenticated():
@@ -28,6 +30,9 @@ def item(request, item_id):
 
     item_id = base36_to_int(item_id)
     item = get_object_or_404(Item.objects.select_related('category', 'profile'), pk=item_id)
+
+    if item.category_id == 8:
+        return redirect(reverse('list-view', args=[int_to_base36(item_id), slugify(item.name)]))
 
     if request.user.is_authenticated():
         try:
@@ -136,4 +141,20 @@ def opinion_remove(request, item_id):
     Similarity.objects.update_item_delta(request.user, delta)
 
     json = simplejson.dumps({'success': True})
+    return HttpResponse(json, mimetype='application/json')
+
+
+@csrf_exempt
+def process_markdown(request):
+    data = {'success': False}
+    if request.method == 'POST':
+        text = request.POST['text']
+        
+        data['success'] = True
+        data['html'] = markdown(text)
+
+    else:
+        data['error_msg'] = 'Wrong request method'
+
+    json = simplejson.dumps(data)
     return HttpResponse(json, mimetype='application/json')

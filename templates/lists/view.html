@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% load base36 %}
+{% load markup %}
+
+{% block title %}
+{{ list.name }} - Archfinch
+{% endblock %}
+
+{% block content %}
+
+<div id="content_left">
+<h1>{{ list.name }}</h1>
+
+{% for entry in entries %}
+{% if entry.get_type_display == 'heading' %}
+<h2>{{ entry.text }}</h2>
+{% endif %}
+{% if entry.get_type_display == 'text' %}
+<div>{{ entry.text|markdown }}</div>
+{% endif %}
+{% if entry.get_type_display == 'item' %}
+    {% with entry.item_id as item_id %} 
+    {% with 1 as yr_big %}
+    {% with entry.item.name as item_name %}
+    {% with entry.item.category.element_singular as category_singular %} 
+    {% with entry.text as annotation %}
+    {% with forloop.counter as seq_term %}
+
+    {% if not user.is_authenticated %}
+        {% include "includes/opinionbox.html" %}
+    {% else %}
+        {% with entry.your_rating as your_rating %}
+        {% with entry.your_rating as rating %}
+            {% include "includes/opinionbox.html" %}
+        {% endwith %}
+        {% endwith %}
+    {% endif %}
+
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% endif %}
+{% endfor %}
+
+</div>
+<div id="content_right">
+<p>
+This list was created by <a href="{% url user-overview list.owner.username %}">{{ list.owner.username }}</a>
+</p>
+
+{% if user.is_authenticated %}
+<p>
+<div class="box opinion itembox">
+{% if opinion %}
+    <div class="rating rating{{ opinion.rating }}" id="yr_{{ list.id|base36 }}">{{ opinion.rating }}</div>
+    <div class="rating_verbose">{{ opinion.get_rating_display }}</div>
+{% else %}
+    <div class="rating" id="yr_{{ list.id|base36 }}"></div>
+    <div class="rating_verbose">
+    <a class="nohover">Rate this {{ list.category.element_singular }}</a>
+    </div>
+{% endif %}
+    <div class="user_opinion" item="{{ list.id|base36 }}">
+
+    <div class="user_rate">
+        <span class="rating_label">Rate:</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 1 %}rated{% endif %} rating1">1</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 2 %}rated{% endif %} rating2">2</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 3 %}rated{% endif %} rating3">3</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 4 %}rated{% endif %} rating4">4</span>
+        <span class="rating_small rate {% if opinion and opinion.rating == 5 %}rated{% endif %} rating5">5</span>
+        <span class="rating_small rate delete {% if not opinion %}nodisplay{% endif %}">x</span>
+    </div><br /><br />
+    <div class="rating_small_hint" id="rsh_{{ list.id|base36 }}" style="margin-left: 0;"></div><br />
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ list.id|base36 }}">
+    </div>
+</div>
+</p>
+{% endif %}
+</div>
+
+{% endblock %}
+{% block media %}
+{% include "includes/generate_lists_tip.html" %}
+{% endblock %}

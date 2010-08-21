@@ -1,10 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User as BaseUser, UserManager as BaseUserManager
+from django.utils.http import int_to_base36
+from django.core.urlresolvers import reverse
 from archfinch.main.models import Opinion, Similarity, Item
 
 
 class User(BaseUser):
     objects = BaseUserManager()
+
+    def self_lists(self):
+        lists = [
+            {'name': 'ignored', 'id': '!ignored'},
+            {'name': 'queue', 'id': '!queue'},
+        ]
+        for list in self.list_set.exclude(ignored=True).exclude(queue=True):
+            lists.append({'name': list.name, 'id': int_to_base36(list.id)})
+
+        return lists
+    
 
     def categories(self, opinions=None):
         '''
@@ -56,7 +69,7 @@ class User(BaseUser):
             return 0
 
 
-    def recommend(self, category=None):
+    def recommend(self, category=None, category_id=None):
         '''
         Fetches items recommended for the user (which the user has not already rated)
          and returns an iterator.
@@ -67,10 +80,15 @@ class User(BaseUser):
         from itertools import takewhile
 
         where = ''
-        params = [self.id, self.id, self.id]
+        params = [self.id, self.id, self.id, self.id]
         if category is not None and category:
+            category_id = category.id
+
+        if category_id is not None:
             where += ' AND mi.category_id = %s'
-            params.append(category.id)
+            params.append(category_id)
+        else:
+            where += " AND mc.hide = 'f'"
 
         # Select items in order of their recommendation to self
         # 
@@ -97,6 +115,8 @@ class User(BaseUser):
              AND NOT EXISTS
               (SELECT 1 FROM main_opinion mo2
                WHERE mo2.item_id=mi.id AND mo2.user_id=%s)
+             AND NOT EXISTS
+              (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id = %s AND le.item_id=mi.id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
             ORDER BY recommendation DESC""",

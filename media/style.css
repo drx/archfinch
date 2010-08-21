@@ -123,7 +123,24 @@ ul.menu li
 }
 .widebox
 {
-    height: 64px;
+    min-height: 64px;
+    padding: 1px;
+}
+.widebox textarea, .widebox input
+{
+    margin-left: 20px;
+    margin-bottom: 10px;
+    display: block;
+}
+.widebox textarea
+{
+    width: 250px;
+    height: 100px;
+}
+.editable > * > textarea
+{
+    width: 500px;
+    height: 200px;
 }
 .box
 {
@@ -196,7 +213,7 @@ td
     height: 16px;
     font-size: 10px;
     padding: 0 0 0 0;
-    line-height: 15px;
+    line-height: 16px;
 }
 .rating
 {
@@ -209,6 +226,10 @@ td
 .itembox .rating
 {
     margin-bottom: 40px;
+}
+.rating.notrated
+{
+    width: 5px;
 }
 .rating1
 {
@@ -256,7 +277,7 @@ td
     -khtml-opacity: 1.0; /* Safari 1.x */
     -moz-opacity: 1.0; /* FF lt 1.5, Netscape */
 }
-.delete
+.delete, .user_rate img
 {
     margin-left: 10px;
 }
@@ -343,19 +364,33 @@ td
 {
     color: #0099ff;
 }
+input[type="text"], input[type="button"], input[type="password"], input[type="submit"], textarea, select
+{
+    border: 1px solid #0099ff;
+    color: #333333;
+    background-color: #ffffff;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+input[type="text"]
+{
+    padding-left: 2px;
+    padding-right: 2px;
+}
 #search, #search_inline
 {
     border: 2px solid #0099ff;
-}
-#search
-{
-    font-weight: bold;
+    background: url("/media/images/search.png") no-repeat scroll 3px 3px #ffffff;
+    padding: 1px 5px 1px 20px;
 }
 #search_inline
 {
     margin-right: 5px;
     font-weight: normal;
     height: 26px;
+    background: url("/media/images/search_big.png") no-repeat scroll 3px 3px #ffffff;
+    padding: 1px 5px 1px 30px;
 }
 #topnav
 {
@@ -370,12 +405,6 @@ td
 {
     width: 10em;
     margin-right: 1em;
-}
-input[type="text"], input[type="password"], input[type="submit"], textarea, select
-{
-    border: 1px solid #0099ff;
-    color: #333333;
-    background-color: #ffffff;
 }
 .error
 {
@@ -487,4 +516,73 @@ h2
     cursor: s-resize;
     height: 9px;
     overflow: hidden;
+}
+
+/* editables */
+a.edit, a.remove
+{
+    font-size: 10px;
+    font-weight: normal;
+    visibility: hidden;
+    margin-left: 10px;
+}
+*:hover > a.edit, *:hover > a.remove, .widebox:hover a.edit, .widebox:hover a.remove
+{
+    visibility: visible;
+}
+.widebox > a.remove
+{
+    float: right;
+    padding-right: 10px;
+}
+
+#add_textarea
+{
+    display: none;
+}
+#list_add.text #add_textarea
+{
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+    height: 100px;
+}
+
+#add_text, #add_item, #item_selector
+{
+    display: none;
+}
+#list_add.item #add_item, #list_add.item #item_selector
+{
+    display: inline;
+}
+#list_add.heading #add_text
+{
+    display: inline;
+}
+#add_submit
+{
+    background: inherit;
+}
+#list_add.item #add_submit
+{
+    background: url('/media/images/search.png') no-repeat center center;
+}
+.annotation
+{
+    margin: 10px;
+}
+h1 form
+{
+    display: inline;
+}
+.qtip-content
+{
+    font-size: 11px;
+}
+.qtip-content ul
+{
+    list-style-type: none;
+    padding: 0 30px 0 3px;
 }
