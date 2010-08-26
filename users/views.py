@@ -112,7 +112,7 @@ def review_edit(request, item_id):
     return render_to_response('user/review_edit.html', locals(), context_instance=RequestContext(request))
 
 
-def overview(request, username, category_slug=None, start=None, n=None):
+def overview(request, username, category_slug=None, start=None, n=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
 
     if start is None:
@@ -161,8 +161,10 @@ def overview(request, username, category_slug=None, start=None, n=None):
     left = count-(start+n)
     opinions = opinions[start:start+n]
 
-    return render_to_response('user/overview.html',
-        locals(), context_instance=RequestContext(request))
+    if json:
+        return render_to_response('user/overview.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
+    else:
+        return render_to_response('user/overview.html', locals(), context_instance=RequestContext(request))
 
 
 def likes_gen(users, request_user):

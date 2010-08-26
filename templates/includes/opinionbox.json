@@ -1,0 +1,11 @@
+{% load base36 %}
+{
+    "id": "{{ item_id|base36 }}",
+    "rating": {{ rating }},
+    {% if your_rating %}
+    "your_rating": {{ your_rating }},
+    {% endif %}
+    "category": "{{ category_singular|capfirst }}",
+    "title": "{{ item_name }}",
+    "url": "{% url item item_id|base36 item_name|slugify %} "
+}
