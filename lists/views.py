@@ -45,10 +45,20 @@ def add(request, list_id, item_id):
     item = get_object_or_404(Item, pk=item_id)
 
     if list_id == '!ignored':
-        list, created = List.objects.get_or_create(owner=request.user, ignored=True, defaults={'category_id': 8, 'name': "{username}'s ignore list".format(username=request.user.username), 'options': {}})
+        try:
+            name = "{username}'s ignore list".format(username=request.user.username)
+        except AttributeError:
+            # python 2.5 compatibility 
+            name = "%s's ignore list" % (request.user.username,)
+        list, created = List.objects.get_or_create(owner=request.user, ignored=True, defaults={'category_id': 8, 'name': name, 'options': {}})
         list_id = list.id
     elif list_id == '!queue':
-        list, created = List.objects.get_or_create(owner=request.user, queue=True, defaults={'category_id': 8, 'name': "{username}'s queue".format(username=request.user.username), 'options': {}})
+        try:
+            name = "{username}'s queue".format(username=request.user.username)
+        except AttributeError:
+            # python 2.5 compatibility 
+            name = "%s's ignore list" % (request.user.username,)
+        list, created = List.objects.get_or_create(owner=request.user, queue=True, defaults={'category_id': 8, 'name': name, 'options': {}})
         list_id = list.id
     else:
         list_id = base36_to_int(list_id)

@@ -11,7 +11,11 @@ class Page(models.Model):
         return self.revisions.latest()
 
     def __unicode__(self):
-        return 'Page #{id}'.format(id=self.pk)
+        try:
+            return 'Page #{id}'.format(id=self.pk)
+        except AttributeError:
+            # python 2.5 compatibility 
+            return 'Page #%s' % (self.pk)
 
 
 class RevisionText(models.Model):
@@ -35,7 +39,11 @@ class Revision(models.Model):
     time = models.DateTimeField(auto_now_add=True, unique=False)
 
     def __unicode__(self):
-        return 'Revision {time} of {page}'.format(time=self.time, page=self.page)
+        try:
+            return 'Revision {time} of {page}'.format(time=self.time, page=self.page)
+        except AttributeError:
+            # python 2.5 compatibility 
+            return 'Revision %s of %s' % (self.time, self.page)
 
     class Meta:
         get_latest_by = 'time'
