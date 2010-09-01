@@ -27,7 +27,7 @@ function additem(id, name, url, annotation, annotation_processed)
 {
     if (annotation)
     {
-        p = "<div class='annotation editable textarea'><div markdown='"+annotation+"'>"+annotation_processed+"</div>"+textareaajax+"</div>";
+        p = "<div class='annotation editable textarea'><div markdown='"+annotation.replace(/'/g, "&apos;")+"'>"+annotation_processed+"</div>"+textareaajax+"</div>";
     }
     else
     {
@@ -43,7 +43,7 @@ function addheading(text, addlinks)
 }
 function addtext(markdown, processed, addlinks)
 {
-    $("#list").append("<div class='editable textarea'><div markdown='"+markdown+"'>"+processed+"</div>"+(addlinks?textarealink+removelink+textareaajax:'')+"</div>");
+    $("#list").append("<div class='editable textarea'><div markdown='"+markdown.replace(/'/g, "&apos;")+"'>"+processed+"</div>"+(addlinks?textarealink+removelink+textareaajax:'')+"</div>");
 }
 
 /* serialize a sorted list */
@@ -77,6 +77,7 @@ function list_serialize()
             });
         }
     });
+    alert(a);
     return a;
 }
 
@@ -333,7 +334,9 @@ $(document).ready(function(){
         else
         {
             p.html(p.getText())
-            p.html("<form><input type='text' name='field' value='"+p.html()+"'></form>");
+            input = $("<input />").attr("type", "text").attr("name", "field").val(p.html());
+            p.html(input);
+            input.wrap("<form></form>");
         }
         p.children("form").submit(function(e)
         {
@@ -356,7 +359,7 @@ $(document).ready(function(){
                         loading.hide()
                         if (data['success'])
                         {
-                            result = "<div markdown='"+encodeURIComponent(unprocessed)+"'>"+data['html']+"</div>";
+                            result = "<div markdown='"+unprocessed.replace(/'/g, "&apos;")+"'>"+data['html']+"</div>";
                             $(self).replaceWith(result+textarealink+removelink)
                             return;
                         }
@@ -499,7 +502,6 @@ $(document).ready(function(){
     $("#list_save").click(function(e)
     {
         $(this).siblings(".loading").show()
-        alert(list_serialize());
         var self = this
         $.ajax({
             url: "/list/save",
