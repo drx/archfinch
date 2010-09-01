@@ -115,6 +115,12 @@ Show only {{ viewed_user.username }}'s
     {% endif %}
 {% endwith %}
 
+{% with lists.count as list_count %}
+    {% if list_count > 0 %}
+        <span style='font-size: 11px'>{{ viewed_user.username }} has created {{ list_count }} list{{ list_count|pluralize }}. <a href="{% url lists-user viewed_user.username %}">See&nbsp;{{ list_count|pluralize:"it,them" }}</a>.</span>
+    {% endif %}
+{% endwith %}
+
 </div>
 
 

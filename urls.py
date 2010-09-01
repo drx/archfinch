@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     (r'^list/', include('archfinch.lists.urls')),
 
     url(r'^lists$', 'archfinch.lists.views.overview', name='lists-overview'),
+    url(r'^lists/user/(?P<username>[\w@\+\.-]+)$', 'archfinch.lists.views.user', name='lists-user'),
     url(r'^utils/markdown$', 'archfinch.main.views.process_markdown', name='utils-markdown'),
 
     url(r'^item/(?P<item_id>[0-9a-z]+)(?:/(.*))?$', 'archfinch.main.views.item', name='item'),

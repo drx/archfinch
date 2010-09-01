@@ -47,6 +47,11 @@ class List(Item):
     queue = models.BooleanField(default=False)
 
 
+    def n(self):
+        return self.entries.filter(type=Entry.types['item']).count()
+
+
+
 class Entry(models.Model):
     list = models.ForeignKey(List, related_name="entries")
 

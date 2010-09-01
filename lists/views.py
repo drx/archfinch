@@ -10,6 +10,7 @@ from django.db.models import Max
 from django.utils import simplejson
 from archfinch.main.models import Item, Opinion
 from archfinch.lists.models import List, Entry
+from archfinch.users.models import User
 
 
 def forbidden(request):
@@ -117,14 +118,14 @@ def create(request):
 def overview(request):
     if request.user.is_authenticated():
         your_lists = request.user.list_set.all()
-        for e_list in your_lists:
-            e_list.n = e_list.entries.filter(type=Entry.types['item']).count()
         recommended = request.user.recommend(category_id=8)  # get recommended lists
-        recommended = list(recommended)
-        for e_list in recommended:
-            e_list.n = 0
-            e_list.n = e_list.list.entries.filter(type=Entry.types['item']).count()
     return render_to_response('lists/overview.html', locals(), context_instance=RequestContext(request))
+
+
+def user(request, username):
+    viewed_user = get_object_or_404(User, username=username)
+    lists = viewed_user.list_set.all()
+    return render_to_response('lists/user.html', locals(), context_instance=RequestContext(request))
 
 
 def edit(request, list_id):

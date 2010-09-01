@@ -161,6 +161,8 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
         except ObjectDoesNotExist:
             similarity = 0
 
+    lists = viewed_user.list_set.all()
+
     count = len(list(opinions))
     left = count-(start+n)
     opinions = opinions[start:start+n]

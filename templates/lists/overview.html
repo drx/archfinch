@@ -25,7 +25,7 @@ Lists - Archfinch
 {% for list in recommended %}
     <p>
         <a href="{% url list-view list.id|base36 list.name|slugify %}">{{ list.name }}</a>
-        &nbsp; {{ list.n }} thing{{ list.n|pluralize }}
+        &nbsp; {{ list.list.n }} thing{{ list.list.n|pluralize }}
     </p>
 {% empty %}
     <p>We don't know you well enough to recommend you anything.</p>
