@@ -115,8 +115,6 @@ def review_edit(request, item_id):
 def overview(request, username, category_slug=None, start=None, n=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
 
-    print json
-
     if start is None:
         start = 0
     else:

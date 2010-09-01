@@ -15,5 +15,4 @@ while True:
         a = a+1
     for c in b:
         c.save()
-    print a, len(b), map(lambda x: x.id, b[:1])
     b = []
