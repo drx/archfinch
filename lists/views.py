@@ -57,7 +57,7 @@ def add(request, list_id, item_id):
             name = "{username}'s queue".format(username=request.user.username)
         except AttributeError:
             # python 2.5 compatibility 
-            name = "%s's ignore list" % (request.user.username,)
+            name = "%s's queue" % (request.user.username,)
         list, created = List.objects.get_or_create(owner=request.user, queue=True, defaults={'category_id': 8, 'name': name, 'options': {}})
         list_id = list.id
     else:
