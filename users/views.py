@@ -167,8 +167,10 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     left = count-(start+n)
     opinions = opinions[start:start+n]
 
-    return render_to_response('user/overview.html',
-        locals(), context_instance=RequestContext(request))
+    if json:
+        return render_to_response('user/overview.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
+    else:
+        return render_to_response('user/overview.html', locals(), context_instance=RequestContext(request))
 
 
 def likes_gen(users, request_user):

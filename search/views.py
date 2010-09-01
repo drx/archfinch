@@ -53,10 +53,13 @@ def query(request, json=False):
 
     if 'in' in modifiers:
         cat_name = modifiers['in']
-        category = Category.objects.get(
-            Q(name__iexact=cat_name)|Q(element_singular__iexact=cat_name)|Q(element_plural__iexact=cat_name)|Q(slug__iexact=cat_name)
-        )
-        results = results.filter(category_id=category.id)
+        try:
+            category = Category.objects.get(
+                Q(name__iexact=cat_name)|Q(element_singular__iexact=cat_name)|Q(element_plural__iexact=cat_name)|Q(slug__iexact=cat_name)
+            )
+            results = results.filter(category_id=category.id)
+        except Category.DoesNotExist:
+            return invalid_search()
 
     if 'bang' in modifiers and not json:
         try:

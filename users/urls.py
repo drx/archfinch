@@ -10,8 +10,8 @@ urlpatterns = patterns('archfinch.users.views',
     url(r'^(?P<username>[\w@\+\.-]+)/reviews/(?P<start>\d+)/(?P<n>\d+)$', 'reviews', name='user-reviews-paged'),
 
 
-    url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)$', 'overview', name='user-overview-slugged'),
-    url(r'^(?P<username>[\w@\+\.-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'overview', name='user-overview-paged'),
-    url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'overview', name='user-overview-slugged-paged'),
+    url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)(?P<json>/json)?$', 'overview', name='user-overview-slugged'),
+    url(r'^(?P<username>[\w@\+\.-]+)/(?P<start>\d+)/(?P<n>\d+)(?P<json>/json)?$', 'overview', name='user-overview-paged'),
+    url(r'^(?P<username>[\w@\+\.-]+)/(?P<category_slug>[\w-]+)/(?P<start>\d+)/(?P<n>\d+)(?P<json>/json)?$', 'overview', name='user-overview-slugged-paged'),
 
 )
