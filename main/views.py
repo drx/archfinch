@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.markup.templatetags.markup import markdown
 from django.views.decorators.csrf import csrf_exempt
+from archfinch.main import tasks
+import celery.result
+from django.core.cache import cache
 
 def welcome(request):
     if request.user.is_authenticated():
@@ -46,11 +49,13 @@ def item(request, item_id):
     return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
 
 
+
+
+
 def recommend(request, category_slug=None, start=None, n=None):
     '''
     Shows a list of recommendations.
     '''
-
     if request.user.is_authenticated():
         if start is None:
             start = 0
@@ -67,16 +72,43 @@ def recommend(request, category_slug=None, start=None, n=None):
         else:
             category = None
 
-        user_categories = request.user.categories()
-        categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
+        users = [request.user]
+        cache_key = 'recommend,%s,%s' % (map(lambda u: u.id, users), category_slug)
+        cache_timeout = 15*60
+        cached_value = cache.get(cache_key)
 
-        recommendations = list(request.user.recommend(category=category))
+        computed = False
+        if cached_value is not None:
+            if type(cached_value) == tuple and cached_value[0] == 'task':
+                recommendations = celery.result.AsyncResult(cached_value[1])
+            else:
+                recommendations = cached_value
+                computed = True
 
-        count = len(recommendations)
-        left = count-(start+n)
-        recommendations = recommendations[start:start+n]
+        else:
+            recommendations = tasks.recommend.delay(category, users)
+            task_id = recommendations.task_id
+            cache.set(cache_key, ('task', task_id), cache_timeout)
 
-        return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
+        if not computed and recommendations.ready():
+            recommendations = recommendations.result
+            cache.set(cache_key, recommendations, cache_timeout)
+            computed = True
+
+        if not computed:
+            wait_page = 'recommend'
+            return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
+        else:
+            user_categories = request.user.categories()
+            categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
+
+            count = len(recommendations)
+            left = count-(start+n)
+            recommendations = recommendations[start:start+n]
+            return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
+
+
+            
     else:
         return render_to_response("main/recommend_anonymous.html", context_instance=RequestContext(request))
 
@@ -141,6 +173,21 @@ def opinion_remove(request, item_id):
     Similarity.objects.update_item_delta(request.user, delta)
 
     json = simplejson.dumps({'success': True})
+    return HttpResponse(json, mimetype='application/json')
+
+
+def task_wait(request, task_id):
+    data = {'success': False}
+    if request.method == 'GET':
+        task = celery.result.AsyncResult(task_id)
+        task.get()
+        
+        data['success'] = True
+
+    else:
+        data['error_msg'] = 'Wrong request method'
+
+    json = simplejson.dumps(data)
     return HttpResponse(json, mimetype='application/json')
 
 

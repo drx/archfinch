@@ -116,6 +116,24 @@ function ajaxerror(obj, error_msg)
 {
     obj.html(error_msg).show().delay(4000).fadeOut('slow')
 }
+
+function task_wait(task_id)
+{
+    $.ajax({
+        url: "/task_wait/"+task_id,
+        dataType: "json",
+        type: "GET",
+        timeout: 30000,
+        success: function(data)
+        {
+            location.reload()
+        },
+        error: function(request, error)
+        {
+        }
+    })
+}
+
 $(document).ready(function(){
     $(".box").live("hover", 
         function(e){

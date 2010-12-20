@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     url(r'^recommend/(?P<category_slug>[\w-]+)$', 'archfinch.main.views.recommend', name='recommend-slugged'),
     url(r'^recommend/(?P<start>\d+)/(?P<n>\d+)$', 'archfinch.main.views.recommend', name='recommend-paged'),
     url(r'^recommend/(?P<category_slug>[\w-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'archfinch.main.views.recommend', name='recommend-slugged-paged'),
+
+    url(r'task_wait/(?P<task_id>[\w-]+)$', 'archfinch.main.views.task_wait', name='task-wait'),
     
     (r'^account/', include('archfinch.account.urls')),
     (r'^wiki/', include('archfinch.wiki.urls')),
