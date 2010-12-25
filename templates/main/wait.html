@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style='text-align: center' class='big'>
+<p>Hang in there.</p>
+<p><img src="/media/images/wait.gif"></p>
+<p>
+{% if wait_page == 'recommend' %}
+We are computing your recommendations as fast as we can.
+{% endif %}
+</p>
+</div>
+
+<script type="text/javascript">
+task_wait("{{ task_id }}");
+</script>
+
+{% endblock %}
