@@ -45,7 +45,7 @@ class ItemManager(models.Manager):
         #      rating: what the user has rated the item
         #      similarity: similarity between the user and self
         recommended = Item.objects.raw("""
-            SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
+            SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM((mo.rating-3)*ms.value) AS recommendation,
              mc.element_singular AS category_element
             FROM main_similarity ms
@@ -65,13 +65,11 @@ class ItemManager(models.Manager):
               (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id = %s AND le.item_id=mi.id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
-            ORDER BY recommendation DESC""",
+            ORDER BY recommendation DESC) AS recommended WHERE reommendation > 0""",
             params)
 
-        # have to do it this way -- RawQuerySet doesn't have filter, etc.
-        recommended = takewhile(lambda x: x.recommendation > 0, recommended)
-
         return recommended
+
 
 
 class Item(models.Model):
@@ -117,6 +115,51 @@ class Item(models.Model):
             return items[0].recommendation
         else:
             return 0
+
+    def also_liked(self, category=None, category_id=None, like=True, also_like=True):
+        '''
+        Fetches items (dis)liked by users who (dis)like a given item for the user (which the user has not already rated)
+         and returns an iterator.
+        '''
+        from itertools import takewhile
+
+        params = [self.id, self.id]
+        where = ''
+        if category is not None and category:
+            category_id = category.id
+
+        if category_id is not None:
+            where += ' AND mi.category_id = %s'
+            params.append(category_id)
+        else:
+            where += " AND mc.hide = 'f'"
+
+        if like:
+            where += " AND mo2.rating >= 4"
+        else:
+            where += " AND mo2.rating <= 2"
+
+        recommended = Item.objects.raw("""
+            SELECT * FROM (
+            SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
+             SUM(abs(mo2.rating-3)*(mo.rating-3)) AS recommendation,
+             mc.element_singular AS category_element
+            FROM main_opinion mo
+             INNER JOIN main_opinion mo2
+              ON mo.user_id=mo2.user_id
+             INNER JOIN main_item mi
+              ON mo.item_id=mi.id
+             INNER JOIN main_category mc
+              ON mc.id=mi.category_id
+            WHERE mo2.item_id=%s
+             AND mo.item_id!=%s
+             """+where+"""
+            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
+            ORDER BY recommendation DESC) AS recommended WHERE recommendation """+('>' if also_like else '<')+""" 0
+            LIMIT 10""",
+            params)
+
+        return recommended
 
 
 class ItemProfile(models.Model):
