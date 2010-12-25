@@ -14,6 +14,66 @@ class Category(models.Model):
         return self.name
 
 
+class ItemManager(models.Manager):
+    def recommended(user, category=None, category_id=None):
+        '''
+        Fetches items recommended for the user (which the user has not already rated)
+         and returns an iterator.
+
+        The algorithm should cut off at a certain amount of similar users,
+         as potentially it's millions of similar users.
+        '''
+        from itertools import takewhile
+
+        where = ''
+        params = [user.id, user.id, user.id, user.id]
+        if category is not None and category:
+            category_id = category.id
+
+        if category_id is not None:
+            where += ' AND mi.category_id = %s'
+            params.append(category_id)
+        else:
+            where += " AND mc.hide = 'f'"
+
+        # Select items in order of their recommendation to self
+        # 
+        # recommendation =
+        #    sum (rating-3)*similarity for all similar users
+        # 
+        #    where 
+        #      rating: what the user has rated the item
+        #      similarity: similarity between the user and self
+        recommended = Item.objects.raw("""
+            SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
+             SUM((mo.rating-3)*ms.value) AS recommendation,
+             mc.element_singular AS category_element
+            FROM main_similarity ms
+             INNER JOIN main_opinion mo
+              ON ms.user2_id=mo.user_id
+             INNER JOIN main_item mi
+              ON mo.item_id=mi.id
+             INNER JOIN main_category mc
+              ON mc.id=mi.category_id
+            WHERE ms.user1_id=%s
+             AND ms.user2_id!=%s
+             AND ms.value > 0
+             AND NOT EXISTS
+              (SELECT 1 FROM main_opinion mo2
+               WHERE mo2.item_id=mi.id AND mo2.user_id=%s)
+             AND NOT EXISTS
+              (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id = %s AND le.item_id=mi.id)
+             """+where+"""
+            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
+            ORDER BY recommendation DESC""",
+            params)
+
+        # have to do it this way -- RawQuerySet doesn't have filter, etc.
+        recommended = takewhile(lambda x: x.recommendation > 0, recommended)
+
+        return recommended
+
+
 class Item(models.Model):
     category = models.ForeignKey(Category)
     parent = models.ForeignKey('Item', null=True, blank=True)
@@ -26,8 +86,37 @@ class Item(models.Model):
         index='main_item',
     )
 
+    objects = ItemManager()
+
     def __unicode__(self):
         return self.name
+
+    def recommendation(self, user):
+        '''
+        Returns the recommendation value for an item for the user.
+
+        Please take extra care to ensure the algorithm is the same as in User.recommend.
+        '''
+        items = Item.objects.raw("""
+            SELECT mi.id, SUM((mo.rating-3)*ms.value) AS recommendation
+            FROM main_similarity ms
+             INNER JOIN main_opinion mo
+              ON ms.user2_id=mo.user_id
+             INNER JOIN main_item mi
+              ON mo.item_id=mi.id
+            WHERE ms.user1_id=%s
+             AND ms.user2_id!=%s
+             AND ms.value > 0
+             AND mi.id = %s
+            GROUP BY mi.id
+            """,
+            [user.id, user.id, self.id])
+
+        items = list(items)
+        if items:
+            return items[0].recommendation
+        else:
+            return 0
 
 
 class ItemProfile(models.Model):

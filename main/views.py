@@ -42,7 +42,7 @@ def item(request, item_id):
             opinion = request.user.opinion_set.get(item=item)
         except Opinion.DoesNotExist:
             opinion = None
-            recommendation = request.user.recommendation(item)
+            recommendation = item.recommendation(request.user)
     else:
         opinion = None
 
