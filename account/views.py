@@ -1,10 +1,10 @@
 ﻿from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.utils import simplejson
+from archfinch.utils import render_to_response
 from archfinch.main.models import Similarity
 from archfinch.account.models import SignupForm, AuthenticationForm
 

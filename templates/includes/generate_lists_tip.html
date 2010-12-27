@@ -1,32 +1,6 @@
 {% if user.is_authenticated %}
 <script type="text/javascript"> 
-$(document).ready(function(){
-    $("img.add_to_list").each(function(){$(this).qtip({
-        content: "<div style='float: left' class='tip'>Add to:<br /><ul item_id='"+get_item_id($(this))+"'>{% for list in user.self_lists %}<li>{% if forloop.last %}or {% endif %}<a href='#' list_id='{{ list.id }}'>{{ list.name }}</a>{% if not forloop.last %},{% endif %}{% endfor %}</ul><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
-            position: {
-            corner: {
-                target: 'topRight',
-                tooltip: 'bottomLeft'
-            },
-            adjust: {
-                screen: true
-            }
-        },
-        show: {
-            when: 'click',
-            solo: true
-        },
-        hide: 'unfocus',
-        style: {
-            tip: true,
-            border: {
-                width: 1,
-                radius: 5
-            },
-            name: 'light'
-        }
-            
-    })}); 
-});
+user_lists = "{% for list in user.self_lists %}<li>{% if forloop.last %}or {% endif %}<a href='#' list_id='{{ list.id }}'>{{ list.name }}</a>{% if not forloop.last %},{% endif %}{% endfor %}";
+$(document).ready(generate_lists_tip);
 </script>
 {% endif %}

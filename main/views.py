@@ -1,14 +1,16 @@
-from django.shortcuts import render_to_response, get_object_or_404, HttpResponse, redirect
+from django.shortcuts import get_object_or_404, HttpResponse, redirect
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.http import base36_to_int, int_to_base36
 from django.template.defaultfilters import slugify
+from django.template.loader import render_to_string
 from archfinch.main.models import Item, Opinion, Action, Similarity, Category
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.markup.templatetags.markup import markdown
 from django.views.decorators.csrf import csrf_exempt
+from archfinch.utils import render_to_response
 from archfinch.main import tasks
 import celery.result
 from django.core.cache import cache
@@ -49,7 +51,20 @@ def item(request, item_id):
     return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
 
 
+def item_also_liked(request, item_id, like, also_like):
+    '''
+    "People who (dis)like x also (dis)like ys".
+    '''
 
+    item_id = base36_to_int(item_id)
+    item = get_object_or_404(Item, pk=item_id)
+    like = like == 'true'
+    also_like = also_like == 'true'
+
+    result_html = render_to_string('includes/also_liked.html', {'items': item.also_liked(like=like, also_like=also_like)}, context_instance=RequestContext(request))
+
+    json = simplejson.dumps({'success': True, 'items': result_html})
+    return HttpResponse(json, mimetype='application/json')
 
 
 def recommend(request, category_slug=None, start=None, n=None):

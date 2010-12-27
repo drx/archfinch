@@ -133,6 +133,34 @@ function task_wait(task_id)
         }
     })
 }
+function generate_lists_tip(){
+    $("img.add_to_list").each(function(){$(this).qtip({
+        content: "<div style='float: left' class='tip'>Add to:<br /><ul item_id='"+get_item_id($(this))+"'>"+user_lists+"</ul><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
+            position: {
+            corner: {
+                target: 'topRight',
+                tooltip: 'bottomLeft'
+            },
+            adjust: {
+                screen: true
+            }
+        },
+        show: {
+            when: 'click',
+            solo: true
+        },
+        hide: 'unfocus',
+        style: {
+            tip: true,
+            border: {
+                width: 1,
+                radius: 5
+            },
+            name: 'light'
+        }
+            
+    })}); 
+}
 
 $(document).ready(function(){
     $(".box").live("hover", 
@@ -148,21 +176,24 @@ $(document).ready(function(){
             }
         }
     )
-    $(".user_rate .rating_small").hover(
+    $(".user_rate .rating_small").live("hover", 
         function(e){
-            $(this).removeClass('rate')
-            seq_term = get_seq_term(this)
-            rsh = $("#rsh_"+seq_term)
-            rsh.html(rating_to_hint($(this)))
-        },
-        function(e){
-            $(this).addClass('rate')
-            seq_term = get_seq_term(this)
-            rsh = $("#rsh_"+seq_term)
-            rsh.html('')
+            if (e.type == "mouseover")
+            {
+                $(this).removeClass('rate')
+                seq_term = get_seq_term(this)
+                rsh = $("#rsh_"+seq_term)
+                rsh.html(rating_to_hint($(this)))
+            }
+            else {
+                $(this).addClass('rate')
+                seq_term = get_seq_term(this)
+                rsh = $("#rsh_"+seq_term)
+                rsh.html('')
+            }
         }
     )
-    $(".user_rate .rating_small:not(img)").mousedown(function(e)
+    $(".user_rate .rating_small:not(img)").live('mousedown', function(e)
     {
         if ($(this).hasClass("rated"))
         {
@@ -594,6 +625,49 @@ $(document).ready(function(){
         })
         e.preventDefault();
     });
+
+    $('button.also_liked').each(function(){
+        $(this).qtip(
+        {
+            content: '<a class="also_liked" like_type="'+$(this).attr('like_type')+'" like_value="true">like</a><br><a class="also_liked" like_type="'+$(this).attr('like_type')+'" like_value="false">dislike</a><br>',
+            position: {
+                corner: {
+                    target: 'bottomLeft'
+                }
+            },
+            show: {
+                when: 'click'
+            },
+            hide: 'unfocus'
+        });
+        $(this).hover(function(e){
+            $(this).addClass("highlight");
+        },function(e){
+            $(this).removeClass("highlight");
+        });
+    });
+    $('a.also_liked').live('click', (function(e){
+        button = $('button.also_liked[like_type='+$(this).attr('like_type')+']');
+        button.children('.like_dislike').html($(this).attr('like_value')=='true' ? 'like' : 'dislike');
+        button.qtip('hide');
+        like = $('button.also_liked[like_type=like] .like_dislike').html();
+        also_like = $('button.also_liked[like_type=also_like] .like_dislike').html();
+        $('#also_liked_also').html((like == also_like) ? 'also' : '');        
+        ld = $("#ld_also_liked")
+        ld.show();
+        $.getJSON("/also_liked/"+$("#item").attr("item_id")+"/"+(like=='like')+"/"+(also_like=='like'), function(data){
+            ld.hide();
+            if (data.success)
+            {
+                $("div.also_liked").html(data.items);
+                generate_lists_tip();
+            }
+            else
+            {
+                ajaxerror($("#also_liked_error"), data.error);
+            }
+        })
+    }));
 
 });
 

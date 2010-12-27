@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^utils/markdown$', 'archfinch.main.views.process_markdown', name='utils-markdown'),
 
     url(r'^item/(?P<item_id>[0-9a-z]+)(?:/(.*))?$', 'archfinch.main.views.item', name='item'),
+    (r'^also_liked/(?P<item_id>[0-9a-z]+)/(?P<like>true|false)/(?P<also_like>true|false)$', 'archfinch.main.views.item_also_liked'),
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 

@@ -490,9 +490,28 @@ div.grippie
 {
     margin-right: 20px;
 }
-h1
+a.also_liked
+{
+    cursor: pointer;
+}
+button.also_liked
+{
+    background: none;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0
+}
+button.also_liked.highlight
+{
+    border: 1px solid #0072cc;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+h1, h1 button
 {
     font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-weight: bold;
     color: #0072cc;
     font-size: 20px;
     line-height: 30px;

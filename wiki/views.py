@@ -1,6 +1,7 @@
 from archfinch.wiki.models import PageForm, Page, Revision, RevisionText
 from archfinch.main.models import Item
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
+from archfinch.utils import render_to_response
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.http import HttpResponseRedirect

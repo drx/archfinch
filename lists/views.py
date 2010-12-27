@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
@@ -8,6 +8,7 @@ from django.utils.http import int_to_base36, base36_to_int
 from django.db import transaction
 from django.db.models import Max
 from django.utils import simplejson
+from archfinch.utils import render_to_response
 from archfinch.main.models import Item, Opinion
 from archfinch.lists.models import List, Entry
 from archfinch.users.models import User

@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
+from archfinch.utils import render_to_response
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.utils.http import base36_to_int
