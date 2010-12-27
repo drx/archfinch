@@ -3,7 +3,7 @@
     {% with 1 as yr_big %}
     {% with 1 as terse_layout %}
     {% with item.name as item_name %}
-    {% with item.category.element_singular as category_singular %}
+    {% with item.category_element as category_singular %}
     {% with item.rating as your_rating %}
     {% with forloop.counter as seq_term %}
         {% include "includes/opinionbox.html" %}
