@@ -129,7 +129,7 @@ def create(request):
 def overview(request):
     if request.user.is_authenticated():
         your_lists = request.user.list_set.all()
-        recommended = Item.objects.recommended(request,user, category_id=8)  # get recommended lists
+        recommended = Item.objects.recommended(request.user, category_id=8)  # get recommended lists
     return render_to_response('lists/overview.html', locals(), context_instance=RequestContext(request))
 
 

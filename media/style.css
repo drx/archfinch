@@ -499,6 +499,7 @@ button.also_liked
     background: none;
     border: 1px solid transparent;
     margin: 0;
+    margin-right: -3px;
     padding: 0
 }
 button.also_liked.highlight

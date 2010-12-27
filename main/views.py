@@ -40,6 +40,7 @@ def item(request, item_id):
         return redirect(reverse('list-view', args=[int_to_base36(item_id), slugify(item.name)]))
 
     if request.user.is_authenticated():
+        also_liked = item.also_liked(user=request.user)
         try:
             opinion = request.user.opinion_set.get(item=item)
         except Opinion.DoesNotExist:
@@ -47,6 +48,7 @@ def item(request, item_id):
             recommendation = item.recommendation(request.user)
     else:
         opinion = None
+        also_liked = item.also_liked()
 
     return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
 

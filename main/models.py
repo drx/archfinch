@@ -15,7 +15,7 @@ class Category(models.Model):
 
 
 class ItemManager(models.Manager):
-    def recommended(user, category=None, category_id=None):
+    def recommended(self, user, category=None, category_id=None):
         '''
         Fetches items recommended for the user (which the user has not already rated)
          and returns an iterator.
@@ -65,7 +65,7 @@ class ItemManager(models.Manager):
               (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id = %s AND le.item_id=mi.id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
-            ORDER BY recommendation DESC) AS recommended WHERE reommendation > 0""",
+            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
             params)
 
         return recommended
@@ -116,7 +116,7 @@ class Item(models.Model):
         else:
             return 0
 
-    def also_liked(self, category=None, category_id=None, like=True, also_like=True):
+    def also_liked(self, user=None, category=None, category_id=None, like=True, also_like=True):
         '''
         Fetches items (dis)liked by users who (dis)like a given item for the user (which the user has not already rated)
          and returns an iterator.
@@ -124,6 +124,7 @@ class Item(models.Model):
         from itertools import takewhile
 
         params = [self.id, self.id]
+        select = ''
         where = ''
         if category is not None and category:
             category_id = category.id
@@ -139,11 +140,15 @@ class Item(models.Model):
         else:
             where += " AND mo2.rating <= 2"
 
+        if user is not None:
+            select += ', COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%s AND mo.item_id=mi.id)) as rating' % (user.id)
+
         recommended = Item.objects.raw("""
             SELECT * FROM (
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM(abs(mo2.rating-3)*(mo.rating-3)) AS recommendation,
              mc.element_singular AS category_element
+             """+select+"""
             FROM main_opinion mo
              INNER JOIN main_opinion mo2
               ON mo.user_id=mo2.user_id
