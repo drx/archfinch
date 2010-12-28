@@ -146,21 +146,7 @@ def opinion_set(request, item_id, rating):
             'error_msg': 'You need to be logged in to set a rating.'})
         return HttpResponse(json, mimetype='application/json')
 
-    # this should be forwarded to a server which does this kind of work
-    #  and not done during the client request
-    # also, this should update similarities
-    opinion, created = Opinion.objects.get_or_create(user=request.user, item=item,
-        defaults={'rating': rating})
-    old_rating = opinion.rating
-    opinion.rating = rating
-    opinion.save()
-
-    action, created = Action.objects.get_or_create(type=Action.types['rating'], opinion=opinion, user=request.user)
-    action.save()
-
-    if created or rating != old_rating:
-        delta = {item_id: ('set', old_rating, rating)}
-        Similarity.objects.update_item_delta(request.user, delta)
+    tasks.opinion_set.delay(request.user, item, rating)
 
     json = simplejson.dumps({'success': True})
     return HttpResponse(json, mimetype='application/json')
@@ -181,13 +167,7 @@ def opinion_remove(request, item_id):
             'error_msg': 'You need to be logged in to remove a rating.'})
         return HttpResponse(json, mimetype='application/json')
 
-    # see a similar comment for opinion_set
-    opinion = Opinion.objects.get(user=request.user, item=item)
-    old_rating = opinion.rating
-    opinion.delete()
-
-    delta = {item_id: ('remove', old_rating)}
-    Similarity.objects.update_item_delta(request.user, delta)
+    tasks.opinion_remove.delay(request.user, item)
 
     json = simplejson.dumps({'success': True})
     return HttpResponse(json, mimetype='application/json')
