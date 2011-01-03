@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('archfinch.lists.views',
     url(r'^edit/(?P<list_id>[0-9a-z]+)$', 'edit', name='list-edit'),
+    url(r'^delete/(?P<list_id>[0-9a-z]+)$', 'delete', name='list-delete'),
     url(r'^save$', 'save', name='list-save'),
     url(r'^create$', 'create', name='list-create'),
 

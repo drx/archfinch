@@ -147,3 +147,15 @@ def edit(request, list_id):
         return forbidden(request)
 
     return render_to_response('lists/edit.html', locals(), context_instance=RequestContext(request))
+
+
+def delete(request, list_id):
+    list_id = base36_to_int(list_id)
+    list = get_object_or_404(List, pk=list_id)
+
+    if list.owner != request.user:
+        return forbidden(request)
+
+    list.delete()
+
+    return HttpResponseRedirect(reverse('lists-overview'))

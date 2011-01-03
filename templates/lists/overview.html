@@ -15,6 +15,7 @@ Lists - Archfinch
         <a href="{% url list-view list.id|base36 list.name|slugify %}">{{ list.name }}</a>
         &nbsp; {{ list.n }} thing{{ list.n|pluralize }}
         &nbsp; <a href="{% url list-edit list.id|base36 %}">edit</a>    
+        &nbsp; <span class="delete-container"><a class="delete-link delete-confirm">delete</a><span class="delete-confirm hide">&nbsp; Are you sure? &nbsp; <a class="delete-undelete">No</a> &nbsp; <a href="{% url list-delete list.id|base36 %}" class="delete-link">Yes</a></span></span>
     </p>
 {% endfor %}
 <br />

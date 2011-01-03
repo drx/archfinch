@@ -669,5 +669,15 @@ $(document).ready(function(){
         })
     }));
 
+    $('a.delete-confirm').click(function(e){
+        $(this).parent().children('span.delete-confirm').fadeIn('slow');
+        $(this).addClass("delete-clicked");
+    });
+    $('a.delete-undelete').click(function(e){
+        $(this).parent().fadeOut('slow');
+        $(this).parent().parent().children('a.delete-link').removeClass("delete-clicked");
+        e.preventDefault();
+    });
+
 });
 
