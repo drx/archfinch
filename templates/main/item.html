@@ -80,6 +80,12 @@
 </div>
 {% endif %}
 
+{% if item.submitter %}
+<p>
+Submitted by <a href="{% url user-overview item.submitter.username %}">{{ item.submitter.username }}</a>
+</p>
+{% endif %}
+
 </div>
 
 {% endblock %}

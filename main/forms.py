@@ -19,10 +19,12 @@ class AddItemForm2(forms.Form):
 
 class AddItemWizard(FormWizard):
     def done(self, request, form_list):
-        item = form_list[0].save()
+        item = form_list[0]
+        item = item.save()
         item_profile = ItemProfile(item=item)
         item_profile.save()
         item.profile = item_profile
+        item.submitter = request.user
         item.save()
         return redirect(reverse('item', args=[int_to_base36(item.id), slugify(item.name)]))
 

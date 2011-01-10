@@ -77,6 +77,8 @@ class Item(models.Model):
     parent = models.ForeignKey('Item', null=True, blank=True)
     name = models.CharField(max_length=1000)
 
+    submitter = models.ForeignKey('users.User', null=True, blank=True)
+
     search = SphinxSearch(
         mode='SPH_MATCH_EXTENDED2',
         rankmode='SPH_RANK_SPH04',
