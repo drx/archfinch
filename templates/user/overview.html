@@ -29,7 +29,7 @@
 <div id="content_left">
 
 {% if opinions %}
-    {% regroup opinions by action.time|timesince_days as date_list %}
+    {% regroup opinions by action_time|timesince_days as date_list %}
     {% for date in date_list %}
         <h2>{{ date.grouper|capfirst }}</h2>
         {% for opinion in date.list %}

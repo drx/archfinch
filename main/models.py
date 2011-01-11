@@ -225,12 +225,6 @@ class Opinion(models.Model):
         }
         return third_person_choices[self.rating]
 
-    def action(self):
-        try:
-            return self.action_set.all()[0]
-        except IndexError:
-            return None
-
 
 class SimilarityManager(models.Manager):
     def update_user(self, user):

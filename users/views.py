@@ -142,7 +142,10 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     if request.user==viewed_user:
         your_profile = True
 
-    select=[('review', 'SELECT EXISTS (SELECT 1 FROM main_review WHERE main_review.user_id = %s AND main_review.item_id = main_item.id)')]
+    select=[
+        ('review', 'SELECT EXISTS (SELECT 1 FROM main_review WHERE main_review.user_id = %s AND main_review.item_id = main_item.id)'),
+        ('action_time', 'SELECT time FROM main_action WHERE main_action.opinion_id = main_opinion.id')
+    ]
     select_params=[viewed_user.id]
 
     if request.user.is_authenticated() and request.user != viewed_user:
