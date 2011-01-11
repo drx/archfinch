@@ -111,7 +111,7 @@
 
 {% with viewed_user.review_set.count as review_count %}
     {% if review_count > 0 %}
-    <span style='font-size: 11px'>{{ viewed_user.username }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;{{ review_count|pluralize:"it,them" }}</a>.</span>
+    <span style='font-size: 11px'>{{ viewed_user.username }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;{{ review_count|pluralize:"it,them" }}</a>.</span><br>
     {% endif %}
 {% endwith %}
 
