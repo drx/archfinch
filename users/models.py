@@ -52,7 +52,7 @@ class User(BaseUser):
         Fetches categories in which the user has rated items, ordered
          by descending rating count.
         '''
-        categories = self.opinion_set.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
+        categories = self.opinion_set.filter(item__category__hide=False).values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
        
         # translate the long keys 
         translate = {'item__category__element_plural': 'element_plural', 'item__category__slug': 'slug'}

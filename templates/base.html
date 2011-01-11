@@ -69,6 +69,7 @@
                  </ul>
             <li> <a href="{% url lists-overview %}">lists</a>
             {% else %}
+            <li style='border: 0'> &nbsp;
             {% endif %}
             <li style='border: 0'> <form style="display:inline; float:right" action="{% url search %}"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search for things...' onClick='this.value=""'{% endif %}></form>
         </ul>
