@@ -8,6 +8,8 @@ from archfinch.main.models import Opinion, Similarity, Item
 class User(BaseUser):
     objects = BaseUserManager()
 
+    karma = models.IntegerField(default=0)
+
     def self_lists(self):
         lists = [
             {'name': 'ignored', 'id': '!ignored'},

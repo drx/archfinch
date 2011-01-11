@@ -68,7 +68,7 @@ a.nohover:hover
 {
     margin-left: 46em;
 }
-p, .article li
+p, .article li, #content li
 {
     font-size: 0.8em;
     line-height: 1.5em;

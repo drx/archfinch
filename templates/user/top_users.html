@@ -1,0 +1,37 @@
+{% extends base %}
+
+{% block title %}Top users - Archfinch{% endblock %}
+
+{% block content %}
+
+<h1>Top users.</h1>
+
+<table>
+{% for user in top_users %}
+<tbody class='box'>
+    <tr><td><div class="user"><a href="{% url users.views.overview user %}">{{ user }}</a></div></td>
+    <td style='padding-left: 10em'>
+    {{ user.karma }}
+    </td></tr>
+</tbody>
+{% endfor %}
+
+</table>
+
+<br />
+
+<p>You get:
+    <ul>
+        <li> <b>20</b> points for each friend you refer
+        <li> <b>10</b> points for each item you <a href="{% url missing %}">add</a>
+        <li> <b>5</b> points for each link you submit
+        <li> <b>5</b> points for each wiki edit
+        <li> <b>1</b> point for each rating
+    </ul>
+</p>
+
+<p>
+Big thanks to anyone using Archfinch, regardless of points. It would be nothing without you!
+</p>
+
+{% endblock %}

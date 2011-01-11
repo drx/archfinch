@@ -25,6 +25,12 @@ def get_max_similarity(user):
     return locals()
 
 
+def top_users(request):
+    top_users = User.objects.order_by('-karma')[:10]
+
+    return render_to_response('user/top_users.html', locals(), context_instance=RequestContext(request))
+
+
 def reviews(request, username, start=None, n=None):
     if start is None:
         start = 0
