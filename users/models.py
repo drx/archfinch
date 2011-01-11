@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from django.contrib.auth.models import User as BaseUser, UserManager as BaseUserManager
 from django.utils.http import int_to_base36
 from django.core.urlresolvers import reverse
@@ -43,3 +44,7 @@ class User(BaseUser):
         return similar_users
 
 
+    def add_points(self, n):
+        self.karma = F('karma') + n
+        print self.karma
+        self.save()

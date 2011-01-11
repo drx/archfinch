@@ -20,6 +20,7 @@ def opinion_set(user, item, rating):
     if created or rating != old_rating:
         delta = {item.id: ('set', old_rating, rating)}
         Similarity.objects.update_item_delta(user, delta)
+        user.add_points(1)
 
 @task
 def opinion_remove(user, item):
@@ -29,4 +30,5 @@ def opinion_remove(user, item):
 
     delta = {item.id: ('remove', old_rating)}
     Similarity.objects.update_item_delta(user, delta)
+    user.add_points(-1)
 

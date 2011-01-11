@@ -43,6 +43,7 @@ def edit(request, page_id=None, item_id=None):
             revision_text.save()
 
             page.revisions.create(text=revision_text, user=request.user)
+            request.user.add_points(5)
             
             return HttpResponseRedirect(redirect_url)
     else:

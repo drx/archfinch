@@ -26,6 +26,7 @@ class AddItemWizard(FormWizard):
         item.profile = item_profile
         item.submitter = request.user
         item.save()
+        request.user.add_points(10)
         return redirect(reverse('item', args=[int_to_base36(item.id), slugify(item.name)]))
 
     def get_template(self, step):
