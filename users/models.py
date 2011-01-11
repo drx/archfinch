@@ -46,5 +46,8 @@ class User(BaseUser):
 
     def add_points(self, n):
         self.karma = F('karma') + n
-        print self.karma
         self.save()
+
+
+    def karma_place(self):
+        return User.objects.filter(karma__gt=self.karma).count()+1

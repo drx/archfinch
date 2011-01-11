@@ -17,6 +17,24 @@
     </td></tr>
 </tbody>
 {% endfor %}
+{% if request.user.is_authenticated and request.user.karma_place > 10 %}
+<tr>
+    <td style='line-height: 5px; text-align: right'>
+        &middot;&nbsp;<br>
+        &middot;&nbsp;<br>
+        &middot;&nbsp;<br>
+    </td>
+</tr>
+<tbody class='box'>
+    <tr>
+    <td style='text-align: right'>{{ request.user.karma_place }}</td>
+    <td style='padding-right: 10em'><div class="user"><a href="{% url users.views.overview request.user %}">{{ request.user }}</a></div></td>
+    <td>
+    {{ request.user.karma }}
+    </td></tr>
+</tbody>
+{% endif %}
+
 
 </table>
 

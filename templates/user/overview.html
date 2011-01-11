@@ -2,6 +2,8 @@
 
 {% load base36 %}
 {% load nbsp %}
+{% load timesince_days %}
+{% load humanize %}
 
 {% block title %}
 {% if category %}
@@ -26,50 +28,55 @@
 
 <div id="content_left">
 
-{% for opinion in opinions %}
-
-{% with opinion.rating as rating %}
-{% with opinion.item_id as item_id %} 
-{% with your_profile as yr_big %}
-{% with opinion.review as review %}
-{% with forloop.counter as seq_term %}
-{% if your_profile or not user.is_authenticated %}
-    {% with rating as your_rating %}
-    {% with opinion.item.name as item_name %} {# opinion.item_name #}
-    {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
-        {% include "includes/opinionbox.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+{% if opinions %}
+    {% regroup opinions by action.time|timesince_days as date_list %}
+    {% for date in date_list %}
+        <h2>{{ date.grouper|capfirst }}</h2>
+        {% for opinion in date.list %}
+            {% with opinion.rating as rating %}
+            {% with opinion.item_id as item_id %} 
+            {% with your_profile as yr_big %}
+            {% with opinion.review as review %}
+            {% with forloop.counter as seq_term %}
+            {% if your_profile or not user.is_authenticated %}
+                {% with rating as your_rating %}
+                {% with opinion.item.name as item_name %} {# opinion.item_name #}
+                {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
+                    {% include "includes/opinionbox.html" %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% else %}
+                {% with opinion.your_rating as your_rating %}
+                {% with opinion.item_name as item_name %} {# opinion.item_name #}
+                {% with opinion.category_singular as category_singular %} {# opinion.category_singular #}
+                    {% include "includes/opinionbox.html" %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            {% endif %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
+        {% endfor %}
+    {% endfor %}
 {% else %}
-    {% with opinion.your_rating as your_rating %}
-    {% with opinion.item_name as item_name %} {# opinion.item_name #}
-    {% with opinion.category_singular as category_singular %} {# opinion.category_singular #}
-        {% include "includes/opinionbox.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-{% endif %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% empty %}
-{% if your_profile %}
-    {% if not start and not category %}
-    <div class="big">
-        <p>Rate some things!</p>
-        <form action="{% url search %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input class="search_inline" type='submit' value='Search' style='padding: 1px 10px 1px 10px'></form>
-        <p>The more you rate, the more accurately we can recommend you new things.</p>
-    </div>
+    {% if your_profile %}
+        {% if not start and not category %}
+        <div class="big">
+            <p>Rate some things!</p>
+            <form action="{% url search %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input class="search_inline" type='submit' value='Search' style='padding: 1px 10px 1px 10px'></form>
+            <p>The more you rate, the more accurately we can recommend you new things.</p>
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="big">
+            <p>This user has not rated anything yet.</p>
+        </div>
     {% endif %}
-{% else %}
-    <div class="big">
-        <p>This user has not rated anything yet.</p>
-    </div>
 {% endif %}
-{% endfor %}
 {% if left > 0 %}
     <span class="smalltext">
     <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
@@ -89,6 +96,7 @@
     </p></span>
 {% endif %}
 
+
 </div>
 <div id="content_right">
 
@@ -100,14 +108,16 @@
 <br /><br />
 {% endif %}
 
-
-{% if categories|length > 1 %}
-<div class="category_filter">
-Show only {{ viewed_user.username }}'s
-{% for id, repr, slug in categories %}
-{% if not category_id %}{{ forloop.last|yesno:"or ," }}{% endif %}<a href="{% url user-overview-slugged viewed_user.username slug %}">{{ repr|nbsp }}</a>{{ forloop.last|yesno:",&#44;"|safe}}{% endfor %}{% if category_id %} or <a href="{% url user-overview-simple viewed_user.username %}">everything</a>.{% else %}.{% endif %}
-</div>
+{% if category_counts|length > 1 %}
+    <p>
+    {% for c in category_counts %}
+        <a href='{% url user-overview-slugged viewed_user.username c.item__category__slug %}'>{{ c.item__category__element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
+    {% endfor %}
+    {% if category %} or <a href="{% url user-overview viewed_user.username %}">everything</a>{% endif %}
+    </p>
 {% endif %}
+
+<p>{{ viewed_user.username }} has {{ viewed_user.karma }} points ({{ viewed_user.karma_place|ordinal }})</p>
 
 {% with viewed_user.review_set.count as review_count %}
     {% if review_count > 0 %}
@@ -120,6 +130,7 @@ Show only {{ viewed_user.username }}'s
         <span style='font-size: 11px'>{{ viewed_user.username }} has created {{ list_count }} list{{ list_count|pluralize }}. <a href="{% url lists-user viewed_user.username %}">See&nbsp;{{ list_count|pluralize:"it,them" }}</a>.</span>
     {% endif %}
 {% endwith %}
+
 
 </div>
 
