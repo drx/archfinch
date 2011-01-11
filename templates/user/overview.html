@@ -38,10 +38,12 @@
             {% with your_profile as yr_big %}
             {% with opinion.review as review %}
             {% with forloop.counter as seq_term %}
+            {% with forloop.parentloop.counter as seq_term2 %}
             {% with opinion.your_rating as your_rating %}
             {% with opinion.item.name as item_name %} {# opinion.item_name #}
             {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
                 {% include "includes/opinionbox.html" %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
