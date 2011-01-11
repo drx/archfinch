@@ -9,8 +9,10 @@
 <table>
 {% for user in top_users %}
 <tbody class='box'>
-    <tr><td><div class="user"><a href="{% url users.views.overview user %}">{{ user }}</a></div></td>
-    <td style='padding-left: 10em'>
+    <tr {% if forloop.counter <= 3 %}class="top{{ forloop.counter }}"{% endif %}>
+    <td style='text-align: right'>{{ forloop.counter }}</td>
+    <td style='padding-right: 10em'><div class="user"><a href="{% url users.views.overview user %}">{{ user }}</a></div></td>
+    <td>
     {{ user.karma }}
     </td></tr>
 </tbody>
@@ -31,7 +33,7 @@
 </p>
 
 <p>
-Big thanks to anyone using Archfinch, regardless of points. It would be nothing without you!
+Big thanks to anyone using Archfinch, regardless of points, you're awesome. It would be nothing without you!
 </p>
 
 {% endblock %}

@@ -620,3 +620,17 @@ a.delete-link:hover, a.delete-clicked
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+
+tr.top1
+{
+    font-weight: bold;
+    font-size: 1.5em;
+}
+tr.top2
+{
+    font-size: 1.25em;
+}
+tr.top3
+{
+    font-size: 1.1em;
+}
