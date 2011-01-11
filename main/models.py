@@ -222,6 +222,7 @@ class Opinion(models.Model):
             3: 'is neutral to',
             4: 'likes',
             5: 'loves',
+            None: 'hasn\'t rated',
         }
         return third_person_choices[self.rating]
 
