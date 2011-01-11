@@ -67,10 +67,10 @@
 
 </div>
 <div id="content_right">
-{% if user_categories %}
+{% if user.categories %}
     <p id="user_cats">Show  
-    {% for id, repr, slug in user_categories %}
-        <a href='{% url recommend-slugged slug|urlencode %}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
+    {% for category in user.categories %}
+        <a href='{% url recommend-slugged category.slug|urlencode %}'>{{ category.element_plural|nbsp }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
     {% endfor %}
     (<a href="#" id="user_cats_more">more</a>)
     </p>

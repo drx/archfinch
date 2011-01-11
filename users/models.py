@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Count
 from django.contrib.auth.models import User as BaseUser, UserManager as BaseUserManager
 from django.utils.http import int_to_base36
 from django.core.urlresolvers import reverse
@@ -20,18 +20,6 @@ class User(BaseUser):
             lists.append({'name': list.name, 'id': int_to_base36(list.id)})
 
         return lists
-    
-
-    def categories(self, opinions=None):
-        '''
-        Fetches categories the user has rated in.
-        '''
-        if opinions is None:
-            opinions = Opinion.objects.filter(user=self).select_related('item__category')
-        categories = opinions.values_list('item__category__id', 'item__category__element_plural', 'item__category__slug')
-        categories = set(categories)
-
-        return categories
 
 
     def similar(self):
@@ -45,9 +33,29 @@ class User(BaseUser):
 
 
     def add_points(self, n):
+        '''
+        Adds points to user's karma.
+        '''
         self.karma = F('karma') + n
         self.save()
 
 
     def karma_place(self):
+        '''
+        Fetches user's place in the top users chart, according to karma.
+        '''
         return User.objects.filter(karma__gt=self.karma).count()+1
+
+
+    def categories(self):
+        '''
+        Fetches categories in which the user has rated items, ordered
+         by descending rating count.
+        '''
+        categories = self.opinion_set.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
+       
+        # translate the long keys 
+        translate = {'item__category__element_plural': 'element_plural', 'item__category__slug': 'slug'}
+        categories = map(lambda c: dict((translate.get(k,k), v) for k,v in c.iteritems()), categories)
+
+        return categories

@@ -162,15 +162,13 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     else:
         opinions = opinions.filter(item__category__hide=False)
 
-    category_counts = viewed_user.opinion_set.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
+    category_counts = viewed_user.categories()
 
     if request.user==viewed_user or not request.user.is_authenticated():
         similarity = 0
         similarity_max = 10
 
     else:
-        #opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
-
         similarity_max = get_max_similarity(request.user)
 
         try:

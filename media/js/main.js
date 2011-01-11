@@ -678,6 +678,12 @@ $(document).ready(function(){
         $(this).parent().parent().children('a.delete-link').removeClass("delete-clicked");
         e.preventDefault();
     });
+    $("ul.menu li").hover(function(e) {
+        $(this).children('ul.submenu').show();
+    },function(e){
+        $(this).children('ul.submenu').hide();
+    });
 
 });
+
 

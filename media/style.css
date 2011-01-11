@@ -76,13 +76,45 @@ p, .article li, #content li
 ul.menu
 {
     list-style-type: none;
-    padding: 0;
-    margin-bottom: 0.5em;
+    padding: 0 0 0.25em 0;
+    margin-bottom: 0;
+    margin-left: 0.5em;
 }
-ul.menu li
+ul.menu > li, #menu_loggedin li
 {
     display: inline;
-    margin-left: 1em;
+    border: 0.5em solid transparent;
+    position: relative;
+}
+ul.menu > li:hover
+{
+    background-color: #0099ff;
+    border-color: #0099ff;
+    border-style: solid;
+    border-width: 0.25em 0.5em 0.25em 0.5em;
+    -moz-border-radius: 4px 4px 0px 0px;
+    -webkit-border-radius: 4px 4px 0px 0px;
+    border-radius: 4px 4px 0px 0px;
+}
+ul.menu li ul.submenu
+{
+    display: none;
+    list-style: none;
+    position: absolute;
+    left: 0;
+    top: 1.25em;
+    margin-left: -0.5em;
+    padding: 0.5em 0 0 0;
+    background: #ffffff;
+    border: 0.5em solid #0099ff;
+    -moz-border-radius: 0px 4px 4px 4px;
+    -webkit-border-radius: 0px 4px 4px 4px;
+    border-radius: 0px 4px 4px 4px;
+    width: 100%;
+}
+ul.submenu li 
+{
+    padding: 0 0.5em 0.5em 0.5em;
 }
 .widebox div.title, .rating_verbose
 {
@@ -368,6 +400,10 @@ td
 {
     color: #0099ff;
 }
+#navbar ul.menu > li:hover > a
+{
+    color: #ffffff;
+}
 input[type="text"], input[type="button"], input[type="password"], input[type="submit"], textarea, select
 {
     border: 1px solid #0099ff;
@@ -638,3 +674,4 @@ tr.top3
 {
     font-size: 1.1em;
 }
+

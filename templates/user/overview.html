@@ -103,7 +103,7 @@
 {% if category_counts|length > 1 %}
     <p>
     {% for c in category_counts %}
-        <a href='{% url user-overview-slugged viewed_user.username c.item__category__slug %}'>{{ c.item__category__element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
+        <a href='{% url user-overview-slugged viewed_user.username c.slug %}'>{{ c.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
     {% endfor %}
     {% if category %} or <a href="{% url user-overview viewed_user.username %}">everything</a>{% endif %}
     </p>
