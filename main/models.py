@@ -199,39 +199,6 @@ class Action(models.Model):
         return self.time.ctime()
 
 
-class OpinionManager(models.Manager):
-    def opinions_of(self, viewed, viewer, category=None):
-        '''
-        Fetches opinions of a user (viewed) on items
-         that the viewer also rated.
-        '''
-
-        where = ''
-        params = [viewed.id, viewer.id, viewed.id]
-        if category is not None and category:
-            where += ' AND mc.id = %s'
-            params.append(category.id)
-
-        else:
-            where += " AND mc.hide = 'f'"
-
-        return self.raw("""
-            SELECT m1.id, m1.item_id, m1.rating, m2.rating AS your_rating,
-             mc.element_singular AS category_singular,
-             mi.name AS item_name,
-             (EXISTS (SELECT 1 FROM main_review WHERE main_review.user_id = %s AND main_review.item_id = mi.id)) AS review
-            FROM main_opinion m1
-            LEFT JOIN main_opinion m2
-             ON (m1.item_id=m2.item_id AND m2.user_id=%s)
-            INNER JOIN main_item mi
-             ON (m1.item_id=mi.id)
-            INNER JOIN main_category mc
-             ON (mi.category_id=mc.id)
-            WHERE m1.user_id = %s""" + where + """
-            ORDER BY m2.rating IS NULL, m1.rating DESC, mi.name""",
-                params)
-
-
 class Opinion(models.Model):
     user = models.ForeignKey('users.User')
     item = models.ForeignKey(Item)
@@ -244,8 +211,6 @@ class Opinion(models.Model):
         (5, 'Love it'),
     )
     rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, db_index=True)
-
-    objects = OpinionManager()
 
     def __unicode__(self):
         return "%s gave %s a rating of %d." % (self.user.username, self.item.name, self.rating)

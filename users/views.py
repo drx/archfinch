@@ -10,7 +10,7 @@ from django.db.models import Max, Count
 from django import forms
 from archfinch.main.models import Opinion, Similarity, Category, Item, Review, Action
 from archfinch.users.models import User
-
+from django.utils.datastructures import SortedDict
 
 def get_max_similarity(user):
     this_user = User.objects.filter(pk=user).annotate(Max('similarity__value')).values_list('similarity__value__max', flat=True)[0]
@@ -139,26 +139,34 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
 
     categories = viewed_user.categories()
     your_profile = False
+    if request.user==viewed_user:
+        your_profile = True
+
+    select=[('review', 'SELECT EXISTS (SELECT 1 FROM main_review WHERE main_review.user_id = %s AND main_review.item_id = main_item.id)')]
+    select_params=[viewed_user.id]
+
+    if request.user.is_authenticated() and request.user != viewed_user:
+        select += [('your_rating', 'SELECT rating FROM main_opinion mo2 WHERE mo2.user_id = %s AND mo2.item_id = main_item.id')]
+        select_params += [request.user.id]
+
+    select = SortedDict(select)
+
+    opinions = Opinion.objects.filter(user__exact=viewed_user).select_related('item__category').order_by('-action__time', '-rating','item__name').extra(
+        select=select, select_params=select_params
+    )
+    if category is not None:
+        opinions = opinions.filter(item__category=category)
+    else:
+        opinions = opinions.filter(item__category__hide=False)
+
+    category_counts = viewed_user.opinion_set.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
+
     if request.user==viewed_user or not request.user.is_authenticated():
-        if request.user==viewed_user:
-            your_profile = True
-
-        opinions = Opinion.objects.filter(user__exact=viewed_user).select_related('item__category').order_by('-action__time', '-rating','item__name').extra(
-            select={'review': 'SELECT EXISTS (SELECT 1 FROM main_review WHERE main_review.user_id = %s AND main_review.item_id = main_item.id)'},
-            select_params=[viewed_user.id],
-        )
-        if category is not None:
-            opinions = opinions.filter(item__category=category)
-        else:
-            opinions = opinions.filter(item__category__hide=False)
-
-        category_counts = viewed_user.opinion_set.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
-
         similarity = 0
         similarity_max = 10
 
     else:
-        opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
+        #opinions = Opinion.objects.opinions_of(viewed_user, request.user, category=category)
 
         similarity_max = get_max_similarity(request.user)
 

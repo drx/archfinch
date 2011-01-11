@@ -38,23 +38,13 @@
             {% with your_profile as yr_big %}
             {% with opinion.review as review %}
             {% with forloop.counter as seq_term %}
-            {% if your_profile or not user.is_authenticated %}
-                {% with rating as your_rating %}
-                {% with opinion.item.name as item_name %} {# opinion.item_name #}
-                {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
-                    {% include "includes/opinionbox.html" %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-            {% else %}
-                {% with opinion.your_rating as your_rating %}
-                {% with opinion.item_name as item_name %} {# opinion.item_name #}
-                {% with opinion.category_singular as category_singular %} {# opinion.category_singular #}
-                    {% include "includes/opinionbox.html" %}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
-            {% endif %}
+            {% with opinion.your_rating as your_rating %}
+            {% with opinion.item.name as item_name %} {# opinion.item_name #}
+            {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
+                {% include "includes/opinionbox.html" %}
+            {% endwith %}
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
