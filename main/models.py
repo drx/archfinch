@@ -26,7 +26,7 @@ class ItemManager(models.Manager):
         from itertools import takewhile
 
         where = ''
-        params = [map(lambda u: u.id, users)]*4
+        params = [tuple(map(lambda u: u.id, users))]*4
         if category is not None and category:
             category_id = category.id
 
