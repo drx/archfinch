@@ -4,8 +4,11 @@ from django.template import RequestContext
 from django.db.models import Count, Q
 from djangosphinx.apis import current as djangosphinx_api
 from djangosphinx.models import SearchError
+from django.utils import simplejson
+from django.conf import settings
 from archfinch.utils import render_to_response
 from archfinch.main.models import Item, Category
+from archfinch.users.models import User
 import re
 
 
@@ -101,3 +104,18 @@ def query(request, json=False):
         return render_to_response('search/results.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
     else:
         return render_to_response('search/results.html', locals(), context_instance=RequestContext(request))
+
+
+def user_search(request):
+    query = request.GET['term']
+  
+    if settings.DEBUG:
+        # some quirky bug in the devserver
+        users = User.objects.filter(username__contains=query)
+    else:
+        users = User.objects.filter(username__icontains=query)
+
+    users = users[:10].values_list('username', flat=True)
+ 
+    json = simplejson.dumps(map(str,users))
+    return HttpResponse(json, mimetype='application/json')

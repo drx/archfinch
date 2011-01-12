@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from archfinch.main.models import Item, Opinion, Action, Similarity, Category
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
+from archfinch.users.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.markup.templatetags.markup import markdown
@@ -69,11 +70,11 @@ def item_also_liked(request, item_id, like, also_like):
     return HttpResponse(json, mimetype='application/json')
 
 
-def recommend(request, category_slug=None, start=None, n=None):
+def recommend(request, category_slug=None, start=None, n=None, usernames=None):
     '''
     Shows a list of recommendations.
     '''
-    if request.user.is_authenticated():
+    if request.user.is_authenticated() or usernames is not None:
         if start is None:
             start = 0
         else:
@@ -89,8 +90,15 @@ def recommend(request, category_slug=None, start=None, n=None):
         else:
             category = None
 
-        users = [request.user]
-        cache_key = 'recommend,%s,%s' % (map(lambda u: u.id, users), category_slug)
+        if usernames is not None:
+            usernames = usernames.split(',')
+            users = list(map(lambda un: get_object_or_404(User, username=un), usernames))
+
+        else:
+            usernames = [request.user.username]
+            users = [request.user]
+
+        cache_key = 'recommend,%s,%s' % ('+'.join(sorted(set(map(lambda u: str(u.id), users)))), category_slug)
         cache_timeout = 15*60
         cached_value = cache.get(cache_key)
 

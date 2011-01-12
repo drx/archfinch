@@ -80,6 +80,21 @@
         {{ forloop.last|yesno:"or ," }}<a href='{% url recommend-slugged slug|urlencode %}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
     {% endfor %}
     </p>
+
+    <br />
+
+    <p>
+        {% if users|length > 1 %}
+        Want to add someone else?<br />
+        {% else %}
+        Watching a movie with someone?<br />
+        {% endif %}
+        <input type='text' class="search" style='margin: 8px 0 8px 0' id='users_autocomplete' url='{% url recommend-for usernames=",,," %}' usernames='{{ usernames|join:"," }}'> <br />
+        {% if users|length <= 1 %}
+        Type in their username to include them in your recommendations.
+        {% endif %}
+    </p>
+
 {% endif %}
 </div>
 

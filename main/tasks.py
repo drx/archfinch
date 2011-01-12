@@ -3,7 +3,7 @@ from archfinch.main.models import Item, Opinion, Action, Similarity
 
 @task
 def recommend(category, users):
-    recommendations = list(Item.objects.recommended(users[0], category=category))
+    recommendations = list(Item.objects.recommended(users, category=category))
     return recommendations
 
 @task

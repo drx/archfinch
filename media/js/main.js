@@ -684,6 +684,20 @@ $(document).ready(function(){
         $(this).children('ul.submenu').hide();
     });
 
+    /* users autocomplete */
+    $("#users_autocomplete").autocomplete({
+			source: "/usersearch",
+			minLength: 2,
+			select: function( event, ui ) {
+                if (ui.item)
+                {
+                    window.location.replace(($(this).attr("url").replace(',,,', $(this).attr("usernames")+','+ui.item.value)));
+                }
+			}
+		});
+
+    
+
 });
 
 
