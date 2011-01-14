@@ -93,10 +93,12 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
         if usernames is not None:
             usernames = usernames.split(',')
             users = list(map(lambda un: get_object_or_404(User, username=un), usernames))
+            usernames_specified = True
 
         else:
             usernames = [request.user.username]
             users = [request.user]
+            usernames_specified = False
 
         cache_key = 'recommend,%s,%s' % ('+'.join(sorted(set(map(lambda u: str(u.id), users)))), category_slug)
         cache_timeout = 15*60

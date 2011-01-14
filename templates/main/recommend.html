@@ -2,6 +2,7 @@
 
 {% load base36 %}
 {% load nbsp %}
+{% load sequence %}
 
 {% block title %}
     {% if category %}
@@ -20,7 +21,12 @@
 {% else %}
     Things
 {% endif %}
- you might like.
+{% if usernames_specified %}
+    {{ usernames|sequence }}
+{% else %}
+    you
+{% endif %}
+ might like.
 </h1>
 
 {% for item in recommendations %}
