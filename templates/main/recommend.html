@@ -46,8 +46,10 @@
 {% empty %}
     {% if not category %}
         <div class="big">
-            <p>We don't know you well enough to recommend you anything.
+            <p>We don't know {% if usernames_specified %}them{% else %}you{% endif %} well enough to recommend you anything.
+            {% if not usernames_specified %}
             <p>We would like to, though, so please consider rating more stuff.</p>
+            {% endif %}
         </div>
     {% endif %}
 {% endfor %}
@@ -55,16 +57,24 @@
     <span class="smalltext">
     <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
     {% if left <= 100 %}
-        {% if category_slug %}
-            <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+        {% if usernames_specified %}
+            <a href="{% url recommend-for category_slug=category_slug|default:"" usernames=usernames|join:"," start=start|add:n n=100 %}">Show {{ left|pluralize:"it,them" }}</a>.
         {% else %}
-            <a href="{% url recommend-paged start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+            {% if category_slug %}
+                <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+            {% else %}
+                <a href="{% url recommend-paged start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
+            {% endif %}
         {% endif %}
     {% else %}
-        {% if category_slug %}
-            Show the next <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">100</a>.
+        {% if usernames_specified %}
+            Show the next <a href="{% url recommend-for category_slug=category_slug|default:"" usernames=usernames|join:"," start=start|add:n n=100 %}">100</a>.
         {% else %}
-            Show the next <a href="{% url recommend-paged start|add:n 100 %}">100</a>.
+            {% if category_slug %}
+                Show the next <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">100</a>.
+            {% else %}
+                Show the next <a href="{% url recommend-paged start|add:n 100 %}">100</a>.
+            {% endif %}
         {% endif %}
     {% endif %}
     </p>
@@ -76,14 +86,25 @@
 {% if user.categories %}
     <p id="user_cats">Show  
     {% for category in user.categories %}
-        <a href='{% url recommend-slugged category.slug|urlencode %}'>{{ category.element_plural|nbsp }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
+        {% if usernames_specified %}
+            {% url recommend-for category.slug|urlencode usernames|join:"," as category_url %}
+        {% else %}
+            {% url recommend-slugged category.slug|urlencode as category_url %}
+        {% endif %}
+        <a href='{{ category_url }}'>{{ category.element_plural|nbsp }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
     {% endfor %}
     (<a href="#" id="user_cats_more">more</a>)
     </p>
 
     <p id="global_cats">Show 
     {% for id, repr, slug in categories %}
-        {{ forloop.last|yesno:"or ," }}<a href='{% url recommend-slugged slug|urlencode %}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
+        {% if usernames_specified %}
+            {% url recommend-for slug|urlencode usernames|join:"," as category_url %}
+        {% else %}
+            {% url recommend-slugged slug|urlencode as category_url %}
+        {% endif %}
+
+        {{ forloop.last|yesno:"or ," }}<a href='{{ category_url }}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
     {% endfor %}
     </p>
 
