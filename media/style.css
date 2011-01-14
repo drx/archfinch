@@ -669,6 +669,12 @@ h1 form
 .ui-menu-item a
 {
     cursor: pointer;
+    width: 100%;
+    display: block;
+}
+.ui-state-hover
+{
+    background-color: #f8f8ff;
 }
 
 a.delete-link, a.delete-undelete
@@ -698,4 +704,3 @@ tr.top3
 {
     font-size: 1.1em;
 }
-
