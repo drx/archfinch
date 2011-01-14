@@ -696,7 +696,42 @@ $(document).ready(function(){
 			}
 		});
 
-    
+    /* rating graphs */
+    $("#ratings_graph").qtip({
+        content: "a",
+        show: {when: false, effect: {length: 0}},
+        position: {target: 'mouse', corner: {target: 'topMiddle', tooltip: 'bottomMiddle'}},
+        hide: {effect: {length: 0}},
+        style: {
+            tip: true,
+            border: {
+                width: 1,
+                radius: 5,
+                color: '#b6dbf8'
+            },
+            name: 'light'
+        }
+    });
+    $("#ratings_graph").bind("plothover", function (event, pos, item) {
+        //alert("You hovered at " + pos.x + ", " + pos.y);
+        // secondary axis coordinates if present are in pos.x2, pos.y2,
+        // if you need global screen coordinates, they are pos.pageX, pos.pageY
+
+        if (item) {
+
+            if (previousPoint != item.datapoint) {
+                previousPoint = item.datapoint;
+                $(this).qtip("api").updateContent(item.datapoint[1]);
+                $(this).qtip("show");
+            }
+        }
+        else {
+            previousPoint = null;
+            $(this).qtip("hide");
+        }
+    });
+
+        
 
 });
 

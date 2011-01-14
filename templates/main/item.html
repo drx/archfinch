@@ -6,6 +6,30 @@
 {% block title %}{{ item.name }} - Archfinch{% endblock %}
 
 {% block media %}
+    <!--[if IE]><script language="javascript" type="text/javascript" src="/media/js/flot/excanvas.min.js"></script><![endif]-->
+    <script type="text/javascript" src="/media/js/flot/jquery.flot.min.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $.plot($("#ratings_graph"), [
+            {
+                data: [
+                {% for rating, count in ratings_count %}
+                    [{{ rating }}, {{ count }}]{% if not forloop.last %},{% endif %}
+                {% endfor %}
+                ],
+                bars: {show: true, barWidth: 0.75, align: "center", fill: 0.5},
+                color: 1
+            }
+        ],
+        {
+            grid: {tickColor: "transparent", hoverable: true},
+            yaxis: {ticks: [], autoscaleMargin: 0.1},
+            xaxis: {autoscaleMargin: 0.05, ticks: [1,2,3,4,5]}
+        });
+    });
+    </script>
+
 {% include "includes/generate_lists_tip.html" %}
 {% endblock %}
 
@@ -79,6 +103,10 @@
     </div>
 </div>
 {% endif %}
+
+<br />
+
+<div id="ratings_graph"></div>
 
 {% if item.submitter %}
 <p>

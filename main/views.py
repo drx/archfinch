@@ -4,6 +4,7 @@ from django.utils import simplejson
 from django.utils.http import base36_to_int, int_to_base36
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
+from django.db.models import Count
 from archfinch.main.models import Item, Opinion, Action, Similarity, Category
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from archfinch.users.models import User
@@ -50,6 +51,13 @@ def item(request, item_id):
     else:
         opinion = None
         also_liked = item.also_liked()
+
+    ratings_count = item.opinion_set.all().values('rating').annotate(count=Count('rating'))
+    ratings_count = dict((x['rating'], x['count']) for x in ratings_count)
+    for rating in range(1, 6):
+        ratings_count.setdefault(rating, 0)
+
+    ratings_count = ratings_count.items()
 
     return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
 

@@ -704,3 +704,9 @@ tr.top3
 {
     font-size: 1.1em;
 }
+
+#ratings_graph
+{
+    width: 100%;
+    height: 150px;
+}
