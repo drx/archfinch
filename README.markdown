@@ -10,8 +10,8 @@ You are free to explore the source code, reuse it in any way you see fit (MIT li
 
 You should be able to recreate Archfinch if you devote enough time to it. If there is ever nonzero demand, I will provide a detailed guide, but I doubt there will be any.
 
+**Pull requests very welcome.**
+
 # Contacing us
 
 If you need any assistance, have questions, are unsure about something, you can go on our IRC (#archfinch on irc.archfinch.com) or [email](mailto:luke@archfinch.com) me.
-
-**Pull requests welcome.**
