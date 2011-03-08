@@ -16,7 +16,9 @@ from archfinch.utils import render_to_response
 from archfinch.main import tasks
 import celery.result
 from django.core.cache import cache
+from lazysignup.decorators import allow_lazy_user
 
+@allow_lazy_user
 def welcome(request):
     if request.user.is_authenticated():
         return redirect(reverse('user-overview', args=[request.user.username]))

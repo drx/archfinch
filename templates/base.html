@@ -41,7 +41,7 @@
             {% if user.is_authenticated %}
             <span id="menu_loggedin">
             <li> <a href="{% url logout %}" id="menu_logout">logout</a>
-            <li> <a href="{% url users.views.overview user.username %}" id="menu_user">{{ user.username }}</a>
+            <li> <a href="{% url users.views.overview user.username %}" id="menu_user">{{ user }}</a>
             </span>
             {% else %}
             <span id="menu_notloggedin">

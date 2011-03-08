@@ -4,6 +4,7 @@ from django.contrib.auth.models import User as BaseUser, UserManager as BaseUser
 from django.utils.http import int_to_base36
 from django.core.urlresolvers import reverse
 from archfinch.main.models import Opinion, Similarity, Item
+from lazysignup.utils import is_lazy_user
 
 
 class User(BaseUser):
@@ -59,3 +60,9 @@ class User(BaseUser):
         categories = map(lambda c: dict((translate.get(k,k), v) for k,v in c.iteritems()), categories)
 
         return categories
+
+    def __unicode__(self):
+        if is_lazy_user(self):
+            return 'Anonymous user'
+        else:
+            return self.username

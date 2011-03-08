@@ -47,18 +47,18 @@ def add(request, list_id, item_id):
 
     if list_id == '!ignored':
         try:
-            name = "{username}'s ignore list".format(username=request.user.username)
+            name = "{user}'s ignore list".format(user=request.user)
         except AttributeError:
             # python 2.5 compatibility 
-            name = "%s's ignore list" % (request.user.username,)
+            name = "%s's ignore list" % (request.user,)
         list, created = List.objects.get_or_create(owner=request.user, ignored=True, defaults={'category_id': 8, 'name': name, 'options': {}})
         list_id = list.id
     elif list_id == '!queue':
         try:
-            name = "{username}'s queue".format(username=request.user.username)
+            name = "{user}'s queue".format(user=request.user)
         except AttributeError:
             # python 2.5 compatibility 
-            name = "%s's queue" % (request.user.username,)
+            name = "%s's queue" % (request.user,)
         list, created = List.objects.get_or_create(owner=request.user, queue=True, defaults={'category_id': 8, 'name': name, 'options': {}})
         list_id = list.id
     else:

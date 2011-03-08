@@ -3,12 +3,12 @@
 {% load base36 %}
 
 {% block title %}
-{{ viewed_user.username }}'s lists - Archfinch
+{{ viewed_user }}'s lists - Archfinch
 {% endblock %}
 
 {% block content %}
 
-<h1>{{ viewed_user.username }}'s lists</h1>
+<h1>{{ viewed_user }}'s lists</h1>
 {% for list in lists %}
     <p>
         <a href="{% url list-view list.id|base36 list.name|slugify %}">{{ list.name }}</a>

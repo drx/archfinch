@@ -11,7 +11,7 @@
 <tbody class='box'>
     <tr {% if forloop.counter <= 3 %}class="top{{ forloop.counter }}"{% endif %}>
     <td style='text-align: right'>{{ forloop.counter }}</td>
-    <td style='padding-right: 10em'><div class="user"><a href="{% url users.views.overview user %}">{{ user }}</a></div></td>
+    <td style='padding-right: 10em'><div class="user"><a href="{% url users.views.overview user.username %}">{{ user }}</a></div></td>
     <td>
     {{ user.karma }}
     </td></tr>
@@ -28,7 +28,7 @@
 <tbody class='box'>
     <tr>
     <td style='text-align: right'>{{ request.user.karma_place }}</td>
-    <td style='padding-right: 10em'><div class="user"><a href="{% url users.views.overview request.user %}">{{ request.user }}</a></div></td>
+    <td style='padding-right: 10em'><div class="user"><a href="{% url users.views.overview request.user.username %}">{{ request.user }}</a></div></td>
     <td>
     {{ request.user.karma }}
     </td></tr>

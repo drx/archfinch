@@ -7,9 +7,9 @@
 
 {% block title %}
 {% if category %}
-    {{ viewed_user.username }}'s {{ category.element_plural }}
+    {{ viewed_user }}'s {{ category.element_plural }}
 {% else %}
-    {{ viewed_user.username }}
+    {{ viewed_user }}
 {% endif %}
  - Archfinch
 {% endblock %}
@@ -17,12 +17,12 @@
 {% block content %}
 
 {% if your_profile %}
-<h1>Welcome {{ viewed_user.username }}</h1><br />
+<h1>Welcome {{ viewed_user }}</h1><br />
 {% endif %}
 
 {% if not user.is_authenticated %}
 <div class="big" style="color: #000000">
-    <p>See how similar you are to {{ viewed_user.username }}. <a href="/">Get an account</a> on Archfinch.</p>
+    <p>See how similar you are to {{ viewed_user }}. <a href="/">Get an account</a> on Archfinch.</p>
 </div>
 {% endif %}
 
@@ -92,7 +92,7 @@
 </div>
 <div id="content_right">
 
-<b>{{ viewed_user.username }}</b>
+<b>{{ viewed_user }}</b>
 
 <br /><br />
 {% if not your_profile and user.is_authenticated %}
@@ -109,17 +109,17 @@
     </p>
 {% endif %}
 
-<p>{{ viewed_user.username }} has {{ viewed_user.karma }} points ({{ viewed_user.karma_place|ordinal }})</p>
+<p>{{ viewed_user }} has {{ viewed_user.karma }} points ({{ viewed_user.karma_place|ordinal }})</p>
 
 {% with viewed_user.review_set.count as review_count %}
     {% if review_count > 0 %}
-    <span style='font-size: 11px'>{{ viewed_user.username }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;{{ review_count|pluralize:"it,them" }}</a>.</span><br>
+    <span style='font-size: 11px'>{{ viewed_user }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;{{ review_count|pluralize:"it,them" }}</a>.</span><br>
     {% endif %}
 {% endwith %}
 
 {% with lists.count as list_count %}
     {% if list_count > 0 %}
-        <span style='font-size: 11px'>{{ viewed_user.username }} has created {{ list_count }} list{{ list_count|pluralize }}. <a href="{% url lists-user viewed_user.username %}">See&nbsp;{{ list_count|pluralize:"it,them" }}</a>.</span>
+        <span style='font-size: 11px'>{{ viewed_user }} has created {{ list_count }} list{{ list_count|pluralize }}. <a href="{% url lists-user viewed_user.username %}">See&nbsp;{{ list_count|pluralize:"it,them" }}</a>.</span>
     {% endif %}
 {% endwith %}
 

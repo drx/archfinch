@@ -13,9 +13,12 @@ from archfinch.users.models import User
 from django.utils.datastructures import SortedDict
 
 def get_max_similarity(user):
-    this_user = User.objects.filter(pk=user).annotate(Max('similarity__value')).values_list('similarity__value__max', flat=True)[0]
-    if not this_user:
-        this_user = 0
+    try:
+        this_user = User.objects.filter(pk=user).annotate(Max('similarity__value')).values_list('similarity__value__max', flat=True)[0]
+        if not this_user:
+            this_user = 0
+    except IndexError:
+        this_user = 0        
     try:
         all_users = Similarity.objects.order_by('-value')[0].value
     except IndexError:
