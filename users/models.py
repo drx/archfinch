@@ -63,6 +63,6 @@ class User(BaseUser):
 
     def __unicode__(self):
         if is_lazy_user(self):
-            return 'Anonymous user'
+            return 'anonymous user'
         else:
             return self.username

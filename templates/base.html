@@ -1,4 +1,5 @@
 {% load cache %}
+{% load lazysignup_tags %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -41,7 +42,7 @@
             {% if user.is_authenticated %}
             <span id="menu_loggedin">
             <li> <a href="{% url logout %}" id="menu_logout">logout</a>
-            <li> <a href="{% url users.views.overview user.username %}" id="menu_user">{{ user }}</a>
+            <li> <a href="{% url users.views.overview user.username %}" id="menu_user">{% if user|is_lazy_user %}<i>you</i>{% else %}{{ user }}{% endif %}</a>
             </span>
             {% else %}
             <span id="menu_notloggedin">
@@ -74,6 +75,15 @@
             <li style='border: 0'> <form style="display:inline; float:right" action="{% url search %}"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search for things...' onClick='this.value=""'{% endif %}></form>
         </ul>
     </div>
+    
+    <div id="message">
+        {% block message_lazy %}
+        {% if user|is_lazy_user %}
+        <p>You are logged in as a temporary user -- if you log out, go to another computer or otherwise delete your session you can lose your data.</p>
+        <p><a>Save your data by creating a permanent account</a> (it takes less than a minute).</p>
+        {% endif %}
+        {% endblock %}
+    </div>
 
     <div id="content">
         {% block content %}{% endblock %}
@@ -82,9 +92,8 @@
 </div>
 <div id="footer">
         <a href="http://blog.archfinch.com/">blog</a>
-        {% if user.is_authenticated %}
         | Drop us a line. We care <b>a lot</b>. <a href="mailto:luke@archfinch.com">luke@archfinch.com</a>
-        {% endif %}
+        | We're <a href="https://github.com/drx/archfinch">open source</a>
 </div>
 </body>
 </html>

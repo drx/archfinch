@@ -4,6 +4,7 @@
 {% load nbsp %}
 {% load timesince_days %}
 {% load humanize %}
+{% load lazysignup_tags %}
 
 {% block title %}
 {% if category %}
@@ -17,7 +18,11 @@
 {% block content %}
 
 {% if your_profile %}
-<h1>Welcome {{ viewed_user }}</h1><br />
+    {% if viewed_user|is_lazy_user %}
+    <h1>Welcome!</h1>
+    {% else %}
+    <h1>Welcome {{ viewed_user }}</h1><br />
+    {% endif %}
 {% endif %}
 
 {% if not user.is_authenticated %}
