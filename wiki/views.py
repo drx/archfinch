@@ -8,9 +8,10 @@ from django.http import HttpResponseRedirect
 from django.utils.http import base36_to_int
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
+from lazysignup.decorators import allow_lazy_user
 
 
-@login_required
+@allow_lazy_user
 def edit(request, page_id=None, item_id=None):
     '''
     Lets the user edit a wiki page.

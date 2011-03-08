@@ -9,9 +9,11 @@ from django.conf import settings
 from archfinch.utils import render_to_response
 from archfinch.main.models import Item, Category
 from archfinch.users.models import User
+from lazysignup.decorators import allow_lazy_user
 import re
 
 
+@allow_lazy_user
 def query(request, json=False):
     def invalid_search():
         if json:

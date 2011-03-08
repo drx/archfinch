@@ -11,6 +11,7 @@ from django import forms
 from archfinch.main.models import Opinion, Similarity, Category, Item, Review, Action
 from archfinch.users.models import User
 from django.utils.datastructures import SortedDict
+from lazysignup.decorators import allow_lazy_user
 
 def get_max_similarity(user):
     try:
@@ -28,12 +29,14 @@ def get_max_similarity(user):
     return locals()
 
 
+@allow_lazy_user
 def top_users(request):
     top_users = User.objects.order_by('-karma')[:10]
 
     return render_to_response('user/top_users.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def reviews(request, username, start=None, n=None):
     if start is None:
         start = 0
@@ -65,6 +68,7 @@ def reviews(request, username, start=None, n=None):
     return render_to_response('user/reviews.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def review_show(request, username, item_id):
     item_id = base36_to_int(item_id)
     review_user = get_object_or_404(User, username=username)
@@ -89,6 +93,7 @@ class ReviewForm(forms.Form):
     )
 
 
+@allow_lazy_user
 def review_edit(request, item_id):
     item = get_object_or_404(Item, pk=base36_to_int(item_id))
 
@@ -122,6 +127,7 @@ def review_edit(request, item_id):
     return render_to_response('user/review_edit.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def overview(request, username, category_slug=None, start=None, n=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
 
@@ -206,6 +212,8 @@ def likes_gen(users, request_user):
         else:
             yield None
 
+
+@allow_lazy_user
 def similar(request, start=None, n=None):
     '''
     Show users most similar to the logged in user.

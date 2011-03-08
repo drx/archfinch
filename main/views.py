@@ -26,12 +26,13 @@ def welcome(request):
         return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
 
 
-@login_required
+@allow_lazy_user
 def missing(request):
     wiz = AddItemWizard([AddItemForm1, AddItemForm2])
     return wiz(request)
 
 
+@allow_lazy_user
 def item(request, item_id):
     '''
     Item page.
@@ -80,6 +81,7 @@ def item_also_liked(request, item_id, like, also_like):
     return HttpResponse(json, mimetype='application/json')
 
 
+@allow_lazy_user
 def recommend(request, category_slug=None, start=None, n=None, usernames=None):
     '''
     Shows a list of recommendations.

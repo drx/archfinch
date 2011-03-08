@@ -12,7 +12,7 @@ from archfinch.utils import render_to_response
 from archfinch.main.models import Item, Opinion
 from archfinch.lists.models import List, Entry
 from archfinch.users.models import User
-
+from lazysignup.decorators import allow_lazy_user
 
 def forbidden(request):
     resp = render_to_response('403.html', context_instance=RequestContext(request))
@@ -20,6 +20,7 @@ def forbidden(request):
     return resp
 
 
+@allow_lazy_user
 def view(request, list_id):
     list_id = base36_to_int(list_id)
     list = get_object_or_404(List, pk=list_id)
@@ -41,6 +42,7 @@ def view(request, list_id):
     return render_to_response('lists/view.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def add(request, list_id, item_id):
     item_id = base36_to_int(item_id)
     item = get_object_or_404(Item, pk=item_id)
@@ -78,6 +80,7 @@ def add(request, list_id, item_id):
     return HttpResponse(json, mimetype='application/json')
 
 
+@allow_lazy_user
 @transaction.commit_on_success
 def save(request):
     data = {'success': True}
@@ -117,7 +120,7 @@ def save(request):
     return HttpResponse(json, mimetype='application/json')
     
 
-@login_required
+@allow_lazy_user
 def create(request):
     name = request.POST['name']
     list = request.user.list_set.create(category_id=8, name=name, options={})
@@ -126,6 +129,7 @@ def create(request):
     return HttpResponseRedirect(redirect_url)
 
 
+@allow_lazy_user
 def overview(request):
     if request.user.is_authenticated():
         your_lists = request.user.list_set.all()
@@ -133,12 +137,14 @@ def overview(request):
     return render_to_response('lists/overview.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def user(request, username):
     viewed_user = get_object_or_404(User, username=username)
     lists = viewed_user.list_set.all()
     return render_to_response('lists/user.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def edit(request, list_id):
     list_id = base36_to_int(list_id)
     list = get_object_or_404(List, pk=list_id)
@@ -149,6 +155,7 @@ def edit(request, list_id):
     return render_to_response('lists/edit.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def delete(request, list_id):
     list_id = base36_to_int(list_id)
     list = get_object_or_404(List, pk=list_id)
