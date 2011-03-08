@@ -76,14 +76,14 @@
         </ul>
     </div>
     
+    {% block message %}
+    {% if user|is_lazy_user %}
     <div id="message">
-        {% block message_lazy %}
-        {% if user|is_lazy_user %}
         <p>You are logged in as a temporary user -- if you log out, go to another computer or otherwise delete your session you can lose your data.</p>
         <p><a>Save your data by creating a permanent account</a> (it takes less than a minute).</p>
-        {% endif %}
-        {% endblock %}
     </div>
+    {% endif %}
+    {% endblock %}
 
     <div id="content">
         {% block content %}{% endblock %}
