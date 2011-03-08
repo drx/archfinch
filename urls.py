@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from archfinch import site
+from django.conf import settings
 
 from django.contrib import admin
 admin.autodiscover()
@@ -44,8 +44,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 )
 
- 
-if not site.production:
+if settings.DEBUG:
     urlpatterns += patterns('', 
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/var/django/archfinch/media'}),
         (r'^favicon.ico$', 'django.views.generic.simple.redirect_to', {'url': '/var/django/archfinch/media/favicon.ico', 'permanent': False}),
