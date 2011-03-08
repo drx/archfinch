@@ -2,8 +2,10 @@
 
 {% block content %}
 
-You're leaving already?<br /><br />
+<h1>Are you sure?</h1>
 
-Come back soon!
+<p>You are a temporary user. Logging out will make your account <b>inaccessible</b>.</p>
+
+<p><a href="{% url loggedout %}">Yes, I'm sure</a>.</p>
 
 {% endblock %}

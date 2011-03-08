@@ -1,4 +1,5 @@
-﻿from django.http import HttpResponse, HttpResponseRedirect
+﻿from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login
 from django.views.decorators.csrf import csrf_protect
@@ -7,6 +8,7 @@ from django.utils import simplejson
 from archfinch.utils import render_to_response
 from archfinch.main.models import Similarity
 from archfinch.account.models import SignupForm, AuthenticationForm
+from lazysignup.utils import is_lazy_user
 
 def signup(request):
     if request.method == 'POST':
@@ -22,6 +24,13 @@ def signup(request):
     return render_to_response("account/signup.html",
         {'form': form},
         context_instance=RequestContext(request))
+
+
+def logout(request):
+    if is_lazy_user(request.user):
+        return render_to_response("account/logout.html", context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect(reverse('loggedout'))
 
 
 def error_msg(errors):
