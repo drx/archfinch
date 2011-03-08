@@ -5,7 +5,7 @@ killa ()
 
 case "$1" in
     start)
-        python manage.py runserver&
+        python manage.py runserver 0.0.0.0:8000&
         /var/rabbitmq_server-2.2.0/sbin/rabbitmq-server&
         python manage.py celeryd&
         memcached&
