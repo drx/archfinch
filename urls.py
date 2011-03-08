@@ -24,7 +24,6 @@ urlpatterns = patterns('',
     (r'^list/', include('archfinch.lists.urls')),
     (r'^convert/', include('lazysignup.urls')),
 
-
     url(r'^topusers$', 'archfinch.users.views.top_users', name='top-users'),
 
     url(r'^lists$', 'archfinch.lists.views.overview', name='lists-overview'),

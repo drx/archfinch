@@ -74,6 +74,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'archfinch.main',
     'archfinch.account',
+    'archfinch.links',
     'archfinch.lists',
     'archfinch.wiki',
     'archfinch.users',

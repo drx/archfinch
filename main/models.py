@@ -8,6 +8,7 @@ class Category(models.Model):
     element_singular = models.CharField(max_length=200)
     element_plural = models.CharField(max_length=200)
 
+    # hide subclasses and other unwanted categories
     hide = models.BooleanField()
 
     def __unicode__(self):
