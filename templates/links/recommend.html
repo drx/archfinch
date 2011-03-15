@@ -80,36 +80,6 @@
 {% endif %}
 
 </div>
-<div id="content_right">
-{% if user.categories %}
-    <p id="user_cats">Show  
-    {% for category in user.categories %}
-        {% if usernames_specified %}
-            {% url recommend-for category.slug|urlencode usernames|join:"," as category_url %}
-        {% else %}
-            {% url recommend-slugged category.slug|urlencode as category_url %}
-        {% endif %}
-        <a href='{{ category_url }}'>{{ category.element_plural|nbsp }}</a>{{ forloop.last|yesno:"...,&#44;"|safe}}
-    {% endfor %}
-    (<a href="#" id="user_cats_more">more</a>)
-    </p>
-
-    <p id="global_cats">Show 
-    {% for id, repr, slug in categories %}
-        {% if usernames_specified %}
-            {% url recommend-for slug|urlencode usernames|join:"," as category_url %}
-        {% else %}
-            {% url recommend-slugged slug|urlencode as category_url %}
-        {% endif %}
-
-        {{ forloop.last|yesno:"or ," }}<a href='{{ category_url }}'>{{ repr|nbsp }}</a>{{ forloop.last|yesno:".,&#44;"|safe}}
-    {% endfor %}
-    </p>
-
-    <br />
-
-{% endif %}
-</div>
 
 {% endblock %}
 {% block media %}
