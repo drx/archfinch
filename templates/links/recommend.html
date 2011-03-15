@@ -8,7 +8,7 @@
     {% if category %}
         {{ category.element_singular|capfirst }} recommendations - Archfinch
     {% else %}
-        Recommendations - Archfinch
+        Link recommendations - Archfinch
     {% endif %}
 {% endblock %}
 
@@ -21,23 +21,20 @@
 {% else %}
     Things
 {% endif %}
-{% if usernames_specified %}
-    {{ usernames|sequence }}
-{% else %}
     you
-{% endif %}
  might like.
 </h1>
 
-{% for item in recommendations %}
-    {{ model }}
-    {% with item.id as item_id %} 
+{% for link in recommendations %}
+    {% with link.id as item_id %} 
     {% with 1 as yr_big %}
     {% with 1 as terse_layout %}
-    {% with item.name as item_name %}
-    {% with item.category_element as category_singular %}
+    {% with link.name as item_name %}
+    {% with link.category_element as category_singular %}
     {% with forloop.counter as seq_term %}
+    {% with link.rating as your_rating %}
         {% include "includes/opinionbox.html" %}
+    {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endwith %}
@@ -110,18 +107,6 @@
     </p>
 
     <br />
-
-    <p>
-        {% if users|length > 1 %}
-        Want to add someone else?<br />
-        {% else %}
-        Watching a movie with someone?<br />
-        {% endif %}
-        <input type='text' class="search" style='margin: 8px 0 8px 0' id='users_autocomplete' url='{% url recommend-for usernames=",,," %}' usernames='{{ usernames|join:"," }}'> <br />
-        {% if users|length <= 1 %}
-        Type in their username to include them in your recommendations.
-        {% endif %}
-    </p>
 
 {% endif %}
 </div>

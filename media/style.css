@@ -228,7 +228,7 @@ td
 {
     color: #aaaaaa;
 }
-.category_element
+.category_element, .link_meta, .link_meta a
 {
     font-size: 11px;
     color: #aaaaaa;
@@ -341,14 +341,25 @@ td
 {
     float: right;
 }
-.terse .category_element, .terse .title
+.terse .category_element, .terse .title, .terse .link_meta
 {
     float: left;
 }
-.terse .title, .terse .category_element
+.terse .title, .terse .category_element, .terse .link_meta
 {
     margin-left: 5px;
 }
+
+.link_comments
+{
+    display: none;
+}
+.highlight .link_comments
+{
+    display: inline;
+    float: right;
+}
+
 .terse
 {
     padding: 2px 2px 0px 2px;

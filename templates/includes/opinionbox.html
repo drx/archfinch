@@ -1,12 +1,19 @@
 {% load base36 %}
 {% load markup %}
 <div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %}">
-    {% if terse_layout %}
+    {% if terse_layout and not link %}
         {% if your_rating %}
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
         {% endif %}
         <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
         <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
+    {% else %}
+    {% if link %}
+        {% if your_rating %}
+        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
+        {% endif %}
+        <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
+        <div class="link_meta" style="width: 300px; height: 32px;">{{ link.time|timesince }} ago, by <a href="{% url user-overview link.submitter %}">{{ link.submitter }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">meta</a></div>
     {% else %}    
     <div class="category_element">
         {{ category_singular|capfirst }}
@@ -17,6 +24,7 @@
     {% if review %}<span class="review"><a href="{% url review viewed_user.username item_id|base36 item_name|slugify %}">review</a></span>{% endif %}
 
     </div>
+    {% endif %}
     {% endif %}
     {% if user.is_authenticated %}
     <div class="user_opinion" item="{{ item_id|base36 }}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">

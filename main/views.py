@@ -146,10 +146,14 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
             user_categories = request.user.categories()
             categories = Category.objects.order_by('name').values_list('id', 'element_plural', 'slug')
 
+            print recommendations
             count = len(recommendations)
             left = count-(start+n)
             recommendations = recommendations[start:start+n]
-            return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
+            if category is not None and category.id == 9:
+                return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
+            else:
+                return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
 
 
             
