@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$',     'archfinch.main.views.welcome'),
     url(r'^missing$', 'archfinch.main.views.missing', name='missing'),
+    url(r'^submit$', 'archfinch.links.views.submit', name='submit'),
 
     url(r'^similar$', 'archfinch.users.views.similar', name='similar'),
     url(r'^similar/(?P<start>\d+)/(?P<n>\d+)$', 'archfinch.users.views.similar', name='similar-paged'),

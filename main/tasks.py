@@ -1,9 +1,14 @@
 from celery.decorators import task
 from archfinch.main.models import Item, Opinion, Action, Similarity
+from archfinch.links.models import Link
 
 @task
 def recommend(category, users):
-    recommendations = list(Item.objects.recommended(users, category=category))
+    if category.id == 9:
+        # links
+        recommendations = list(Link.objects.recommended(users[0], category=category))
+    else:
+        recommendations = list(Item.objects.recommended(users, category=category))
     return recommendations
 
 @task

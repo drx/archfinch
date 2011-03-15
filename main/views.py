@@ -17,6 +17,7 @@ from archfinch.main import tasks
 import celery.result
 from django.core.cache import cache
 from lazysignup.decorators import allow_lazy_user
+from django.conf import settings
 
 @allow_lazy_user
 def welcome(request):
@@ -29,7 +30,7 @@ def welcome(request):
 @allow_lazy_user
 def missing(request):
     wiz = AddItemWizard([AddItemForm1, AddItemForm2])
-    return wiz(request)
+    return wiz(request, model=Item)
 
 
 @allow_lazy_user
@@ -113,7 +114,11 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
             usernames_specified = False
 
         cache_key = 'recommend,%s,%s' % ('+'.join(sorted(set(map(lambda u: str(u.id), users)))), category_slug)
-        cache_timeout = 15*60
+        if settings.DEBUG:
+            cache_timeout = 30
+        else:
+            cache_timeout = 15*60
+
         cached_value = cache.get(cache_key)
 
         computed = False

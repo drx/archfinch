@@ -3,11 +3,13 @@
 {% load base36 %}
 
 {% block content %}
-<h1>What are we missing?</h1>
+<h1>{% if model == 'Link' %}Submit a link{% else %}What are we missing?{% endif %}</h1>
 <div class="big">
     {% if step == 1 %}
-        <p>Hint: make sure the title is canonical. You can do that by checking the title on Wikipedia, IMDb, etc.</p>
-        <p>For example, The <em>Godfather Part II</em> is preferable to <em>Godfather 2</em> or the <em>god father part ii</em>.</p>
+        {% if model == 'Item' %}
+            <p>Hint: make sure the title is canonical. You can do that by checking the title on Wikipedia, IMDb, etc.</p>
+            <p>For example, The <em>Godfather Part II</em> is preferable to <em>Godfather 2</em> or the <em>god father part ii</em>.</p>
+        {% endif %}
     {% else %}
         <p>The thing you are trying to add might already be in the database. The candidates are:
         {% for item in potential_conflicts %}
