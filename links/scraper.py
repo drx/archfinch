@@ -40,13 +40,13 @@ def scrape(url):
     keys = None
     oembed = None
     if embedly_video_re.match(url):
-        oembed = get_oembed(url)
+        oembed = get_oembed(url, maxwidth=640)
         if oembed['type'] == 'video':
             data['category'] = 'video'
             keys = ('html','width','height','thumbnail_url','thumbnail_width','thumbnail_height')
 
     elif embedly_pic_re.match(url):
-        oembed = get_oembed(url, maxwidth=640)
+        oembed = get_oembed(url)
         if oembed['type'] == 'photo':
             data['category'] = 'pic'
             keys = ('url','width','height','thumbnail_url','thumbnail_width','thumbnail_height')
