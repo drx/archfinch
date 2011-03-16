@@ -27,7 +27,7 @@ class LinkManager(models.Manager):
         recommended = Link.objects.raw("""
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
 
-             SUM((mo.rating-3)*ms.value)/
+             SUM((mo.rating-3)*ms.value) /
              (CASE
                WHEN extract(epoch from now()-ll.time)/86400 < 1
                THEN 1
@@ -56,8 +56,33 @@ class LinkManager(models.Manager):
         return recommended
 
 
+class ImageURLField(models.TextField):
+    """Image URL field, stored as url,width,height in the database"""
+    __metaclass__ = models.SubfieldBase
+
+    def to_python(self, value):
+        if value is None: return
+        if not isinstance(value, basestring): return value
+        fields = value.split(',')
+        if len(fields) < 3:
+            return {'url': fields[0]}
+        return {'url': fields[0], 'width': int(fields[1]), 'height': int(fields[2])}
+
+    def get_prep_value(self, value):
+        if value is None: return
+        try:
+            return ','.join([value['url'], str(value['width']), str(value['height'])])
+        except KeyError:
+            return value['url']
+
+
 class Link(Item):
     url = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
     time = models.DateTimeField(auto_now=True, unique=False)
+
+    thumbnail_url = ImageURLField(max_length=1000, blank=True, null=True)
+
+    image_url = ImageURLField(max_length=1000, blank=True, null=True)
+    html = models.TextField(max_length=1000, blank=True, null=True)    
 
     objects = LinkManager()

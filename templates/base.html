@@ -63,6 +63,7 @@
                  <ul class="submenu" style='width: 75px'>
                     <li> <a href="{% url recommend-slugged "videos" %}">videos</a>
                     <li> <a href="{% url recommend-slugged "pics" %}">pics</a>
+                    <li> <a href="{% url recommend-slugged "links" %}">other</a>
                  </ul>
             <li> <a href="{% url main.views.recommend %}">things you might like</a>
                  {% if user.categories %}

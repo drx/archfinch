@@ -5,6 +5,7 @@ from django.contrib.formtools.wizard import FormWizard
 from django import forms
 from archfinch.main.models import Item, ItemProfile, Category
 from archfinch.links.models import Link
+from archfinch.links.scraper import scrape
 from django.shortcuts import redirect
 
 
@@ -31,7 +32,14 @@ class AddItemWizard(FormWizard):
         item = form_list[0]
         item = item.save(commit=False)
         if self.model.__name__ == 'Link':
-            item.category_id = 9
+            scraped_data = scrape(item.url)
+            item.category_id = scraped_data['category_id']
+            if 'thumbnail_url' in scraped_data:
+                item.thumbnail_url = {'url': scraped_data['thumbnail_url'], 'width': scraped_data['thumbnail_width'], 'height': scraped_data['thumbnail_height']}
+            if 'url' in scraped_data:
+                item.image_url = {'url': scraped_data['url'], 'width': scraped_data['width'], 'height': scraped_data['height']}
+            if 'html' in scraped_data:
+                item.html = scraped_data['html']
         item.save()
         item_profile = ItemProfile(item=item)
         item_profile.save()

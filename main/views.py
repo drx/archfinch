@@ -147,7 +147,7 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
             count = len(recommendations)
             left = count-(start+n)
             recommendations = recommendations[start:start+n]
-            if category is not None and category.id == 9:
+            if category is not None and category.id in (9,10,11):
                 # links
                 return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
             else:

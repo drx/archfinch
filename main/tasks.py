@@ -4,7 +4,7 @@ from archfinch.links.models import Link
 
 @task
 def recommend(category, users):
-    if category is not None and category.id == 9:
+    if category is not None and category.id in (9,10,11):
         # links
         recommendations = list(Link.objects.recommended(users[0], category=category))
     else:
