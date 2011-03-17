@@ -35,9 +35,9 @@ class AddItemWizard(FormWizard):
             scraped_data = scrape(item.url)
             item.category_id = scraped_data['category_id']
             if 'thumbnail_url' in scraped_data:
-                item.thumbnail_url = {'url': scraped_data['thumbnail_url'], 'width': scraped_data['thumbnail_width'], 'height': scraped_data['thumbnail_height']}
+                item.thumbnail = {'url': scraped_data['thumbnail_url'], 'width': scraped_data['thumbnail_width'], 'height': scraped_data['thumbnail_height']}
             if 'url' in scraped_data:
-                item.image_url = {'url': scraped_data['url'], 'width': scraped_data['width'], 'height': scraped_data['height']}
+                item.image = {'url': scraped_data['url'], 'width': scraped_data['width'], 'height': scraped_data['height']}
             if 'html' in scraped_data:
                 item.html = scraped_data['html']
             generate_thumbnail(item)

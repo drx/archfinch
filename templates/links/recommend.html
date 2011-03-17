@@ -55,8 +55,8 @@
 {% else %}
 {% if category.name == 'Pics' %}
     {% for link in recommendations %}
-        {% if link.thumbnail_url %}
-            <a href="{{ link.url }}"><img src="{{ link.thumbnail_url.url }}"></a>
+        {% if link.thumbnail %}
+            <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}"></a>
         {% else %}
             <img src="{{ link.url }}">
         {% endif %}

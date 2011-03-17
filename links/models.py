@@ -56,7 +56,7 @@ class LinkManager(models.Manager):
         return recommended
 
 
-class ImageURLField(models.TextField):
+class ImageURLField(models.CharField):
     """Image URL field, stored as url,width,height in the database"""
     __metaclass__ = models.SubfieldBase
 
@@ -80,9 +80,9 @@ class Link(Item):
     url = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
     time = models.DateTimeField(auto_now=True, unique=False)
 
-    thumbnail_url = ImageURLField(max_length=1000, blank=True, null=True)
+    thumbnail = ImageURLField(max_length=1000, blank=True, null=True)
+    image = ImageURLField(max_length=1000, blank=True, null=True)
 
-    image_url = ImageURLField(max_length=1000, blank=True, null=True)
     html = models.TextField(max_length=1000, blank=True, null=True)    
 
     objects = LinkManager()
