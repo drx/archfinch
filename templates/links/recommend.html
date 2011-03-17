@@ -55,7 +55,11 @@
 {% else %}
 {% if category.name == 'Pics' %}
     {% for link in recommendations %}
-    <img src="{{ link.url }}">
+        <img src="{{ link.url }}">
+    {% endfor %}
+{% else %}
+    {% for link in recommendations %}
+        {{ link.html|safe }}
     {% endfor %}
 {% endif %}
 {% endif %}
