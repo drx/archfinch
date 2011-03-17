@@ -1,6 +1,7 @@
 import urllib
 import urllib2
 import re
+import Image
 try:
     import json
 except ImportError:
@@ -9,6 +10,8 @@ except ImportError:
     except ImportError:
         raise ImportError("Need a json decoder")
 
+
+max_filesize = 1024*1024*10  # 10MB
 
 def get_oembed(url, **kwargs):
     """
@@ -60,4 +63,34 @@ def scrape(url):
 
     data['category_id'] = category_id[data['category']]
     return data
-        
+
+def get_url(url):
+    return urllib2.urlopen(url).read(max_filesize)
+
+def str_to_image(s):
+    import StringIO
+    s = StringIO.StringIO(s)
+    s.seek(0)
+    return Image.open(s)
+
+def get_image_from_url(url):
+    return str_to_image(get_url(url)) 
+
+def generate_thumbnail(item):
+    """Generate a thumbnali if the image is too big
+        and (the thumbnail is too small or not privided).
+    """
+    if item.image_url['width'] > 640 and item.thumbnail_url['width'] < 320:
+        if re.search(r'imgur\.com', item.image_url['url']):
+            # imgur coincidentally has a 640 thumbnail by default but for some reason doesn't return it in its oembed
+
+            new_url = item.image_url['url'].split('.')
+            new_url[-2] += 'l'
+            new_url = '.'.join(new_url)
+            
+            img = get_image_from_url(new_url)
+
+            item.thumbnail_url['url'] = new_url
+            item.thumbnail_url['width'], item.thumbnail_url['height'] = img.size
+            
+
