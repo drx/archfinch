@@ -14,7 +14,7 @@ def get_oembed(url, **kwargs):
     """
     Gets oEmbed data from Embedly
     """
-    ACCEPTED_ARGS = ['maxwidth', 'maxheight', 'format']
+    ACCEPTED_ARGS = ['maxwidth', 'maxheight', 'format', 'wmode']
 
     api_url = 'http://api.embed.ly/1/oembed?'
 
@@ -40,7 +40,7 @@ def scrape(url):
     keys = None
     oembed = None
     if embedly_video_re.match(url):
-        oembed = get_oembed(url, maxwidth=640)
+        oembed = get_oembed(url, maxwidth=640, wmode='transparent')
         if oembed['type'] == 'video':
             data['category'] = 'video'
             keys = ('html','width','height','thumbnail_url','thumbnail_width','thumbnail_height')
