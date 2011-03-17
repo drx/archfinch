@@ -2,6 +2,8 @@ import urllib
 import urllib2
 import re
 import Image
+import pycurl
+import StringIO
 try:
     import json
 except ImportError:
@@ -12,6 +14,7 @@ except ImportError:
 
 
 max_filesize = 1024*1024*10  # 10MB
+imgur_key = 'b3bcfea2ecada72e4d26f3a964c014d1'
 
 def get_oembed(url, **kwargs):
     """
@@ -68,7 +71,6 @@ def get_url(url):
     return urllib2.urlopen(url).read(max_filesize)
 
 def str_to_image(s):
-    import StringIO
     s = StringIO.StringIO(s)
     s.seek(0)
     return Image.open(s)
@@ -88,6 +90,26 @@ def generate_thumbnail(item):
             new_url[-2] += 'l'
             new_url = '.'.join(new_url)
             
+            img = get_image_from_url(new_url)
+
+            item.thumbnail['url'] = new_url
+            item.thumbnail['width'], item.thumbnail['height'] = img.size
+
+        else:
+            # we have to reupload the pic
+            response = StringIO.StringIO()
+            c = pycurl.Curl()
+            values = [("key", imgur_key), ("image", str(item.image['url'])), ('type', 'url')]
+
+            c.setopt(c.URL, "http://api.imgur.com/2/upload.json")
+            c.setopt(c.HTTPPOST, values)
+            c.setopt(c.WRITEFUNCTION, response.write)
+
+            c.perform()
+            c.close()
+            response = json.loads(response.getvalue())
+
+            new_url = response['upload']['links']['large_thumbnail']
             img = get_image_from_url(new_url)
 
             item.thumbnail['url'] = new_url
