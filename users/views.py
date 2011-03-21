@@ -6,12 +6,13 @@ from django.core.urlresolvers import reverse
 from django.utils.http import base36_to_int
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Max, Count
+from django.db.models import Max, Count, StdDev
 from django import forms
 from archfinch.main.models import Opinion, Similarity, Category, Item, Review, Action
 from archfinch.users.models import User
 from django.utils.datastructures import SortedDict
 from lazysignup.decorators import allow_lazy_user
+from django.core.cache import cache
 
 def get_max_similarity(user):
     try:
@@ -160,6 +161,16 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     if request.user.is_authenticated() and request.user != viewed_user:
         select += [('your_rating', 'SELECT rating FROM main_opinion mo2 WHERE mo2.user_id = %s AND mo2.item_id = main_item.id')]
         select_params += [request.user.id]
+
+    show_controversial = False
+    if your_profile:
+        opinion_count = viewed_user.opinion_set.aggregate(Count('id'))['id__count']
+        if opinion_count == 0:
+            show_controversial = True
+            controversial = cache.get('controversial')
+            if controversial is None:
+                controversial = Item.objects.filter(category__hide=False).annotate(count=Count('opinion'), stddev=StdDev('opinion__rating')).filter(count__gt=26).order_by('-count')[:100]
+                cache.set('controversial', controversial, 60*60*24)
 
     select = SortedDict(select)
 

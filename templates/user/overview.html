@@ -33,7 +33,27 @@
 
 <div id="content_left">
 
-{% if opinions %}
+{% if show_controversial %}
+    <p>Recommendations are tailored to what you like, so the more you rate the better.</p>
+    <p>You haven't rated much, so here's a list of things we suggest you rate if you have opinions about them.</p>
+    {% for item in controversial %}
+        {% with item.id as item_id %} 
+        {% with 1 as yr_big %}
+        {% with 1 as terse_layout %}
+        {% with item.name as item_name %}
+        {% with item.category_element as category_singular %}
+        {% with forloop.counter as seq_term %}
+            {% include "includes/opinionbox.html" %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
+    {% endfor %}
+{% endif %}
+
+{% if opinions and not show_controversial %}
     {% regroup opinions by action_time|timesince_days as date_list %}
     {% for date in date_list %}
         <h2>{{ date.grouper|capfirst }}</h2>
@@ -60,15 +80,7 @@
         {% endfor %}
     {% endfor %}
 {% else %}
-    {% if your_profile %}
-        {% if not start and not category %}
-        <div class="big">
-            <p>Rate some things!</p>
-            <form action="{% url search %}"><input type='text' id='search_inline' name='q' {% if query %}value='{{ query }}'{% else %}value='Find something to rate...' onClick='this.value=""'{% endif %}><input class="search_inline" type='submit' value='Search' style='padding: 1px 10px 1px 10px'></form>
-            <p>The more you rate, the more accurately we can recommend you new things.</p>
-        </div>
-        {% endif %}
-    {% else %}
+    {% if not your_profile %}
         <div class="big">
             <p>This user has not rated anything yet.</p>
         </div>
