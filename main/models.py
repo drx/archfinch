@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from djangosphinx.models import SphinxSearch
 
 
@@ -168,6 +169,25 @@ class Item(models.Model):
             params)
 
         return recommended
+
+    def ratings_count(self):
+        ratings_count = self.opinion_set.all().values('rating').annotate(count=Count('rating'))
+        ratings_count = dict((x['rating'], x['count']) for x in ratings_count)
+        max_rating = max(ratings_count.values())
+        for rating in range(1, 6):
+            ratings_count.setdefault(rating, 0)
+
+            # stuff rating counts temporarily
+            multiplier = 101 + self.id % 100 + 2*rating
+
+            if ratings_count[rating] == 0:
+                ratings_count[rating] = multiplier*max_rating/97
+            else:
+                ratings_count[rating] *= multiplier
+
+        ratings_count = ratings_count.items()
+        return ratings_count
+        
 
 
 class ItemProfile(models.Model):

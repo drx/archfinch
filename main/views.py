@@ -56,13 +56,6 @@ def item(request, item_id):
         opinion = None
         also_liked = item.also_liked()
 
-    ratings_count = item.opinion_set.all().values('rating').annotate(count=Count('rating'))
-    ratings_count = dict((x['rating'], x['count']) for x in ratings_count)
-    for rating in range(1, 6):
-        ratings_count.setdefault(rating, 0)
-
-    ratings_count = ratings_count.items()
-
     return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
 
 

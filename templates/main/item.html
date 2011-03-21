@@ -2,6 +2,7 @@
 
 {% load markup %}
 {% load base36 %}
+{% load cache %}
 
 {% block title %}{{ item.name }} - Archfinch{% endblock %}
 
@@ -14,9 +15,11 @@
         $.plot($("#ratings_graph"), [
             {
                 data: [
-                {% for rating, count in ratings_count %}
+                {% cache 86400 ratings_count item.id %}
+                {% for rating, count in item.ratings_count %}
                     [{{ rating }}, {{ count }}]{% if not forloop.last %},{% endif %}
                 {% endfor %}
+                {% endcache %}
                 ],
                 bars: {show: true, barWidth: 0.75, align: "center", fill: 0.5},
                 color: 1
