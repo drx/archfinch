@@ -26,6 +26,7 @@
 </h1>
 
 {% if category.name == 'Links' %}
+    {# links #}
     {% for link in recommendations %}
         {% with link.id as item_id %} 
         {% with 1 as yr_big %}
@@ -54,14 +55,17 @@
     {% endfor %}
 {% else %}
 {% if category.name == 'Pics' %}
+    {# pics #}
     {% for link in recommendations %}
         {% if link.thumbnail %}
-            <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}"></a>
+            <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
         {% else %}
             <img src="{{ link.url }}">
         {% endif %}
+            <br />
     {% endfor %}
 {% else %}
+    {# videos #}
     {% for link in recommendations %}
         {{ link.html|safe }}
     {% endfor %}
