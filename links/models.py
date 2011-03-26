@@ -27,7 +27,7 @@ class LinkManager(models.Manager):
         recommended = Link.objects.raw("""
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
 
-             SUM((mo.rating-3)*ms.value) /
+             SUM((mo.rating-3)*ms.value) *
              (CASE
                WHEN extract(epoch from now()-ll.time)/86400 < 1
                THEN 1
