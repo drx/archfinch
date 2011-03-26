@@ -11,6 +11,8 @@ class User(BaseUser):
     objects = BaseUserManager()
 
     karma = models.IntegerField(default=0)
+    
+    referred_by = models.ForeignKey('users.User', null=True, blank=True)
 
     def self_lists(self):
         lists = [
