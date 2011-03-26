@@ -209,6 +209,19 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
         return render_to_response('user/overview.html', locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
+def referral(request, username):
+    referrer = get_object_or_404(User, username=username)
+
+    request.user.referred_by = referrer
+    request.user.save()
+
+    referrer.add_points(20)
+    referrer.save()
+        
+    return HttpResponseRedirect('/') 
+
+
 def likes_gen(users, request_user):
     for user in users:
         likes = user.user2.opinion_set.filter(rating__gte=4).extra(

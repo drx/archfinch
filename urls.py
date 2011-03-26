@@ -40,6 +40,8 @@ urlpatterns = patterns('',
     url(r'^search.json$', 'archfinch.search.views.query', {'json': True}, name='search-json'),
     url(r'^usersearch$', 'archfinch.search.views.user_search', name='user-search'),
 
+    url(r'^ref/(?P<username>[\w@\+\.-]+)$', 'archfinch.users.views.referral', name='referral'),
+
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 )
