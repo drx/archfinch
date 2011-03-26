@@ -158,7 +158,7 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     ]
     select_params=[viewed_user.id]
 
-    if request.user.is_authenticated() and request.user != viewed_user:
+    if request.user.is_authenticated():
         select += [('your_rating', 'SELECT rating FROM main_opinion mo2 WHERE mo2.user_id = %s AND mo2.item_id = main_item.id')]
         select_params += [request.user.id]
 
@@ -213,12 +213,11 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
 def referral(request, username):
     referrer = get_object_or_404(User, username=username)
 
-    request.user.referred_by = referrer
-    request.user.save()
+    from lazysignup.utils import is_lazy_user
+    if is_lazy_user(request.user) and not request.user.referred_by:
+        request.user.referred_by = referrer
+        request.user.save()
 
-    referrer.add_points(20)
-    referrer.save()
-        
     return HttpResponseRedirect('/') 
 
 

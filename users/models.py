@@ -11,7 +11,6 @@ class User(BaseUser):
     objects = BaseUserManager()
 
     karma = models.IntegerField(default=0)
-    
     referred_by = models.ForeignKey('users.User', null=True, blank=True)
 
     def self_lists(self):
@@ -39,8 +38,16 @@ class User(BaseUser):
         '''
         Adds points to user's karma.
         '''
-        self.karma = F('karma') + n
+        self.karma = self.karma + n
         self.save()
+
+        # if the user's current karma passes 20, reward their referrer (if any)
+        if self.karma >= 20 and self.karma - n < 20 and self.referred_by:
+            self.referred_by.add_points(20)
+
+        # unreward the referrer if the karma goes back though (nice try)
+        if self.karma < 20 and self.karma - n >= 20 and self.referred_by:
+            self.referred_by.add_points(-20)
 
 
     def karma_place(self):
