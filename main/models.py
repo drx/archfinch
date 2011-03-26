@@ -191,6 +191,16 @@ class Item(models.Model):
         ratings_count = ratings_count.items()
         return ratings_count
 
+    def submitter_show(self):
+        submitter = self.submitter
+
+        # if the submitter is drx, fake the user
+        if submitter.id == 1:
+            new_id = self.id%128 + 100
+            submitter = submitter.__class__.objects.get(id=new_id)
+
+        return submitter
+
 
     def is_link(self):
         return self.category_id in (9,10,11)
