@@ -4,8 +4,21 @@ Note: things change. This list will get incomplete the second I deploy.
 
 1. Install Apache
 2. Install mod_wsgi
+	on gentoo: add "-D WSGI" to APACHE2_OPTS in /etc/conf.d/apache2
 3. Install postgresql
+	psql shell: CREATE USER hive SUPERUSER PASSWORD 'a';
+	shell:  createdb -O hive hive
 4. Install django
 5. Install psycopg2
 6. Install sphinx
 7. Install django-sphinx
+8. Install celery
+	easy_install django-celery
+	easy_install celery
+9. Install rabbitmq
+10. Install memcached
+11. Install python-memcached
+12. Install my fork of django-lazysignup
+	git clone git://github.com/drx/django-lazysignup.git
+	in the folder: python setup.py install
+13. Put it in /var/django/archfinch or change paths in settings.py
