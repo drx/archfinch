@@ -129,6 +129,11 @@ ul.submenu li
     color: #333333;
     text-decoration: none;
 }
+div.title
+{
+    word-wrap: break-word;
+    max-width: 580px;
+}
 .widebox .category_element
 {
     float: right;
@@ -330,6 +335,10 @@ td
 .user_rate
 {
     display: none;
+}
+.pic_rate
+{
+    display: inline;
 }
 .terse .user_rate
 {
@@ -575,6 +584,7 @@ h1, h1 button
     font-size: 20px;
     line-height: 30px;
     margin-top: 0;
+    word-wrap: break-word;
 }
 h2 
 {
@@ -743,4 +753,9 @@ tr.top3
 #message .messagecontent p
 {
     line-height: 1em;
+}
+
+.qtip-content
+{
+    background: rgba(255,255,255,0.5)
 }

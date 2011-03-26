@@ -107,7 +107,7 @@ function rating_to_hint(obj)
         case '3': return 'Neutral to it'
         case '4': return 'Like it'
         case '5': return 'Love it'
-        case 'x': return 'Delete this opinion'
+        case 'x': return 'Nevermind'
         case 'list': return 'Add to a list'
     }
     return '?'
@@ -225,7 +225,7 @@ $(document).ready(function(){
                 yr.addClass("rating"+rating)
                 yr.html(rating).show()
                 yr.parent().removeClass("nodisplay")
-                if ($(self).parents(".terse").length)
+                if ($(self).parents(".click_hides").length)
                 {
                     $(self).parent().hide()
                     opinion.hide('slow')
@@ -608,7 +608,7 @@ $(document).ready(function(){
                 if (data['success'])
                 {
                     tooltip = $(self).parents('.qtip');
-                    tooltip.qtip('api').elements.target.parents('.opinion.terse').hide('slow');
+                    tooltip.qtip('api').elements.target.parents('.opinion.click_hides').hide('slow');
                     tooltip.qtip('hide');
                     return;
                 }
@@ -734,5 +734,3 @@ $(document).ready(function(){
         
 
 });
-
-

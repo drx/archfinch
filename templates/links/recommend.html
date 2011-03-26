@@ -25,52 +25,32 @@
  might like.
 </h1>
 
-{% if category.name == 'Links' %}
-    {# links #}
-    {% for link in recommendations %}
-        {% with link.id as item_id %} 
-        {% with 1 as yr_big %}
-        {% with 1 as terse_layout %}
-        {% with link.name as item_name %}
-        {% with link.category_element as category_singular %}
-        {% with forloop.counter as seq_term %}
-        {% with link.rating as your_rating %}
-            {% include "includes/opinionbox.html" %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-    {% empty %}
-        {% if not category %}
-            <div class="big">
-                <p>We don't know {% if usernames_specified %}them{% else %}you{% endif %} well enough to recommend you anything.
-                {% if not usernames_specified %}
-                <p>We would like to, though, so please consider rating more stuff.</p>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% endfor %}
-{% else %}
-{% if category.name == 'Pics' %}
-    {# pics #}
-    {% for link in recommendations %}
-        {% if link.thumbnail %}
-            <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
-        {% else %}
-            <img src="{{ link.url }}">
-        {% endif %}
-            <br />
-    {% endfor %}
-{% else %}
-    {# videos #}
-    {% for link in recommendations %}
-        {{ link.html|safe }}
-    {% endfor %}
-{% endif %}
-{% endif %}
+{% for link in recommendations %}
+    {% with link.id as item_id %} 
+    {% with 1 as yr_big %}
+    {% with 1 as terse_layout %}
+    {% with link.name as item_name %}
+    {% with link.category_element as category_singular %}
+    {% with forloop.counter as seq_term %}
+    {% with link.rating as your_rating %}
+        {% include "includes/opinionbox.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% empty %}
+    {% if not category %}
+        <div class="big">
+            <p>We don't know {% if usernames_specified %}them{% else %}you{% endif %} well enough to recommend you anything.
+            {% if not usernames_specified %}
+            <p>We would like to, though, so please consider rating more stuff.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endfor %}
 {% if left > 0 %}
     <span class="smalltext">
     <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
@@ -100,6 +80,10 @@
 {% endif %}
 
 </div>
+<div id="content_right">
+    <p>Want to share a {{ category.element_singular }}? <a href="{% url submit %}">Submit</a> it!</a></p>
+</div>
+
 
 {% endblock %}
 {% block media %}

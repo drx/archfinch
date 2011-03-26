@@ -40,7 +40,8 @@ class AddItemWizard(FormWizard):
                 item.image = {'url': scraped_data['url'], 'width': scraped_data['width'], 'height': scraped_data['height']}
             if 'html' in scraped_data:
                 item.html = scraped_data['html']
-            generate_thumbnail(item)
+            if scraped_data['category'] == 'pic':
+                generate_thumbnail(item)
                     
         item.save()
         item_profile = ItemProfile(item=item)

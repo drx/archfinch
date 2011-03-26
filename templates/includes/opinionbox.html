@@ -1,6 +1,6 @@
 {% load base36 %}
 {% load markup %}
-<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %}">
+<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %}">
     {% if terse_layout and not link %}
         {% if your_rating %}
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
@@ -13,7 +13,7 @@
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
         {% endif %}
         <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
-        <div class="link_meta" style="width: 300px; height: 32px;">{{ link.time|timesince }} ago, by <a href="{% url user-overview link.submitter %}">{{ link.submitter }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">meta</a></div>
+        <div class="link_meta" style="width: 300px; height: 32px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter.username %}">{{ link.submitter }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">meta</a></div>
     {% else %}    
     <div class="category_element">
         {{ category_singular|capfirst }}
@@ -70,5 +70,18 @@
     <div class="annotation">
     {{ annotation|markdown }}
     </div>
+    {% endif %}
+
+    {% if category_singular == 'pic' %}
+        {% if link.thumbnail %}
+            <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
+        {% else %}
+            <img src="{{ link.url }}">
+        {% endif %}
+        <br /><br />
+    {% endif %}
+    {% if category_singular == 'video' %}
+        {{ link.html|safe }}
+        <br /><br />
     {% endif %}
 </div>

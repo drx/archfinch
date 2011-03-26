@@ -40,10 +40,12 @@
         {% with item.id as item_id %} 
         {% with 1 as yr_big %}
         {% with 1 as terse_layout %}
+        {% with 1 as click_hides %}
         {% with item.name as item_name %}
         {% with item.category_element as category_singular %}
         {% with forloop.counter as seq_term %}
             {% include "includes/opinionbox.html" %}
+        {% endwith %}
         {% endwith %}
         {% endwith %}
         {% endwith %}

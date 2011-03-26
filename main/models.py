@@ -173,20 +173,27 @@ class Item(models.Model):
     def ratings_count(self):
         ratings_count = self.opinion_set.all().values('rating').annotate(count=Count('rating'))
         ratings_count = dict((x['rating'], x['count']) for x in ratings_count)
-        max_rating = max(ratings_count.values())
         for rating in range(1, 6):
             ratings_count.setdefault(rating, 0)
 
-            # stuff rating counts temporarily
-            multiplier = 101 + self.id % 100 + 2*rating
+        import datetime
+        if ratings_count and (not self.is_link() or self.link.time + datetime.timedelta(hours=6) < datetime.datetime.now()):
+            # stuff rating counts (temporarily), but only for links that are 6 hours or older
+            max_rating = max(ratings_count.values())
+            for rating in range(1, 6):
+                multiplier = 101 + self.id % 100 + 2*rating
 
-            if ratings_count[rating] == 0:
-                ratings_count[rating] = multiplier*max_rating/97
-            else:
-                ratings_count[rating] *= multiplier
+                if ratings_count[rating] == 0:
+                    ratings_count[rating] = multiplier*max_rating/97
+                else:
+                    ratings_count[rating] *= multiplier
 
         ratings_count = ratings_count.items()
         return ratings_count
+
+
+    def is_link(self):
+        return self.category_id in (9,10,11)
         
 
 
