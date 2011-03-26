@@ -142,6 +142,11 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
             recommendations = recommendations[start:start+n]
             if category is not None and category.id in (9,10,11):
                 # links
+                for r in recommendations:
+                    try:
+                        r.rating = request.user.opinion_set.get(item__id=r.id).rating
+                    except Opinion.DoesNotExist:
+                        pass
                 return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
             else:
                 user_categories = request.user.categories()
