@@ -6,7 +6,7 @@ DECLARE
             INNER JOIN main_opinion m2
              ON (m1.item_id = m2.item_id AND m1.user_id=a_user)
             INNER JOIN main_opinion m3
-             ON (m2.user_id = m3.user_id AND m3.item_id = item AND m3.user_id != a_user)
+             ON (m2.user_id = m3.user_id AND m3.item_id = item)
             GROUP BY m2.user_id;
 BEGIN
     FOR u IN user_cursor
