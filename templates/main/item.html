@@ -69,7 +69,11 @@
 
 <h1>People who
 <button class="also_liked" like_type='like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
+{% if item.link %}
+    this {{ item.category.element_singular }}
+{% else %}
  {{ item.name }}
+{% endif %}
 <span id="also_liked_also">also</span>
 <button class="also_liked" like_type='also_like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 <img src="/media/images/ajax-loader.gif" style='margin-left: 20px' class="loading nodisplay" id="ld_also_liked">

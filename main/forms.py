@@ -18,7 +18,8 @@ class AddItemForm1(forms.ModelForm):
 
 
 class AddLinkForm1(forms.ModelForm):
-    name = forms.CharField(max_length=1000, label='Title')
+    name = forms.CharField(max_length=1000, label='Title', widget=forms.TextInput(attrs={'size': '40'}))
+    url = forms.CharField(max_length=1000, label='URL', widget=forms.TextInput(attrs={'size': '40'}))
     class Meta:
         model = Link
         fields = ('name', 'url')
