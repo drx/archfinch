@@ -180,7 +180,7 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     if category is not None:
         opinions = opinions.filter(item__category=category)
     else:
-        opinions = opinions.filter(item__category__hide=False)
+        opinions = opinions.exclude(item__category__name='Lists')
 
     category_counts = viewed_user.categories()
 

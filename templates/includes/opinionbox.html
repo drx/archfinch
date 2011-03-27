@@ -72,7 +72,7 @@
     </div>
     {% endif %}
 
-    {% if category_singular == 'pic' %}
+    {% if category_singular == 'pic' and not no_src %}
         {% if link.image.width > 640 and link.thumbnail %}
             <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
         {% else %}
@@ -80,7 +80,7 @@
         {% endif %}
         <br /><br />
     {% endif %}
-    {% if category_singular == 'video' %}
+    {% if category_singular == 'video' and not no_src %}
         {{ link.html|safe }}
         <br /><br />
     {% endif %}

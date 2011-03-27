@@ -69,7 +69,9 @@
             {% with opinion.your_rating as your_rating %}
             {% with opinion.item.name as item_name %} {# opinion.item_name #}
             {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
+            {% with 1 as no_src %}
                 {% include "includes/opinionbox.html" %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}
