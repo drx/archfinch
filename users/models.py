@@ -63,16 +63,22 @@ class User(BaseUser):
          by descending rating count.
         '''
         categories = self.opinion_set.filter(item__category__hide=False)
-        if not categories:
-            categories = Category.objects.filter(name__in=['TV shows', 'Films', 'Video games', 'Books']).values('element_plural', 'slug')
-        else:
-            categories = categories.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
-       
-            # translate the long keys 
-            translate = {'item__category__element_plural': 'element_plural', 'item__category__slug': 'slug'}
-            categories = map(lambda c: dict((translate.get(k,k), v) for k,v in c.iteritems()), categories)
+        categories = categories.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
+   
+        # translate the long keys 
+        translate = {'item__category__element_plural': 'element_plural', 'item__category__slug': 'slug'}
+        categories = map(lambda c: dict((translate.get(k,k), v) for k,v in c.iteritems()), categories)
 
         return categories
+
+    def my_categories(self):
+        '''
+        If the user doesn't have any categories, return the 'major' ones.
+        '''
+        if self.opinion_set.filter(item__category__hide=False):
+            return self.categories()
+        else:
+            return Category.objects.filter(name__in=['TV shows', 'Films', 'Video games', 'Books']).values('element_plural', 'slug')
 
     def __unicode__(self):
         if is_lazy_user(self):
