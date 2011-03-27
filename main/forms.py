@@ -3,6 +3,7 @@ from django.template.defaultfilters import slugify
 from django.utils.http import int_to_base36
 from django.contrib.formtools.wizard import FormWizard
 from django import forms
+from archfinch.main import tasks
 from archfinch.main.models import Item, ItemProfile, Category
 from archfinch.links.models import Link
 from archfinch.links.scraper import scrape, generate_thumbnail
@@ -42,6 +43,7 @@ class AddItemWizard(FormWizard):
                 item.html = scraped_data['html']
             if scraped_data['category'] == 'pic':
                 generate_thumbnail(item)
+
                     
         item.save()
         item_profile = ItemProfile(item=item)
@@ -50,6 +52,8 @@ class AddItemWizard(FormWizard):
         item.submitter = request.user
         item.save()
         request.user.add_points(10)
+        if self.model.__name__ == 'Link':
+            tasks.opinion_set.delay(request.user, item, 5)
         return redirect(reverse('item', args=[int_to_base36(item.id), slugify(item.name)]))
 
     def get_template(self, step):
