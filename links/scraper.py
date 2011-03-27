@@ -85,7 +85,6 @@ def generate_thumbnail(item):
     if item.image['width'] > 640 and item.thumbnail['width'] < 320:
         if re.search(r'imgur\.com', item.image['url']):
             # imgur coincidentally has a 640 thumbnail by default but for some reason doesn't return it in its oembed
-            print 'a'
 
             new_url = item.image['url'].split('.')
             new_url[-2] += 'l'
