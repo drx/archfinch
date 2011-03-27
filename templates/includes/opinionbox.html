@@ -73,7 +73,7 @@
     {% endif %}
 
     {% if category_singular == 'pic' %}
-        {% if link.thumbnail %}
+        {% if link.image.width > 640 and link.thumbnail %}
             <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
         {% else %}
             <img src="{{ link.url }}">

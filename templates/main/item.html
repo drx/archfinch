@@ -40,6 +40,22 @@
 <div id="content_left">
 <h1 id="item" item_id="{{ item.id|base36 }}">{{ item.name }}</h1>
 
+{% if item.category.element_singular == 'link' %}
+    <p>URL: <a href="{{ item.link.url }}">{{ item.link.url }}</a></p>
+{% endif %}
+{% if item.category.element_singular == 'pic' %}
+    {% if item.link.image.width > 640 and item.link.thumbnail %}
+        <a href="{{ item.link.url }}"><img src="{{ item.link.thumbnail.url }}" style='border: 0'></a>
+    {% else %}
+        <img src="{{ item.link.url }}">
+    {% endif %}
+    <br /><br />
+{% endif %}
+{% if item.category.element_singular == 'video' %}
+    {{ item.link.html|safe }}
+    <br /><br />
+{% endif %}
+
 {% if item.profile.page %}
     <div class="article">
     {{ item.profile.page.render|markdown }}
