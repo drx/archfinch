@@ -83,7 +83,9 @@ ul.menu
 ul.menu > li, #menu_loggedin li, #menu_notloggedin li
 {
     display: inline;
-    border: 0.5em solid transparent;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 0.25em 0.5em 0.25em 0.5em;
     position: relative;
 }
 ul.menu > li:hover
@@ -113,6 +115,10 @@ ul.menu li ul.submenu
     -webkit-border-radius: 0px 4px 4px 4px;
     border-radius: 0px 4px 4px 4px;
     width: 100%;
+}
+.webkit  ul.menu li ul.submenu
+{
+    top: 1.40em;
 }
 ul.submenu li 
 {

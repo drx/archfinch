@@ -193,7 +193,7 @@ $(document).ready(function(){
             }
         }
     )
-    $(".user_rate .rating_small:not(img)").live('mousedown', function(e)
+    $(".user_rate .rating_small:not(img)").live('click', function(e)
     {
         if ($(this).hasClass("rated"))
         {
