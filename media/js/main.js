@@ -165,7 +165,7 @@ function generate_lists_tip(){
 $(document).ready(function(){
     $(".box").live("hover", 
         function(e){
-            if (e.type == "mouseover")
+            if (e.type == "mouseenter")
             {
                 $(this).addClass('highlight')
             }
@@ -178,7 +178,7 @@ $(document).ready(function(){
     )
     $(".user_rate .rating_small").live("hover", 
         function(e){
-            if (e.type == "mouseover")
+            if (e.type == "mouseenter")
             {
                 $(this).removeClass('rate')
                 seq_term = get_seq_term(this)

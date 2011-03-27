@@ -10,13 +10,42 @@ class Category(models.Model):
     element_plural = models.CharField(max_length=200)
 
     # hide subclasses and other unwanted categories
-    hide = models.BooleanField()
+    hide = models.BooleanField(db_index=True)
 
     def __unicode__(self):
         return self.name
 
 
 class ItemManager(models.Manager):
+    def recommended_generic(self, category=None):
+        '''
+        Fetches items recommended generally (i.e. not for a specific user).
+        '''
+        params = []
+        where = ''
+        if category is not None:
+            where += ' mi.category_id = %s'
+            params.append(category.id)
+        else:
+            where += " mc.hide = 'f'"
+
+        recommended = Item.objects.raw("""
+            SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
+             SUM((mo.rating-3)) AS recommendation,
+             mc.element_singular AS category_element
+            FROM main_opinion mo
+             INNER JOIN main_item mi
+              ON mo.item_id=mi.id
+             INNER JOIN main_category mc
+              ON mc.id=mi.category_id
+            WHERE 
+             """+where+"""
+            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
+            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
+            params)
+
+        return recommended
+
     def recommended(self, users, category=None, category_id=None):
         '''
         Fetches items recommended for the user (which the user has not already rated)
@@ -27,8 +56,10 @@ class ItemManager(models.Manager):
         '''
         from itertools import takewhile
 
+        user_ids = map(lambda u: u.id, users)
+
         where = ''
-        params = [tuple(map(lambda u: u.id, users))]*4
+        params = [tuple(user_ids)]*4
         if category is not None and category:
             category_id = category.id
 

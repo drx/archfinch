@@ -2,6 +2,55 @@ from django.db import models
 from archfinch.main.models import Item
 
 class LinkManager(models.Manager):
+    def recommended_generic(self, category=None):
+        '''
+        Fetches links recommended generally (not for a specific user).
+        '''
+
+        where = ''
+        params = []
+
+        if category is not None:
+            where += ' mi.category_id = %s'
+            params.append(category.id)
+
+        # Select items in order of their recommendation to self
+        # 
+        # recommendation =
+        #    sum (rating-3)*similarity for all similar users
+        # 
+        #    where 
+        #      rating: what the user has rated the item
+        #      similarity: similarity between the user and self
+        recommended = Link.objects.raw("""
+            SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
+
+             SUM((mo.rating-3)) *
+             (CASE
+               WHEN extract(epoch from now()-ll.time)/86400 < 1
+               THEN 1
+               ELSE 86400/extract(epoch from now()-ll.time)
+              END
+             ) AS recommendation,
+
+             mc.element_singular AS category_element
+            FROM main_opinion mo
+              
+             INNER JOIN main_item mi
+              ON mo.item_id=mi.id
+             INNER JOIN main_category mc
+              ON mc.id=mi.category_id
+             INNER JOIN links_link ll
+              ON ll.item_ptr_id=mi.id
+            WHERE 
+             """+where+"""
+            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
+            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
+            params)
+
+        return recommended
+
+
     def recommended(self, user, category=None, category_id=None):
         '''
         Fetches links recommended for the user.

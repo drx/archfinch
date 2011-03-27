@@ -3,7 +3,7 @@ from django.db.models import F, Count
 from django.contrib.auth.models import User as BaseUser, UserManager as BaseUserManager
 from django.utils.http import int_to_base36
 from django.core.urlresolvers import reverse
-from archfinch.main.models import Opinion, Similarity, Item
+from archfinch.main.models import Opinion, Similarity, Item, Category
 from lazysignup.utils import is_lazy_user
 
 
@@ -62,11 +62,15 @@ class User(BaseUser):
         Fetches categories in which the user has rated items, ordered
          by descending rating count.
         '''
-        categories = self.opinion_set.filter(item__category__hide=False).values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
+        categories = self.opinion_set.filter(item__category__hide=False)
+        if not categories:
+            categories = Category.objects.filter(name__in=['TV shows', 'Films', 'Video games', 'Books']).values('element_plural', 'slug')
+        else:
+            categories = categories.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
        
-        # translate the long keys 
-        translate = {'item__category__element_plural': 'element_plural', 'item__category__slug': 'slug'}
-        categories = map(lambda c: dict((translate.get(k,k), v) for k,v in c.iteritems()), categories)
+            # translate the long keys 
+            translate = {'item__category__element_plural': 'element_plural', 'item__category__slug': 'slug'}
+            categories = map(lambda c: dict((translate.get(k,k), v) for k,v in c.iteritems()), categories)
 
         return categories
 

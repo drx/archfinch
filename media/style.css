@@ -102,12 +102,12 @@ ul.menu li ul.submenu
     list-style: none;
     position: absolute;
     left: 0;
-    top: 1.45em;
+    top: 1.55em;
     margin-left: -0.5em;
-    padding: 0.5em 0.6em 0 0;
+    padding: 0.7em 0.8em 0 0;
     background: #ffffff;
     border-color: #0099ff;
-    border-width: 0.2em 0.2em 0.2em 0.2em;
+    border-width: 0.1em;
     border-style: solid;
     -moz-border-radius: 0px 4px 4px 4px;
     -webkit-border-radius: 0px 4px 4px 4px;
@@ -412,7 +412,7 @@ td
     font-family: Helvetica, Verdana, Arial, sans-serif;
     margin-bottom: 30px;
     clear: both;
-    border-bottom: 1px solid #0099ff;
+    border-bottom: 2px solid #0099ff;
 }
 #navbar a
 {

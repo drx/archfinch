@@ -11,6 +11,16 @@ def recommend(category, users):
         recommendations = list(Item.objects.recommended(users, category=category))
     return recommendations
 
+
+@task
+def recommend_generic(category):
+    if category is not None and category.id in (9,10,11):
+        # links
+        return list(Link.objects.recommended_generic(category=category))
+    else:
+        return list(Item.objects.recommended_generic(category=category))
+
+
 @task
 def opinion_set(user, item, rating):
     opinion, created = Opinion.objects.get_or_create(user=user, item=item,

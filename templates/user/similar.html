@@ -16,7 +16,7 @@
 <table>
 {% for similarity in similar_users %}
 <tbody class='box'>
-    <tr><td><div class="user"><a href="{% url users.views.overview similarity.user2 %}">{{ similarity.user2 }}</a></div></td>
+    <tr><td><div class="user"><a href="{% url users.views.overview similarity.user2.username %}">{{ similarity.user2 }}</a></div></td>
     <td style='padding-left: 10em'><div>
     {% with similarity.value as similarity %}
         {% include "includes/similarity_bar.html" %}

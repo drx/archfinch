@@ -106,7 +106,17 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
             users = [request.user]
             usernames_specified = False
 
-        cache_key = 'recommend,%s,%s' % ('+'.join(sorted(set(map(lambda u: str(u.id), users)))), category_slug)
+        user_ids = map(lambda u: u.id, users)
+        usernames_k = '+'.join(sorted(set(map(str, user_ids))))
+
+        opinion_count = users[0].__class__.objects.filter(pk__in=user_ids).aggregate(Count('opinion'))['opinion__count']
+        if opinion_count < 10:
+            generic = True
+            usernames_k = '#generic'
+        else:
+            generic = False
+    
+        cache_key = 'recommend,%s,%s' % (usernames_k, category_slug)
         if settings.DEBUG:
             cache_timeout = 30
         else:
@@ -123,7 +133,10 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
                 computed = True
 
         else:
-            recommendations = tasks.recommend.delay(category, users)
+            if generic:
+                recommendations = tasks.recommend_generic.delay(category)
+            else:
+                recommendations = tasks.recommend.delay(category, users)
             task_id = recommendations.task_id
             cache.set(cache_key, ('task', task_id), cache_timeout)
 
