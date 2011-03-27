@@ -39,6 +39,8 @@ embedly_video_re = re.compile("http://(.*youtube\.com/watch.*|.*\.youtube\.com/v
 
 embedly_pic_re = re.compile("http://(.*yfrog\..*/.*|tweetphoto\.com/.*|www\.flickr\.com/photos/.*|flic\.kr/.*|twitpic\.com/.*|www\.twitpic\.com/.*|twitpic\.com/photos/.*|www\.twitpic\.com/photos/.*|.*imgur\.com/.*|.*\.posterous\.com/.*|post\.ly/.*|twitgoo\.com/.*|i.*\.photobucket\.com/albums/.*|s.*\.photobucket\.com/albums/.*|phodroid\.com/.*/.*/.*|www\.mobypicture\.com/user/.*/view/.*|moby\.to/.*|xkcd\.com/.*|www\.xkcd\.com/.*|imgs\.xkcd\.com/.*|www\.asofterworld\.com/index\.php\?id=.*|www\.asofterworld\.com/.*\.jpg|asofterworld\.com/.*\.jpg|www\.qwantz\.com/index\.php\?comic=.*|23hq\.com/.*/photo/.*|www\.23hq\.com/.*/photo/.*|.*dribbble\.com/shots/.*|drbl\.in/.*|.*\.smugmug\.com/.*|.*\.smugmug\.com/.*#.*|emberapp\.com/.*/images/.*|emberapp\.com/.*/images/.*/sizes/.*|emberapp\.com/.*/collections/.*/.*|emberapp\.com/.*/categories/.*/.*/.*|embr\.it/.*|picasaweb\.google\.com.*/.*/.*#.*|picasaweb\.google\.com.*/lh/photo/.*|picasaweb\.google\.com.*/.*/.*|dailybooth\.com/.*/.*|brizzly\.com/pic/.*|pics\.brizzly\.com/.*\.jpg|img\.ly/.*|www\.tinypic\.com/view\.php.*|tinypic\.com/view\.php.*|www\.tinypic\.com/player\.php.*|tinypic\.com/player\.php.*|www\.tinypic\.com/r/.*/.*|tinypic\.com/r/.*/.*|.*\.tinypic\.com/.*\.jpg|.*\.tinypic\.com/.*\.png|meadd\.com/.*/.*|meadd\.com/.*|.*\.deviantart\.com/art/.*|.*\.deviantart\.com/gallery/.*|.*\.deviantart\.com/#/.*|fav\.me/.*|.*\.deviantart\.com|.*\.deviantart\.com/gallery|.*\.deviantart\.com/.*/.*\.jpg|.*\.deviantart\.com/.*/.*\.gif|.*\.deviantart\.net/.*/.*\.jpg|.*\.deviantart\.net/.*/.*\.gif|plixi\.com/p/.*|plixi\.com/profile/home/.*|plixi\.com/.*|www\.fotopedia\.com/.*/.*|fotopedia\.com/.*/.*|photozou\.jp/photo/show/.*/.*|photozou\.jp/photo/photo_only/.*/.*|instagr\.am/p/.*|skitch\.com/.*/.*/.*|img\.skitch\.com/.*|https://skitch\.com/.*/.*/.*|https://img\.skitch\.com/.*|share\.ovi\.com/media/.*/.*|www\.questionablecontent\.net/|questionablecontent\.net/|www\.questionablecontent\.net/view\.php.*|questionablecontent\.net/view\.php.*|questionablecontent\.net/comics/.*\.png|www\.questionablecontent\.net/comics/.*\.png|picplz\.com/user/.*/pic/.*/|twitrpix\.com/.*|.*\.twitrpix\.com/.*|www\.someecards\.com/.*/.*|someecards\.com/.*/.*|some\.ly/.*|www\.some\.ly/.*|pikchur\.com/.*|achewood\.com/.*|www\.achewood\.com/.*|achewood\.com/index\.php.*|www\.achewood\.com/index\.php.*)", re.I)
 
+global_pic_re = re.compile("http://.*\.(png|jpg|gif|jpeg)", re.I)
+
 category_id = {'link': 9, 'pic': 10, 'video': 11}
 
 def scrape(url):
@@ -56,6 +58,15 @@ def scrape(url):
         if oembed['type'] == 'photo':
             data['category'] = 'pic'
             keys = ('url','width','height','thumbnail_url','thumbnail_width','thumbnail_height')
+
+    elif global_pic_re.match(url):
+        req = urllib2.urlopen(urllib2.Request(url))
+        content = req.read(max_filesize)
+        if 'image' in req.headers.get('content-type'):
+            img = str_to_image(content)
+            data['url'] = url
+            data['width'], data['height'] = img.size
+            data['category'] = 'pic'
 
     if keys: 
         for key in keys: 
@@ -82,7 +93,8 @@ def generate_thumbnail(item):
     """Generate a thumbnail if the image is too big
         and (the thumbnail is too small or not privided).
     """
-    if item.image['width'] > 640 and item.thumbnail['width'] < 320:
+    if item.image['width'] > 640 and (not item.thumbnail or item.thumbnail['width'] < 320):
+        thumbnail = {}
         if re.search(r'imgur\.com', item.image['url']):
             # imgur coincidentally has a 640 thumbnail by default but for some reason doesn't return it in its oembed
 
@@ -92,8 +104,8 @@ def generate_thumbnail(item):
             
             img = get_image_from_url(new_url)
 
-            item.thumbnail['url'] = new_url
-            item.thumbnail['width'], item.thumbnail['height'] = img.size
+            thumbnail['url'] = new_url
+            thumbnail['width'], thumbnail['height'] = img.size
 
         else:
             # we have to reupload the pic
@@ -112,7 +124,8 @@ def generate_thumbnail(item):
             new_url = response['upload']['links']['large_thumbnail']
             img = get_image_from_url(new_url)
 
-            item.thumbnail['url'] = new_url
-            item.thumbnail['width'], item.thumbnail['height'] = img.size
-            
+            thumbnail['url'] = new_url
+            thumbnail['width'], thumbnail['height'] = img.size
+           
+        item.thumbnail = thumbnail 
 
