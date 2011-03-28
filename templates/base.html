@@ -43,7 +43,7 @@
             {% if user.is_authenticated %}
             <span id="menu_loggedin">
             <li> <a href="{% url logout %}" id="menu_logout">logout</a>
-            <li> <a href="{% url users.views.overview user.username %}" id="menu_user">{% if user|is_lazy_user %}<i>you</i>{% else %}{{ user }}{% endif %}</a>
+            <li> logged in as: <a href="{% url users.views.overview user.username %}" id="menu_user">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
             </span>
             {% else %}
             <span id="menu_notloggedin">
@@ -73,7 +73,6 @@
                     <li> <a href="{% url users.views.similar %}">similar</a>
                     <li> <a href="{% url top-users %}">top users</a>
                  </ul>
-            <li> <a href="{% url lists-overview %}">lists</a>
             {% else %}
             <li style='border: 0'> &nbsp;
             {% endif %}
@@ -85,9 +84,8 @@
     {% if user|is_lazy_user %}
     <div id="message">
         <div class="messagecontent">
-            <p>You've been logged in as a temporary user -- if you log out you can lose your data.</p>
-            <p><a href="{% url lazysignup_convert %}">Save your data by creating a permanent account</a> (it takes less than a minute).</p>
-            <p>Don't worry, you can try out the site just fine for now, but remember to save your data later.</p>
+            <p>Archfinch - rate things and get recommendations based on what <i>you</i> like.</p>
+            <p>Your account is temporary. <a href="{% url lazysignup_convert %}"><u>Sign up</u></a> to save your data (it takes less than a minute).</p>
         </div>
         <div class="login"><p>Already have an account?<br /><a href="{% url login %}">Log in</a>.</p></div>
         <div style='clear: both'></div>
