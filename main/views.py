@@ -22,7 +22,7 @@ from django.conf import settings
 @allow_lazy_user
 def welcome(request):
     if request.user.is_authenticated():
-        return redirect(reverse('user-overview', args=[request.user.username]))
+        return redirect(reverse('recommend-slugged', args=['links']))
     else:
         return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
 
