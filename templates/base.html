@@ -47,7 +47,7 @@
             </span>
             {% else %}
             <span id="menu_notloggedin">
-            <li> <a href="/" id="menu_signup">signup</a>
+            <li> <a href="{% url lazysignup_convert %}" id="menu_signup">signup</a>
             <li> <a href="{% url login %}" id="menu_login">login</a>
             </span>
             {% endif %}
