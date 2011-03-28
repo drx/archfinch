@@ -96,3 +96,12 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/account/login'
 
 USER_MODEL = 'users.User'
+
+LAZYSIGNUP_USER_AGENT_BLACKLIST = (
+    'slurp',
+    'googlebot',
+    'yandex',
+    'msnbot',
+    'baiduspider',
+    'pingdom',
+)
