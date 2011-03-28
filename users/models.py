@@ -57,12 +57,15 @@ class User(BaseUser):
         return User.objects.filter(karma__gt=self.karma).count()+1
 
 
-    def categories(self):
+    def categories(self, hide=True):
         '''
         Fetches categories in which the user has rated items, ordered
          by descending rating count.
         '''
-        categories = self.opinion_set.filter(item__category__hide=False)
+        
+        categories = self.opinion_set.all()
+        if hide:
+            categories = categories.filter(item__category__hide=False)       
         categories = categories.values('item__category__element_plural', 'item__category__slug').annotate(count=Count('item__category')).order_by('-count')
    
         # translate the long keys 

@@ -147,7 +147,11 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
     else:
         category = None
 
-    categories = viewed_user.categories()
+    hide = False
+    if viewed_user.id == 1:
+        # don't show drx's links
+        hide = True
+    categories = viewed_user.categories(hide=hide)
     your_profile = False
     if request.user==viewed_user:
         your_profile = True
@@ -181,8 +185,10 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
         opinions = opinions.filter(item__category=category)
     else:
         opinions = opinions.exclude(item__category__name='Lists')
+    if hide:
+        opinions = opinions.filter(item__category__hide=False)
 
-    category_counts = viewed_user.categories()
+    category_counts = viewed_user.categories(hide=hide)
 
     if request.user==viewed_user or not request.user.is_authenticated():
         similarity = 0
