@@ -86,15 +86,21 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
         else:
             start = int(start)
         
-        if n is None or not 0 < int(n) < 100:
-            n = 100
-        else:
-            n = int(n)
-
         if category_slug is not None and category_slug:
             category = Category.objects.get(slug=category_slug)
         else:
             category = None
+
+        if n is None or not 0 < int(n) < 100:
+            if category:
+                if category.name in ('Videos', 'Pics'):
+                    n = 10
+                else:
+                    n = 100
+            else:
+                n = 100
+        else:
+            n = int(n)
 
         if usernames is not None:
             usernames = usernames.split(',')
