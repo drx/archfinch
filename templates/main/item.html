@@ -10,6 +10,7 @@
     <!--[if IE]><script language="javascript" type="text/javascript" src="/media/js/flot/excanvas.min.js"></script><![endif]-->
     <script type="text/javascript" src="/media/js/flot/jquery.flot.min.js"></script>
 
+{% if not item.is_link %}
     <script type="text/javascript">
     $(document).ready(function(){
         $.plot($("#ratings_graph"), [
@@ -32,6 +33,7 @@
         });
     });
     </script>
+{% endif %}
 
 {% include "includes/generate_lists_tip.html" %}
 {% endblock %}
@@ -131,6 +133,8 @@
 
 {% if not item.is_link %}
 <div id="ratings_graph"></div>
+{% else %}
+<p>{{ item.link.views }} views</p>
 {% endif %}
 
 {% if item.submitter %}

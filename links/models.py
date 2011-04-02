@@ -134,3 +134,20 @@ class Link(Item):
     html = models.TextField(max_length=1000, blank=True, null=True)    
 
     objects = LinkManager()
+
+    def age(self):
+        import datetime
+        age = (datetime.datetime.now() - self.time)
+        return age.seconds+age.days*60*60*24
+
+    def views(self):
+        age = self.age()
+        multiplier = 113 + self.id % 20
+        if age < 15*60:
+            views = (age/900.)**2 * multiplier
+        elif age < 60*60*24:
+            views = (age/900.) * multiplier
+        else:
+            views = 96 * multiplier + age/360.
+
+        return int(views)
