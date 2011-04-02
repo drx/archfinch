@@ -280,6 +280,10 @@ td
 {
     width: 5px;
 }
+.terse .rating.notrated
+{
+    display: none;
+}
 .rating1
 {
     background-color: #f02000;

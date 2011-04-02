@@ -4,6 +4,8 @@
     {% if terse_layout and not link %}
         {% if your_rating %}
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
+        {% else %}
+        <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
         {% endif %}
         <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
         <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
@@ -11,6 +13,8 @@
     {% if link %}
         {% if your_rating %}
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
+        {% else %}
+        <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
         {% endif %}
         <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
         <div class="link_meta" style="width: 300px; height: 32px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">meta</a></div>
