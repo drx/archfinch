@@ -119,12 +119,12 @@ function ajaxerror(obj, error_msg)
 
 function task_wait(task_id)
 {
-    setTimeout("window.location.reload()", 10000);
+    setTimeout("window.location.reload()", 20000);
     $.ajax({
         url: "/task_wait/"+task_id,
         dataType: "json",
         type: "GET",
-        timeout: 15000,
+        timeout: 20000,
         success: function(data)
         {
             location.reload()
