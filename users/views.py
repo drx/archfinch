@@ -13,6 +13,7 @@ from archfinch.users.models import User
 from django.utils.datastructures import SortedDict
 from lazysignup.decorators import allow_lazy_user
 from django.core.cache import cache
+from archfinch.utils import paginate
 
 def get_max_similarity(user):
     try:
@@ -38,16 +39,14 @@ def top_users(request):
 
 
 @allow_lazy_user
-def reviews(request, username, start=None, n=None):
-    if start is None:
-        start = 0
+def reviews(request, username, page=None):
+    if page is None:
+        page = 1
     else:
-        start = int(start)
+        page = int(page)
     
-    if n is None or not 0 < int(n) < 10:
-        n = 10
-    else:
-        n = int(n)
+    n = 10
+
     review_user = get_object_or_404(User, username=username)
 
     reviews = Review.objects.filter(user=review_user).extra(
@@ -57,9 +56,8 @@ def reviews(request, username, start=None, n=None):
         },
     ).select_related('item').order_by('-time')
 
-    count = reviews.count()
-    left = count-(start+n)
-    reviews = reviews[start:start+n]
+    # pagination
+    reviews, paginator, current_page, page_range = paginate(reviews, page, n)
 
     for review in reviews:
         review.rating_verbose = Opinion(rating=review.rating).get_third_person()
@@ -129,18 +127,15 @@ def review_edit(request, item_id):
 
 
 @allow_lazy_user
-def overview(request, username, category_slug=None, start=None, n=None, json=None):
+def overview(request, username, category_slug=None, page=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
 
-    if start is None:
-        start = 0
+    if page is None:
+        page = 1
     else:
-        start = int(start)
+        page = int(page)
     
-    if n is None or not 0 < int(n) < 100:
-        n = 100
-    else:
-        n = int(n)
+    n = 100
 
     if category_slug is not None and category_slug:
         category = Category.objects.get(slug=category_slug)
@@ -205,9 +200,8 @@ def overview(request, username, category_slug=None, start=None, n=None, json=Non
 
     lists = viewed_user.list_set.all()
 
-    count = len(list(opinions))
-    left = count-(start+n)
-    opinions = opinions[start:start+n]
+    # pagination
+    opinions, paginator, current_page, page_range = paginate(opinions, page, n)
 
     if json:
         return render_to_response('user/overview.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
@@ -243,29 +237,27 @@ def likes_gen(users, request_user):
 
 
 @allow_lazy_user
-def similar(request, start=None, n=None):
+def similar(request, page=None):
     '''
     Show users most similar to the logged in user.
     '''
 
     if request.user.is_authenticated():
-        if start is None:
-            start = 0
+        if page is None:
+            page = 1
         else:
-            start = int(start)
-        
-        if n is None or not 0 < int(n) < 10:
-            n = 10
-        else:
-            n = int(n)
+            page = int(page)
 
+        n = 10
+        
         similarity_max = get_max_similarity(request.user)
         similar_users = request.user.similar()
         count = similar_users.count()
-        similar_users = similar_users[start:start+n]
-        likes = likes_gen(similar_users, request.user)
 
-        left = count-(start+n)
+        # pagination
+        similar_users, paginator, current_page, page_range = paginate(similar_users, page, n)
+
+        likes = likes_gen(similar_users, request.user)
 
         return render_to_response('user/similar.html', locals(), context_instance=RequestContext(request))
     else:

@@ -76,7 +76,7 @@
             {% else %}
             <li style='border: 0'> &nbsp;
             {% endif %}
-            <li style='border: 0'> <form style="display:inline; float:right" action="{% url search %}"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search for things...' onClick='this.value=""'{% endif %}></form>
+            <li style='border: 0'> <form style="display:inline; float:right" action="{% url search-base %}" onSubmit="window.location.href='{% url search-base %}/'+this.q.value;return false;"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search for things...' onClick='if (this.value=="Search for things...") this.value=""'{% endif %} ></form>
         </ul>
     </div>
     

@@ -5,6 +5,7 @@
 {% load timesince_days %}
 {% load humanize %}
 {% load lazysignup_tags %}
+{% load reversetag %}
 
 {% block title %}
 {% if category %}
@@ -90,25 +91,13 @@
         </div>
     {% endif %}
 {% endif %}
-{% if left > 0 %}
-    <span class="smalltext">
-    <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
-    {% if left <= 100 %}
-        {% if category_slug %}
-            <a href="{% url user-overview-slugged-paged viewed_user.username category_slug start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
-        {% else %}
-            <a href="{% url user-overview-paged viewed_user.username start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
-        {% endif %}
-    {% else %}
-        {% if category_slug %}
-            Show the next <a href="{% url user-overview-slugged-paged viewed_user.username category_slug|default:"" start|add:n 100 %}">100</a>.
-        {% else %}
-            Show the next <a href="{% url user-overview-paged viewed_user.username start|add:n 100 %}">100</a>.
-        {% endif %}
-    {% endif %}
-    </p></span>
-{% endif %}
 
+{% if category_slug %}
+    {% reverse partial "user-overview-slugged-paged" username=viewed_user.username category_slug=category_slug as pagination_url %}
+{% else %}
+    {% reverse partial "user-overview-paged" username=viewed_user.username as pagination_url %}
+{% endif %}
+{% include "includes/pagination.html" %}
 
 </div>
 <div id="content_right">

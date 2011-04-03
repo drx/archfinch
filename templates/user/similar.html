@@ -1,5 +1,7 @@
 {% extends base %}
 
+{% load reversetag %}
+
 {% block title %}Similar people - Archfinch{% endblock %}
 
 {% block content %}
@@ -32,16 +34,7 @@
 
 </table>
 
-{% if left > 0 %}
-    <span class="smalltext">
-    <p>There {{ left|pluralize:"is,are" }} {{ left }} more {{ left|pluralize:"person,people" }}.
-    {% if left <= 10 %}
-        <a href="{% url similar-paged start|add:n 10 %}">Show them</a>.
-    {% else %}
-        Show the next <a href="{% url similar-paged start|add:n 10 %}">10</a>.
-    {% endif %}
-    </p></span>
-{% endif %}
-
+{% reverse partial "similar-paged" as pagination_url %}
+{% include "includes/pagination.html" %}
 
 {% endblock %}

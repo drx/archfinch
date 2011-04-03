@@ -81,6 +81,7 @@ INSTALLED_APPS = (
     'archfinch.search',
     'djcelery',
     'lazysignup',
+    'reversetag',
 )
 if DEBUG:
     INSTALLED_APPS += (

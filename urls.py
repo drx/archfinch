@@ -10,12 +10,12 @@ urlpatterns = patterns('',
     url(r'^submit$', 'archfinch.links.views.submit', name='submit'),
 
     url(r'^similar$', 'archfinch.users.views.similar', name='similar'),
-    url(r'^similar/(?P<start>\d+)/(?P<n>\d+)$', 'archfinch.users.views.similar', name='similar-paged'),
+    url(r'^similar/(?P<page>\d+)$', 'archfinch.users.views.similar', name='similar-paged'),
     url(r'^recommend$', 'archfinch.main.views.recommend', name='recommend'),
-    url(r'^recommend/(?P<category_slug>[\w-]+)$', 'archfinch.main.views.recommend', name='recommend-slugged'),
-    url(r'^recommend/(?P<start>\d+)/(?P<n>\d+)$', 'archfinch.main.views.recommend', name='recommend-paged'),
-    url(r'^recommend/(?P<category_slug>[\w-]+)/(?P<start>\d+)/(?P<n>\d+)$', 'archfinch.main.views.recommend', name='recommend-slugged-paged'),
-    url(r'^recommend(?:/(?P<category_slug>[\w-]*))?/for/(?P<usernames>[,\w@\+\.-]+)(?:/(?P<start>\d+)/(?P<n>\d+))?$', 'archfinch.main.views.recommend', name='recommend-for'),
+    url(r'^recommend/(?P<category_slug>[a-z-]+)$', 'archfinch.main.views.recommend', name='recommend-slugged'),
+    url(r'^recommend/(?P<page>\d+)$', 'archfinch.main.views.recommend', name='recommend-paged'),
+    url(r'^recommend/(?P<category_slug>[a-z-]+)/(?P<page>\d+)$', 'archfinch.main.views.recommend', name='recommend-slugged-paged'),
+    url(r'^recommend(?:/(?P<category_slug>[a-z-]*))?/for/(?P<usernames>[,\w@\+\.-]+)(?:/(?P<page>\d+))?$', 'archfinch.main.views.recommend', name='recommend-for'),
 
     url(r'task_wait/(?P<task_id>[\w-]+)$', 'archfinch.main.views.task_wait', name='task-wait'),
     
@@ -36,8 +36,8 @@ urlpatterns = patterns('',
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 
-    url(r'^search$', 'archfinch.search.views.query', name='search'),
-    url(r'^search.json$', 'archfinch.search.views.query', {'json': True}, name='search-json'),
+    url(r'^search$', 'archfinch.search.views.query', name='search-base'),
+    url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?$', 'archfinch.search.views.query', name='search'),
     url(r'^usersearch$', 'archfinch.search.views.user_search', name='user-search'),
 
     url(r'^ref/(?P<username>[\w@\+\.-]+)$', 'archfinch.users.views.referral', name='referral'),

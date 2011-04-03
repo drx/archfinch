@@ -10,23 +10,26 @@ from archfinch.utils import render_to_response
 from archfinch.main.models import Item, Category
 from archfinch.users.models import User
 from lazysignup.decorators import allow_lazy_user
+from archfinch.utils import paginate
 import re
 
 
 @allow_lazy_user
-def query(request, json=False):
+def query(request, query=None, page=None, json=False):
     def invalid_search():
         if json:
             return render_to_response('search/invalid.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
         else:
             return render_to_response('search/invalid.html', locals(), context_instance=RequestContext(request))
 
-    query = request.GET['q']
-    start = int(request.GET.get('s', 0))
-    n = int(request.GET.get('n', 10))
+    if 'q' in request.GET:
+        query = request.GET['q']
 
-    if not 0 < n <= 100:
-        n = 10
+    if page is None:
+        page = 1
+    else:
+        page = int(page)
+    n = 10
 
     modifiers = {}
     words = query.split()
@@ -98,9 +101,7 @@ def query(request, json=False):
 
     category_counts.sort(key=lambda x: x['count'], reverse=True)
     
-    results = results[start:start+n]
-
-    left = count-(start+n)
+    results, paginator, current_page, page_range = paginate(results, page, n)
 
     if json:
         return render_to_response('search/results.json', locals(), context_instance=RequestContext(request), mimetype='application/json')

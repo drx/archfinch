@@ -2,6 +2,7 @@
 
 {% load markup %}
 {% load base36 %}
+{% load reversetag %}
 
 {% block title %}
 {% if single %}
@@ -31,17 +32,10 @@
     <br /><br />
 {% endfor %}
 
-{% if not single and left > 0 %}
-    <span class="smalltext">
-    <p>There {{ left|pluralize:"is,are" }} {{ left }} more review{{ left|pluralize }}.
-    {% if left <= 10 %}
-        <a href="{% url user-reviews-paged review_user.username start|add:n 10 %}">Show {{ left|pluralize:"it,them" }}</a>.
-    {% else %}
-        Show the next <a href="{% url user-reviews-paged review_user.username start|add:n 10 %}">10</a>.
-    {% endif %}
-    </p></span>
+{% if not single %}
+    {% reverse partial "user-reviews-paged" username=review_user.username as pagination_url %}
+    {% include "includes/pagination.html" %}
 {% endif %}
-
 
 </div>
 

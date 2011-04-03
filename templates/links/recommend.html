@@ -3,6 +3,7 @@
 {% load base36 %}
 {% load nbsp %}
 {% load sequence %}
+{% load reversetag %}
 
 {% block title %}
     {% if category %}
@@ -51,33 +52,16 @@
         </div>
     {% endif %}
 {% endfor %}
-{% if left > 0 %}
-    <span class="smalltext">
-    <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
-    {% if left <= 100 %}
-        {% if usernames_specified %}
-            <a href="{% url recommend-for category_slug=category_slug|default:"" usernames=usernames|join:"," start=start|add:n n=100 %}">Show {{ left|pluralize:"it,them" }}</a>.
-        {% else %}
-            {% if category_slug %}
-                <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
-            {% else %}
-                <a href="{% url recommend-paged start|add:n 100 %}">Show {{ left|pluralize:"it,them" }}</a>.
-            {% endif %}
-        {% endif %}
+{% if usernames_specified %}
+    {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
+{% else %}
+    {% if category_slug %}
+        {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
     {% else %}
-        {% if usernames_specified %}
-            Show the next <a href="{% url recommend-for category_slug=category_slug|default:"" usernames=usernames|join:"," start=start|add:n n=100 %}">100</a>.
-        {% else %}
-            {% if category_slug %}
-                Show the next <a href="{% url recommend-slugged-paged category_slug start|add:n 100 %}">100</a>.
-            {% else %}
-                Show the next <a href="{% url recommend-paged start|add:n 100 %}">100</a>.
-            {% endif %}
-        {% endif %}
+        {% reverse partial "recommend-paged" as pagination_url %}
     {% endif %}
-    </p>
-    </span>
 {% endif %}
+{% include "includes/pagination.html" %}
 
 </div>
 <div id="content_right">

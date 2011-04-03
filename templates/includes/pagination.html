@@ -1,0 +1,15 @@
+{% load reversetag %}
+<div class="pagination">
+    {% if current_page.has_previous %}
+        <a href="{% reverse pagination_url page=current_page.previous_page_number %}" class="page">Prev</a> &nbsp;&nbsp;
+    {% endif %}
+    {% if current_page.has_other_pages %}
+    {% for page_number in page_range %}
+        <a href="{% reverse pagination_url page=page_number %}" class="page {% if current_page.number == page_number %}current_page{% endif %}">{{ page_number }}</a>
+    {% endfor %}
+    {% endif %}
+    {% if current_page.has_next %}
+        &nbsp;&nbsp; <a href="{% reverse pagination_url page=current_page.next_page_number %}" class="page">Next</a>
+    {% endif %}
+</div>
+

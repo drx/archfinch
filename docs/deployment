@@ -21,4 +21,5 @@ Note: things change. This list will get incomplete the second I deploy.
 12. Install my fork of django-lazysignup
 	git clone git://github.com/drx/django-lazysignup.git
 	in the folder: python setup.py install
-13. Put it in /var/django/archfinch or change paths in settings.py
+13. Install django-reversetag
+14. Put it in /var/django/archfinch or change paths in settings.py

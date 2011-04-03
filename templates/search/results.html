@@ -1,6 +1,7 @@
 {% extends base %}
 
 {% load base36 %}
+{% load reversetag %}
 
 {% block title %}{{ query }} search results - Archfinch{% endblock %}
 
@@ -36,17 +37,10 @@
     {% endwith %}
 {% endfor %}
 
+{% reverse partial "search" query=query|urlencode as pagination_url %}
+{% include "includes/pagination.html" %}
+
 <span class="smalltext">
-{% if left > 0 %}
-    <p>There {{ left|pluralize:"is,are" }} {{ left }} more result{{ left|pluralize }}.
-    {% if left <= 10 %}
-        <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">Show {{ left|pluralize:"it,them" }}</a>.
-    {% else %}
-        {# Sorry for the long line, this is for great justice^W^Wproper punctuation #}
-        Show the next <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=10">10</a>{% if left > 10 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=25">{% if left < 25 %}{{ left }}{% else %}25{% endif %}</a>{% endif %}{% if left > 25 %}, <a href="/search?q={{ query|urlencode }}&s={{ start|add:n }}&n=100">{% if left < 100 %}{{ left }}{% else %}100{% endif %}</a>{% endif %}.
-    {% endif %}
-    </p>
-{% endif %}
 <p>Are we missing something? Please <a href="{% url missing %}">add it</a>!</p>
 </span>
 </div>
@@ -55,7 +49,7 @@
         <p>Show:</p>
         <p>
         {% for c in category_counts %}
-            <a href='/search?q={{ title|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
+            <a href='{% url search-base %}/{{ title|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
         {% endfor %}
         </p>
     {% endif %}
@@ -67,13 +61,13 @@
         <div class="hide" style='color: black'>
             <p><b>Search help</b></p>
             <p>
-            Phrases: <a href="/search?q={{ "\"lion king\""|urlencode }}">"lion king"</a> <br />
-            Filter by category: <a href="/search?q={{ "angel in:tv-shows"|urlencode }}">angel in:tv-shows</a> <br />
-            Exclude words: <a href="/search?q={{ "dexter -laboratory"|urlencode }}">dexter -laboratory</a> <br />
-            One OR the other: <a href="/search?q={{ "sonic | mario"|urlencode }}">sonic | mario</a> <br />
-            Title start: <a href="/search?q={{ "^hannibal"|urlencode }}">^hannibal</a><br />
-            Title end: <a href="/search?q={{ "of doom$"|urlencode }}">of doom$</a><br />
-            Word wildcards: <a href="/search?q={{ "alumin*"|urlencode }}">alumin*</a><br />
+            Phrases: <a href="{% url search "\"lion king\""|urlencode %}">"lion king"</a> <br />
+            Filter by category: <a href="{% url search "angel in:tv-shows"|urlencode %}">angel in:tv-shows</a> <br />
+            Exclude words: <a href="{% url search "dexter -laboratory"|urlencode %}">dexter -laboratory</a> <br />
+            One OR the other: <a href="{% url search "sonic | mario"|urlencode %}">sonic | mario</a> <br />
+            Title start: <a href="{% url search "^hannibal"|urlencode %}">^hannibal</a><br />
+            Title end: <a href="{% url search "of doom$"|urlencode %}">of doom$</a><br />
+            Word wildcards: <a href="{% url search "alumin*"|urlencode %}">alumin*</a><br />
             </p>
             <p>(<a href="#" class="showhide">hide</a>)</p>
         </div>

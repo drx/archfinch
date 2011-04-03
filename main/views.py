@@ -18,6 +18,7 @@ import celery.result
 from django.core.cache import cache
 from lazysignup.decorators import allow_lazy_user
 from django.conf import settings
+from archfinch.utils import paginate
 
 @allow_lazy_user
 def welcome(request):
@@ -76,31 +77,25 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @allow_lazy_user
-def recommend(request, category_slug=None, start=None, n=None, usernames=None):
+def recommend(request, category_slug=None, page=None, usernames=None):
     '''
     Shows a list of recommendations.
     '''
     if request.user.is_authenticated() or usernames is not None:
-        if start is None:
-            start = 0
+        if page is None:
+            page = 1
         else:
-            start = int(start)
+            page = int(page)
         
         if category_slug is not None and category_slug:
             category = Category.objects.get(slug=category_slug)
         else:
             category = None
 
-        if n is None or not 0 < int(n) < 100:
-            if category:
-                if category.name in ('Videos', 'Pics'):
-                    n = 10
-                else:
-                    n = 100
-            else:
-                n = 100
-        else:
-            n = int(n)
+        n = 100
+        if category:
+            if category.name in ('Videos', 'Pics'):
+                n = 10
 
         if usernames is not None:
             usernames = usernames.split(',')
@@ -114,6 +109,7 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
 
         user_ids = map(lambda u: u.id, users)
         usernames_k = '+'.join(sorted(set(map(str, user_ids))))
+        usernames_joined = ','.join(usernames)
 
         opinion_count = users[0].__class__.objects.filter(pk__in=user_ids).aggregate(Count('opinion'))['opinion__count']
         if opinion_count < 10:
@@ -156,9 +152,9 @@ def recommend(request, category_slug=None, start=None, n=None, usernames=None):
             return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
         else:
 
-            count = len(recommendations)
-            left = count-(start+n)
-            recommendations = recommendations[start:start+n]
+            # pagination
+            recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
+
             if category is not None and category.id in (9,10,11):
                 # links
                 for r in recommendations:
