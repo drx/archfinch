@@ -774,6 +774,7 @@ tr.top3
 .pagination
 {
     margin-left: 7px;
+    margin-top: 10px;
 }
 .pagination > a.page
 {
