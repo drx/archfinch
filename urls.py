@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^recommend(?:/(?P<category_slug>[a-z-]*))?/for/(?P<usernames>[,\w@\+\.-]+)(?:/(?P<page>\d+))?$', 'archfinch.main.views.recommend', name='recommend-for'),
 
     url(r'task_wait/(?P<task_id>[\w-]+)$', 'archfinch.main.views.task_wait', name='task-wait'),
+    url(r'task_wait_error$', 'archfinch.main.views.task_wait_error', name='task-wait-error'),
     
     (r'^account/', include('archfinch.account.urls')),
     (r'^wiki/', include('archfinch.wiki.urls')),

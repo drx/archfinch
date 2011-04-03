@@ -217,6 +217,11 @@ def opinion_remove(request, item_id):
     return HttpResponse(json, mimetype='application/json')
 
 
+def task_wait_error(request):
+    """Raise a task_wait error to log request data etc."""
+    raise Exception("task_wait_error");
+
+
 def task_wait(request, task_id):
     data = {'success': False}
     if request.method == 'GET':

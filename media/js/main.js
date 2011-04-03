@@ -119,17 +119,21 @@ function ajaxerror(obj, error_msg)
 
 function task_wait(task_id)
 {
+    setTimeout("window.location.reload()", 10000);
     $.ajax({
         url: "/task_wait/"+task_id,
         dataType: "json",
         type: "GET",
-        timeout: 30000,
+        timeout: 15000,
         success: function(data)
         {
             location.reload()
         },
         error: function(request, error)
         {
+            ajaxerror($("#wait_error"), 'There has been an error communicating with the server.<br><br>The error has been logged and we will try to fix it as soon as possible.<br><br>Will try refreshing in 4 seconds.')
+            $.getJSON("/task_wait_error?task_id="+encodeURIComponent(task_id), function(data){});
+            setTimeout('window.location.reload()', 4000);
         }
     })
 }
