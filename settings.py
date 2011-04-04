@@ -105,4 +105,5 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
     'msnbot',
     'baiduspider',
     'pingdom',
+    'cloudkick',
 )
