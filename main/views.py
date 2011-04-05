@@ -77,7 +77,7 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @allow_lazy_user
-def recommend(request, category_slug=None, page=None, usernames=None, fresh=None):
+def recommend(request, category_slug=None, page=None, usernames=None):
     '''
     Shows a list of recommendations.
     '''
@@ -86,9 +86,14 @@ def recommend(request, category_slug=None, page=None, usernames=None, fresh=None
             page = 1
         else:
             page = int(page)
-        
+         
+        fresh = False
         if category_slug is not None and category_slug:
-            category = Category.objects.get(slug=category_slug)
+            if category_slug == 'fresh':
+                fresh = True
+                category = None
+            else:
+                category = Category.objects.get(slug=category_slug)
         else:
             category = None
 
@@ -117,7 +122,7 @@ def recommend(request, category_slug=None, page=None, usernames=None, fresh=None
         else:
             generic = False
     
-        cache_key = 'recommend,%s,%s,%s' % (usernames_k, category_slug, fresh)
+        cache_key = 'recommend,%s,%s' % (usernames_k, category_slug)
         if settings.DEBUG:
             cache_timeout = 30
         else:
