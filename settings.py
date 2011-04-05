@@ -106,4 +106,5 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
     'baiduspider',
     'pingdom',
     'cloudkick',
+    'facebook',
 )
