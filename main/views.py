@@ -93,8 +93,7 @@ def recommend(request, category_slug=None, page=None, usernames=None, fresh=None
             category = None
 
         n = 100
-        if category:
-            if category.name in ('Videos', 'Pics') or fresh:
+        if category and category.name in ('Videos', 'Pics') or fresh:
                 n = 10
 
         if usernames is not None:
