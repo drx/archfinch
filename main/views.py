@@ -23,7 +23,7 @@ from archfinch.utils import paginate
 @allow_lazy_user
 def welcome(request):
     if request.user.is_authenticated():
-        return redirect(reverse('recommend-slugged', args=['links']))
+        return redirect(reverse('fresh'))
     else:
         return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
 
@@ -77,7 +77,7 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @allow_lazy_user
-def recommend(request, category_slug=None, page=None, usernames=None):
+def recommend(request, category_slug=None, page=None, usernames=None, fresh=None):
     '''
     Shows a list of recommendations.
     '''
@@ -94,7 +94,7 @@ def recommend(request, category_slug=None, page=None, usernames=None):
 
         n = 100
         if category:
-            if category.name in ('Videos', 'Pics'):
+            if category.name in ('Videos', 'Pics') or fresh:
                 n = 10
 
         if usernames is not None:
@@ -118,7 +118,7 @@ def recommend(request, category_slug=None, page=None, usernames=None):
         else:
             generic = False
     
-        cache_key = 'recommend,%s,%s' % (usernames_k, category_slug)
+        cache_key = 'recommend,%s,%s,%s' % (usernames_k, category_slug, fresh)
         if settings.DEBUG:
             cache_timeout = 30
         else:
@@ -136,9 +136,9 @@ def recommend(request, category_slug=None, page=None, usernames=None):
 
         else:
             if generic:
-                recommendations = tasks.recommend_generic.delay(category)
+                recommendations = tasks.recommend_generic.delay(category, fresh)
             else:
-                recommendations = tasks.recommend.delay(category, users)
+                recommendations = tasks.recommend.delay(category, fresh, users)
             task_id = recommendations.task_id
             cache.set(cache_key, ('task', task_id), cache_timeout)
 
@@ -155,7 +155,7 @@ def recommend(request, category_slug=None, page=None, usernames=None):
             # pagination
             recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
 
-            if category is not None and category.id in (9,10,11):
+            if category is not None and category.id in (9,10,11) or fresh:
                 # links
                 for r in recommendations:
                     try:

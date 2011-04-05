@@ -3,8 +3,8 @@ from archfinch.main.models import Item, Opinion, Action, Similarity
 from archfinch.links.models import Link
 
 @task
-def recommend(category, users):
-    if category is not None and category.id in (9,10,11):
+def recommend(category, fresh, users):
+    if category is not None and category.id in (9,10,11) or fresh:
         # links
         recommendations = list(Link.objects.recommended(users[0], category=category))
     else:
@@ -13,8 +13,8 @@ def recommend(category, users):
 
 
 @task
-def recommend_generic(category):
-    if category is not None and category.id in (9,10,11):
+def recommend_generic(category, fresh):
+    if category is not None and category.id in (9,10,11) or fresh:
         # links
         return list(Link.objects.recommended_generic(category=category))
     else:

@@ -11,6 +11,7 @@ urlpatterns = patterns('',
 
     url(r'^similar$', 'archfinch.users.views.similar', name='similar'),
     url(r'^similar/(?P<page>\d+)$', 'archfinch.users.views.similar', name='similar-paged'),
+    url(r'^recommend/fresh$', 'archfinch.main.views.recommend', {'fresh': True}, name='fresh'),
     url(r'^recommend$', 'archfinch.main.views.recommend', name='recommend'),
     url(r'^recommend/(?P<category_slug>[a-z-]+)$', 'archfinch.main.views.recommend', name='recommend-slugged'),
     url(r'^recommend/(?P<page>\d+)$', 'archfinch.main.views.recommend', name='recommend-paged'),

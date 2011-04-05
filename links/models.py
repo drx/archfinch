@@ -11,7 +11,7 @@ class LinkManager(models.Manager):
         params = []
 
         if category is not None:
-            where += ' mi.category_id = %s'
+            where += 'WHERE mi.category_id = %s'
             params.append(category.id)
 
         # Select items in order of their recommendation to self
@@ -42,7 +42,7 @@ class LinkManager(models.Manager):
               ON mc.id=mi.category_id
              INNER JOIN links_link ll
               ON ll.item_ptr_id=mi.id
-            WHERE 
+             
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
             ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
