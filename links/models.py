@@ -41,7 +41,7 @@ class LinkManager(models.Manager):
              
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
-            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
+            ORDER BY date_trunc('day', ll.time) DESC, recommendation DESC) AS recommended WHERE recommendation > 0""",
             params)
 
         return recommended
@@ -90,7 +90,7 @@ class LinkManager(models.Manager):
              AND ms.value > 0
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
-            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
+            ORDER BY date_trunc('day', ll.time) DESC,recommendation DESC) AS recommended WHERE recommendation > 0""",
             params)
 
         return recommended
