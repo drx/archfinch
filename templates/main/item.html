@@ -84,9 +84,7 @@
 <div id="also_liked_error" class="error"></div>
 
 <div class="also_liked">
-{% with also_liked as items %}
-    {% include "includes/also_liked.html" %}
-{% endwith %}
+{% include "includes/also_liked.html" with items=also_liked %}
 </div>
 
 

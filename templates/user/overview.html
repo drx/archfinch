@@ -38,21 +38,7 @@
     <p>Recommendations are tailored to what you like, so the more you rate the better.</p>
     <p>You haven't rated much, so here's a list of things we suggest you rate if you have opinions about them.</p>
     {% for item in controversial %}
-        {% with item.id as item_id %} 
-        {% with 1 as yr_big %}
-        {% with 1 as terse_layout %}
-        {% with 1 as click_hides %}
-        {% with item.name as item_name %}
-        {% with item.category_element as category_singular %}
-        {% with forloop.counter as seq_term %}
-            {% include "includes/opinionbox.html" %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
-        {% endwith %}
+        {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item.name category_singular=item.category_element seq_term=forloop.counter %}
     {% endfor %}
 {% endif %}
 
@@ -61,27 +47,7 @@
     {% for date in date_list %}
         <h2>{{ date.grouper|capfirst }}</h2>
         {% for opinion in date.list %}
-            {% with opinion.rating as rating %}
-            {% with opinion.item_id as item_id %} 
-            {% with your_profile as yr_big %}
-            {% with opinion.review as review %}
-            {% with forloop.counter as seq_term %}
-            {% with forloop.parentloop.counter as seq_term2 %}
-            {% with opinion.your_rating as your_rating %}
-            {% with opinion.item.name as item_name %} {# opinion.item_name #}
-            {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
-            {% with 1 as no_src %}
-                {% include "includes/opinionbox.html" %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
+            {% include "includes/opinionbox.html" with rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter your_rating=opinion.your_rating item_name=opinion.item.name category_singular=opinion.item.category.element_singular no_src=1 %}
         {% endfor %}
     {% endfor %}
 {% else %}
@@ -121,13 +87,13 @@
 
 <p>{{ viewed_user }} has {{ viewed_user.karma }} points ({{ viewed_user.karma_place|ordinal }})</p>
 
-{% with viewed_user.review_set.count as review_count %}
+{% with review_count=viewed_user.review_set.count %}
     {% if review_count > 0 %}
     <span style='font-size: 11px'>{{ viewed_user }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;{{ review_count|pluralize:"it,them" }}</a>.</span><br>
     {% endif %}
 {% endwith %}
 
-{% with lists.count as list_count %}
+{% with list_count=lists.count %}
     {% if list_count > 0 %}
         <span style='font-size: 11px'>{{ viewed_user }} has created {{ list_count }} list{{ list_count|pluralize }}. <a href="{% url lists-user viewed_user.username %}">See&nbsp;{{ list_count|pluralize:"it,them" }}</a>.</span>
     {% endif %}

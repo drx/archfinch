@@ -27,21 +27,7 @@
 </h1>
 
 {% for link in recommendations %}
-    {% with link.id as item_id %} 
-    {% with 1 as yr_big %}
-    {% with 1 as terse_layout %}
-    {% with link.name as item_name %}
-    {% with link.category_element as category_singular %}
-    {% with forloop.counter as seq_term %}
-    {% with link.rating as your_rating %}
-        {% include "includes/opinionbox.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+    {% include "includes/opinionbox.html" with item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
 {% empty %}
     {% if not category %}
         <div class="big">
