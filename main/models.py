@@ -111,6 +111,7 @@ class Item(models.Model):
     name = models.CharField(max_length=1000)
 
     submitter = models.ForeignKey('users.User', null=True, blank=True)
+    tags = models.ManyToManyField('Tag', through='Tagged')
 
     search = SphinxSearch(
         mode='SPH_MATCH_EXTENDED2',
@@ -242,6 +243,19 @@ class ItemProfile(models.Model):
     item = models.OneToOneField(Item, related_name='profile')
 
     page = models.ForeignKey('wiki.Page', null=True)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=200, unique=True, db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Tagged(models.Model):
+    item = models.ForeignKey(Item)
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey('users.User')
 
 
 class Review(models.Model):
