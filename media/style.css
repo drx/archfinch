@@ -9,9 +9,22 @@ html, body
 {
     height: 100%;
 }
+
+
+html, body, #wrap
+{
+min-height: 100%; 
+}
+body > #wrap
+{
+ height: auto; 
+ min-height: 100%; 
+ }
+
 #main-wrapper
 {
 	background: #f2f2f2;
+	
 }
 #main
 {
@@ -66,12 +79,14 @@ html, body
 }
 #footer
 {
-    height: 25px;
-    margin-left: 12px;
     font-size: 12px;
     color: #ffffff;
-    position: relative;
 	background: #434d53;
+	clear: both;
+	position: relative;
+	z-index: 10;
+	height: 3em;
+	margin-top: -3em;
 }
 .clearfooter
 {
@@ -89,6 +104,15 @@ html, body
 #navbar a.selected, #navbar a.selected:hover
 {   margin: 0;
     color: #004c80;
+}
+#bigsignup
+{
+
+}
+
+
+#biglogin
+{
 }
 a
 {
@@ -170,7 +194,7 @@ ul.menu > li:hover
     -moz-border-radius: 4px 4px 0px 0px;
     -webkit-border-radius: 4px 4px 0px 0px;
     border-radius: 4px 4px 0px 0px;
-	padding: 3px;
+	padding: 2px 0 3px 0;
 }
 ul.menu li ul.submenu
 {
@@ -180,7 +204,7 @@ ul.menu li ul.submenu
     left: 0;
     top: 1.55em;
     margin-left: -0.5em;
-    padding: 0.7em 0.8em 0 0;
+    padding: 0.7em 0 0 0;
     background: #0e8d94;
     border-color: #0e8d94;
     border-width: 0.1em;
@@ -190,6 +214,12 @@ ul.menu li ul.submenu
     border-radius: 0px 4px 4px 4px;
     width: 100%;
 	margin-top: 5px;
+}
+ul.menu li ul.submenu > li:hover
+{
+	background-color: #11a8b0;
+	border-color: #11a8b0;
+	
 }
 .webkit  ul.menu li ul.submenu
 {
@@ -214,6 +244,8 @@ div.title
 {
     word-wrap: break-word;
     max-width: 580px;
+	padding: 2px;
+	
 }
 .widebox .category_element
 {
@@ -287,7 +319,7 @@ div.title
 }
 .box.highlight
 {
-    background-color: #f8f8ff;
+    background-color: #f2f2f2;
 }
 table
 {
@@ -320,7 +352,7 @@ td
 .category_element, .link_meta, .link_meta a
 {
     font-size: 11px;
-    color: #aaaaaa;
+    color: #434d53;
 }
 .widebox .category_element
 {
@@ -674,7 +706,7 @@ h1, h1 button
     word-wrap: break-word;
 	background: #434d53;
 	color: #ffffff;
-	padding: 5px 10px;
+	padding: 5px 20px;
 	-moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 10px;

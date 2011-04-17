@@ -39,95 +39,97 @@
     {% endif %}
 </head>
 <body>
-<div id="header-wrapper">
-    <div id="header-main">
-        <div id="topnav">
-            <ul class="menu">
-                {% if user.is_authenticated %}
-                <span id="menu_loggedin">
-                <li> <a href="{% url logout %}" id="menu_logout">logout</a>
-                <li> logged in as: <a href="{% url users.views.overview user.username %}" id="menu_user">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
-                </span>
-                {% else %}
-                <span id="menu_notloggedin">
-                <li> <a href="{% url lazysignup_convert %}" id="menu_signup">signup</a>
-                <li> <a href="{% url login %}" id="menu_login">login</a>
-                </span>
-                {% endif %}
-            </ul>
-        </div>
-        <div id="logo">
-            <a href="/" alt="Archfinch" title="Archfinch"><img src="/media/logo.png"></a>
-            {% if debug %}<span style="font-size: 16px; color: #ffffff; background-color: #ff0000; padding: 2px 10px;">[ debug mode ]</span>{% endif %}
-        </div>
-    </div>
-</div>
-<div id="navbar-wrapper">
-    <div id="nav-main">
+<div id="wrap">
+	<div id="header-wrapper">
+		<div id="header-main">
+			<div id="topnav">
+				<ul class="menu">
+					{% if user.is_authenticated %}
+					<span id="menu_loggedin">
+					<li> <a href="{% url logout %}" id="menu_logout" style="color: #ffffff">logout</a>
+					<li> logged in as: <a href="{% url users.views.overview user.username %}" id="menu_user" style="color: #ffffff">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
+					</span>
+					{% else %}
+					<span id="menu_notloggedin">
+					<li> <a href="{% url lazysignup_convert %}" id="menu_signup">signup</a>
+					<li> <a href="{% url login %}" id="menu_login" style="color: #ffffff">login</a>
+					</span>
+					{% endif %}
+				</ul>
+			</div>
+			<div id="logo">
+				<a href="/" alt="Archfinch" title="Archfinch"><img src="/media/logo.png"></a>
+				{% if debug %}<span style="font-size: 16px; color: #ffffff; background-color: #ff0000; padding: 2px 10px;">[ debug mode ]</span>{% endif %}
+			</div>
+		</div>
+	</div>
+	<div id="navbar-wrapper">
+		<div id="nav-main">
 
-            <div id="navbar">
-                <ul class="menu">
-                    {% if user.is_authenticated %}
-                    <li> <a href="{% url recommend-slugged "fresh" %}">fresh</a>
-                        <ul class="submenu" style='width: 75px'>
-                            <li> <a href="{% url recommend-slugged "videos" %}">videos</a>
-                            <li> <a href="{% url recommend-slugged "pics" %}">pics</a>
-                            <li> <a href="{% url recommend-slugged "links" %}">links</a>
-                        </ul>
-                    <li> <a href="{% url main.views.recommend %}">things you might like</a>
-                        <ul class="submenu">
-                            {% for category in user.my_categories %}
-                            <li> <a href="{% url recommend-slugged category.slug %}">{{ category.element_plural }}</a>
-                            {% endfor %}
-                        </ul>
-                    <li> <a>people</a>
-                        <ul class="submenu" style='width: 125px'>
-                            <li> <a href="{% url users.views.similar %}">similar</a>
-                            <li> <a href="{% url top-users %}">top users</a>
-                        </ul>
-                    {% else %}
-                    <li style='border: 0'> &nbsp;
-                    {% endif %}
-                      </ul>
-                    
-            </div>
-            <div id="search-right"> <li style='border: 0'> <form style="display:inline; float:right" action="{% url search-base %}" onSubmit="window.location.href='{% url search-base %}/'+this.q.value;return false;"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search for things...' onClick='if (this.value=="Search for things...") this.value=""'{% endif %} ></form>
-               
-            </div>
-        </div>
-</div>
- <div id="main-wrapper">
-    <div id="main">
-            {% block message %}
-            {% if user|is_lazy_user %}
+				<div id="navbar">
+					<ul class="menu">
+						{% if user.is_authenticated %}
+						<li> <a href="{% url recommend-slugged "fresh" %}">fresh</a>
+							<ul class="submenu" style='width: 75px'>
+								<li> <a href="{% url recommend-slugged "videos" %}">videos</a>
+								<li> <a href="{% url recommend-slugged "pics" %}">pics</a>
+								<li> <a href="{% url recommend-slugged "links" %}">links</a>
+							</ul>
+						<li> <a href="{% url main.views.recommend %}">things you might like</a>
+							<ul class="submenu" style='width: 200px'>
+								{% for category in user.my_categories %}
+								<li> <a href="{% url recommend-slugged category.slug %}">{{ category.element_plural }}</a>
+								{% endfor %}
+							</ul>
+						<li> <a>people</a>
+							<ul class="submenu" style='width: 110px'>
+								<li> <a href="{% url users.views.similar %}">similar</a>
+								<li> <a href="{% url top-users %}">top users</a>
+							</ul>
+						{% else %}
+						<li style='border: 0'> &nbsp;
+						{% endif %}
+						  </ul>
+						
+				</div>
+				<div id="search-right"> <li style='border: 0'> <form style="display:inline; float:right" action="{% url search-base %}" onSubmit="window.location.href='{% url search-base %}/'+this.q.value;return false;"><input type='text' id='search' name='q' {% if query %}value='{{ query }}'{% else %}value='Search for things...' onClick='if (this.value=="Search for things...") this.value=""'{% endif %} ></form>
+				   
+				</div>
+			</div>
+	</div>
+	 <div id="main-wrapper">
+		<div id="main">
+				{% block message %}
+				{% if user|is_lazy_user %}
 
-                <div id="message">
-                    <div class="messagecontent">
-                        <p>Archfinch - rate things and get recommendations based on what <i>you</i> like.</p>
-                        <p>Your account is temporary.&nbsp;&nbsp;&nbsp;<a href="{% url lazysignup_convert %}" style="color: #000000"><span style="font-size: 19px"><u><b>Sign up</u></b></a></span>&nbsp;&nbsp;&nbsp;to save your data (it takes less than a minute).</p>
-                    </div>
-                    <div class="login"><p>Already have an account?</p><p><a href="{% url login %}" style="color: #ffffff"><span style="font-size: 19px"><u><b>Log in</b></u></span></a>.</p></div>
-                    <div style='clear: both'></div>
-                </div>
-            {% endif %}
-            {% endblock %}
-        
-                <div id="content">
-                {% block content %} 
-                    <div id="content_left">
-                    {% block content_left %}{% endblock %}
-                    </div>
-                    <div id="content_right">
-                    {% block content_right %}{% endblock %}
-                    </div>
-                {% endblock %}
-                </div>
-                
-                <div class="clearfooter"></div>
-				
-    </div>
+					<div id="message">
+						<div class="messagecontent">
+							<p>Archfinch - rate things and get recommendations based on what <i>you</i> like.</p>
+							<p>Your account is temporary.&nbsp;&nbsp;&nbsp;<a href="{% url lazysignup_convert %}" style="color: #000000" id="bigsignup"><span style="font-size: 19px"><u><b>Sign up</u></b></a></span>&nbsp;&nbsp;&nbsp;to save your data (it takes less than a minute).</p>
+						</div>
+						<div class="login"><p>Already have an account?</p><p><a href="{% url login %}" style="color: #ffffff" id="biglogin"><span style="font-size: 19px"><u><b>Log in</b></u></span></a>.</p></div>
+						<div style='clear: both'></div>
+					</div>
+				{% endif %}
+				{% endblock %}
+			
+					<div id="content">
+					{% block content %} 
+						<div id="content_left">
+						{% block content_left %}{% endblock %}
+						</div>
+						<div id="content_right">
+						{% block content_right %}{% endblock %}
+						</div>
+					{% endblock %}
+					</div>
+					
+					<div class="clearfooter"></div>
+					
+		</div>
 
-</div>
+	</div>
+
 <div id="footer">
         <a href="http://blog.archfinch.com/">blog</a>
         | irc.archfinch.com #archfinch
