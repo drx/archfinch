@@ -7,7 +7,7 @@ from djangosphinx.models import SearchError
 from django.utils import simplejson
 from django.conf import settings
 from archfinch.utils import render_to_response
-from archfinch.main.models import Item, Category
+from archfinch.main.models import Item, Category, Tag
 from archfinch.users.models import User
 from lazysignup.decorators import allow_lazy_user
 from archfinch.utils import paginate
@@ -31,7 +31,7 @@ def query(request, query=None, page=None, json=False):
         page = int(page)
     n = 10
 
-    modifiers = {}
+    modifiers = {'tag': []}
     words = query.split()
 
     if len(words) > 1 and words[0] == '!':
@@ -40,13 +40,16 @@ def query(request, query=None, page=None, json=False):
 
     words_cleaned = []
     for word in words:
-        mod, comma, arg = word.partition(':')
-        if not comma:
+        mod, colon, arg = word.partition(':')
+        if not colon:
             words_cleaned.append(word)
             continue
 
         if mod == 'in':
             modifiers['in'] = arg
+
+        elif mod == 'tag':
+            modifiers['tag'].append(arg)
 
         else:
             words_cleaned.append(word)
@@ -60,6 +63,11 @@ def query(request, query=None, page=None, json=False):
             select={'rating': 'SELECT COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%s AND mo.item_id=main_item.id))'},
             select_params=[request.user.id])
 
+    tags = Tag.objects.filter(name__in=modifiers['tag'])
+    for tag in tags:
+        results = results.filter(tag=tag.id)     
+
+    results_pre_categories = results
     if 'in' in modifiers:
         cat_name = modifiers['in']
         try:
@@ -84,12 +92,7 @@ def query(request, query=None, page=None, json=False):
         except SearchError:
             return invalid_search()
 
-    try:
-        count = results.count()
-    except SearchError:
-        return invalid_search()
-
-    results_categories = Item.search.query(title).group_by('category_id', djangosphinx_api.SPH_GROUPBY_ATTR)
+    results_categories = results_pre_categories.group_by('category_id', djangosphinx_api.SPH_GROUPBY_ATTR)
     cats = map(lambda x: x._sphinx['attrs']['@groupby'], results_categories)
     categories = Category.objects.in_bulk(cats)
 
@@ -100,7 +103,12 @@ def query(request, query=None, page=None, json=False):
         category_counts.append({'category': categories[cat_id], 'count': cat_count})
 
     category_counts.sort(key=lambda x: x['count'], reverse=True)
-    
+
+    try:
+        count = results.count()
+    except SearchError:
+        return invalid_search()
+
     results, paginator, current_page, page_range = paginate(results, page, n)
 
     if json:

@@ -8,13 +8,11 @@
 {% block content_left %}
 
 {% if results %}
-    Search results for <b>{{ query }}</b>
+    <h1>Search results{% if title %} for {{ title }}{% endif %}</h1>
 {% else %}
     No results for <b>{{ query }}</b>
 {% endif %}
 
-<br />
-<br />
 
 {% for result in results %}
     {% include "includes/opinionbox.html" with item_id=result.id yr_big=1 terse_layout=1 click_hides=1 item_name=result.name category_singular=result.category.element_singular your_rating=result.rating seq_term=forloop.counter %}
@@ -28,11 +26,18 @@
 </span>
 {% endblock %}
 {% block content_right %}
+    {% if tags %}
+        <h2>Selected tags</h2>
+        {% for tag in tags %}
+        <p><span class="tag"><a class="taglink" href="{% url search-base %}/tag:{{ tag.name }}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span></p>
+        {% endfor %}
+        <form style="display: inline" onSubmit="window.location.href='{% url search-base %}/{{ query|urlencode }} tag:'+this.tag.value;return false"><input type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form>
+    {% endif %}
     {% if category_counts|length > 1 %}
-        <p>Show:</p>
+        <h2>Categories</h2>
         <p>
         {% for c in category_counts %}
-            <a href='{% url search-base %}/{{ title|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
+            <a style='{% if c.category == category %}font-weight: bold{% endif %}' href='{% url search-base %}/{{ query|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
         {% endfor %}
         </p>
     {% endif %}
@@ -46,6 +51,7 @@
             <p>
             Phrases: <a href="{% url search "\"lion king\""|urlencode %}">"lion king"</a> <br />
             Filter by category: <a href="{% url search "angel in:tv-shows"|urlencode %}">angel in:tv-shows</a> <br />
+            Filter by tag: <a href="{% url search "tag:co-op"|urlencode %}">tag:co-op</a> <br />
             Exclude words: <a href="{% url search "dexter -laboratory"|urlencode %}">dexter -laboratory</a> <br />
             One OR the other: <a href="{% url search "sonic | mario"|urlencode %}">sonic | mario</a> <br />
             Title start: <a href="{% url search "^hannibal"|urlencode %}">^hannibal</a><br />
