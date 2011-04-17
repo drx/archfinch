@@ -45,13 +45,13 @@
             <ul class="menu">
                 {% if user.is_authenticated %}
                 <span id="menu_loggedin">
-                <li> <a href="{% url logout %}" id="menu_logout">logout</a>
-                <li> logged in as: <a href="{% url users.views.overview user.username %}" id="menu_user">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
+                <li> <a href="{% url logout %}" id="menu_logout" style="color: #ffffff">logout</a>
+                <li> logged in as: <a href="{% url users.views.overview user.username %}" id="menu_user" style="color: #ffffff">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
                 </span>
                 {% else %}
                 <span id="menu_notloggedin">
                 <li> <a href="{% url lazysignup_convert %}" id="menu_signup">signup</a>
-                <li> <a href="{% url login %}" id="menu_login">login</a>
+                <li> <a href="{% url login %}" id="menu_login" style="color: #ffffff">login</a>
                 </span>
                 {% endif %}
             </ul>

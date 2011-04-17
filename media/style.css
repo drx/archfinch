@@ -180,7 +180,7 @@ ul.menu li ul.submenu
     left: 0;
     top: 1.55em;
     margin-left: -0.5em;
-    padding: 0.7em 0.8em 0 0;
+    padding: 0.7em 0 0 0;
     background: #0e8d94;
     border-color: #0e8d94;
     border-width: 0.1em;
@@ -190,6 +190,12 @@ ul.menu li ul.submenu
     border-radius: 0px 4px 4px 4px;
     width: 100%;
 	margin-top: 5px;
+}
+ul.menu li ul.submenu > li:hover
+{
+	background-color: #11a8b0;
+	border-color: #11a8b0;
+	
 }
 .webkit  ul.menu li ul.submenu
 {
