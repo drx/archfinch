@@ -16,8 +16,8 @@
    inkscape:version="0.47 r22583"
    sodipodi:docname="af2.svg"
    inkscape:export-filename="C:\Users\Kazia\Desktop\archfinch logo70.png"
-   inkscape:export-xdpi="36.91"
-   inkscape:export-ydpi="36.91">
+   inkscape:export-xdpi="159.47395"
+   inkscape:export-ydpi="159.47395">
   <defs
      id="defs4">
     <inkscape:path-effect
@@ -57,9 +57,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.51265242"
-     inkscape:cx="190.38845"
-     inkscape:cy="708.55904"
+     inkscape:zoom="4.1012194"
+     inkscape:cx="193.66584"
+     inkscape:cy="864.67329"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -86,21 +86,6 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <a
-       id="a3638"
-       transform="matrix(0.81785901,0,0,0.59104039,34.347918,53.83345)"
-       style="fill:#ffffff"
-       inkscape:export-xdpi="1000.0949"
-       inkscape:export-ydpi="1000.0949"
-       inkscape:export-filename="C:\Users\Kazia\Desktop\logozm.png">
-      <rect
-         y="127.83629"
-         x="77.133934"
-         height="66.638268"
-         width="208.71686"
-         id="rect3636"
-         style="fill:#ffffff;fill-opacity:1" />
-    </a>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS"
@@ -114,7 +99,7 @@
          id="tspan2818"
          x="182.56529"
          y="177.41461"
-         style="text-anchor:middle;text-align:center;fill:#0099ff;fill-opacity:1">Archfinch</tspan></text>
+         style="text-anchor:middle;text-align:center;fill:#ffffff;fill-opacity:1">Archfinch</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS"
@@ -153,27 +138,21 @@
        transform="matrix(0.91075525,0.15731475,-0.15731475,0.91075525,14.015364,-11.023478)"
        inkscape:export-filename="C:\Users\Kazia\Desktop\logozm.png"
        inkscape:export-xdpi="1000.0949"
-       inkscape:export-ydpi="1000.0949">
+       inkscape:export-ydpi="1000.0949"
+       style="fill:#ffab07;fill-opacity:1">
       <path
          sodipodi:nodetypes="cccaacasc"
          inkscape:original-d="m 167.88816,172.02488 c -0.61599,1.55231 -3.12053,0.0674 -4.66133,-0.43206 -1.6721,-0.54513 -3.25123,-1.34234 -4.87804,-2.01061 -1.11012,-0.45603 -3.78888,-1.2128 -3.332,-1.36413 0,0 3.3626,-3.99131 5.42071,-5.56164 1.47063,-1.12207 4.85593,-2.6863 4.85593,-2.6863 1.59612,3.80893 0.80664,1.89753 1.00874,2.90126 0.41324,2.0523 -0.3307,3.86447 0.39401,6.26811 0.72471,2.40363 2.89252,4.84542 1.19198,2.88537 z"
          inkscape:path-effect="#path-effect3628"
          id="path3626"
          d="m 167.88816,172.02488 c -1.56285,0.13824 -3.15051,-0.009 -4.66133,-0.43206 -1.69546,-0.47485 -3.2732,-1.28633 -4.87804,-2.01061 -1.09413,-0.49379 -2.20572,-0.94888 -3.332,-1.36413 1.4722,-2.14479 3.3144,-4.03489 5.42071,-5.56164 1.50145,-1.08832 3.13615,-1.99264 4.85593,-2.6863 0.49651,0.90102 0.83917,1.88657 1.00874,2.90126 0.34559,2.06799 -0.026,4.21395 0.39401,6.26811 0.20974,1.02569 0.61666,2.0107 1.19198,2.88537"
-         style="fill:#ff6600;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:#ffab07;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
       <path
          sodipodi:nodetypes="caa"
          id="path2843"
          d="m 155.66958,168.32857 c 0.19581,0.0282 4.12622,0.70514 6.18041,0.48112 1.50727,-0.16438 4.35222,-1.3222 4.35222,-1.3222"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:#ffab07;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
     </g>
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 166.50724,164.00492 c 0.0708,0 0.14163,0 0.21245,0"
-       id="path2840"
-       inkscape:export-filename="C:\Users\Kazia\Desktop\logozm.png"
-       inkscape:export-xdpi="1000.0949"
-       inkscape:export-ydpi="1000.0949" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot2846"
@@ -184,5 +163,5 @@
            height="53.291534"
            x="92.613441"
            y="139.16261" /></flowRegion><flowPara
-         id="flowPara2852"></flowPara></flowRoot>  </g>
+         id="flowPara2852" /></flowRoot>  </g>
 </svg>
