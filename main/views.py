@@ -221,6 +221,27 @@ def opinion_remove(request, item_id):
     return HttpResponse(json, mimetype='application/json')
 
 
+def add_tag(request, item_id):
+    '''
+    Add a tag.
+    '''
+
+    item_id = base36_to_int(item_id)
+    item = get_object_or_404(Item, pk=item_id)
+    tag = request.GET['tag']
+
+    if not request.user.is_authenticated():
+        json = simplejson.dumps({'success': False,
+            'error_msg': 'You need to be logged in to set a rating.'})
+        return HttpResponse(json, mimetype='application/json')
+
+
+    item.add_tag(tag, request.user)
+
+    json = simplejson.dumps({'success': True})
+    return HttpResponse(json, mimetype='application/json')
+
+
 def task_wait_error(request):
     """Raise a task_wait error to log request data etc."""
     raise Exception("task_wait_error");

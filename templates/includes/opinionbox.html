@@ -3,6 +3,12 @@
 {
     border-bottom: 5px solid transparent;
 }
+.addtag, .addtag:hover
+{
+    color: #0E8D94;
+    margin-right: 10px;
+    font-size: 14px;
+}
 .tag
 {
     color: #aaa;
@@ -52,7 +58,7 @@
 </style>
 {% load base36 %}
 {% load markup %}
-<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %}">
+<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
     {% if terse_layout and not link %}
         {% if your_rating %}
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
@@ -69,7 +75,8 @@
         <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
         {% endif %}
         <div class="tags" style="font-size: 11px; color: #ccc; width: 300px; float: right; margin-top: 5px; text-align: right">
-            {% for tag in link.tags.all %}
+            <a class="addtag" href="#">+</a>
+            {% for tag in link.popular_tags %}
             <span class="tag"><a class="taglink" href="/tags/{{ tag.name }}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span>
             {% endfor %}
         </div>
@@ -90,7 +97,7 @@
     {% endif %}
     {% endif %}
     {% if user.is_authenticated %}
-    <div class="user_opinion" item="{{ item_id|base36 }}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">
+    <div class="user_opinion">
 
     {% if not yr_big %}
     <div class="your_opinion {% if not your_rating %}nodisplay{% endif %}">
@@ -135,16 +142,18 @@
     </div>
     {% endif %}
 
-    {% if category_singular == 'pic' and not no_src %}
-        {% if link.image.width > 640 and link.thumbnail %}
-            <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
-        {% else %}
-            <img src="{{ link.url }}">
+    {% if link %}
+        {% if category_singular == 'pic' and not no_src %}
+            {% if link.image.width > 640 and link.thumbnail %}
+                <a href="{{ link.url }}"><img src="{{ link.thumbnail.url }}" style='border: 0'></a>
+            {% else %}
+                <img src="{{ link.url }}">
+            {% endif %}
+            <br /><br />
         {% endif %}
-        <br /><br />
-    {% endif %}
-    {% if category_singular == 'video' and not no_src %}
-        {{ link.html|safe }}
-        <br /><br />
+        {% if category_singular == 'video' and not no_src %}
+            {{ link.html|safe }}
+            <br /><br />
+        {% endif %}
     {% endif %}
 </div>

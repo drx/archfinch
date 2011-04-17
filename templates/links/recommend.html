@@ -13,9 +13,8 @@
     {% endif %}
 {% endblock %}
 
-{% block content %}
 
-<div id="content_left">
+{% block content_left %}
 <h1>
 {% if category %}
     {{ category.element_plural|capfirst }}
@@ -49,8 +48,8 @@
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
     <h2>Share a 
     {% if category %}
         {{ category.element_singular }}
@@ -62,8 +61,6 @@
     <h2>Like Archfinch?</h2>
     <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
     <fb:like href="http://archfinch.com/" show_faces="true" width="225" font="verdana"></fb:like> 
-</div>
-
 
 {% endblock %}
 {% block media %}
