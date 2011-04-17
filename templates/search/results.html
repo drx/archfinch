@@ -5,9 +5,8 @@
 
 {% block title %}{{ query }} search results - Archfinch{% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 {% if results %}
     Search results for <b>{{ query }}</b>
 {% else %}
@@ -27,8 +26,8 @@
 <span class="smalltext">
 <p>Are we missing something? Please <a href="{% url missing %}">add it</a>!</p>
 </span>
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
     {% if category_counts|length > 1 %}
         <p>Show:</p>
         <p>
@@ -56,7 +55,6 @@
             <p>(<a href="#" class="showhide">hide</a>)</p>
         </div>
     </div>
-</div>
 
 {% endblock %}
 {% block media %}

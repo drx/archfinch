@@ -38,8 +38,7 @@
 {% include "includes/generate_lists_tip.html" %}
 {% endblock %}
 
-{% block content %}
-<div id="content_left">
+{% block content_left %}
 <h1 id="item" item_id="{{ item.id|base36 }}">{{ item.name }}</h1>
 
 {% if item.category.element_singular == 'link' %}
@@ -88,9 +87,8 @@
 </div>
 
 
-</div>
-
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 
 {% if user.is_authenticated %}
 <div class="box opinion itembox">
@@ -140,7 +138,5 @@
 Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show.username }}</a>
 </p>
 {% endif %}
-
-</div>
 
 {% endblock %}
