@@ -20,29 +20,7 @@
 <div>{{ entry.text|markdown }}</div>
 {% endif %}
 {% if entry.get_type_display == 'item' %}
-    {% with entry.item_id as item_id %} 
-    {% with 1 as yr_big %}
-    {% with entry.item.name as item_name %}
-    {% with entry.item.category.element_singular as category_singular %} 
-    {% with entry.text as annotation %}
-    {% with forloop.counter as seq_term %}
-
-    {% if not user.is_authenticated %}
-        {% include "includes/opinionbox.html" %}
-    {% else %}
-        {% with entry.your_rating as your_rating %}
-        {% with entry.your_rating as rating %}
-            {% include "includes/opinionbox.html" %}
-        {% endwith %}
-        {% endwith %}
-    {% endif %}
-
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+    {% include "includes/opinionbox.html" with item_id=entry.item_id yr_big=1 item_name=entry.item.name category_singular=entry.item.category.element_singular annotation=entry.text seq_term=forloop.counter rating=entry.your_rating your_rating=entry.your_rating %}
 {% endif %}
 {% endfor %}
 

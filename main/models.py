@@ -111,6 +111,7 @@ class Item(models.Model):
     name = models.CharField(max_length=1000)
 
     submitter = models.ForeignKey('users.User', null=True, blank=True)
+    tags = models.ManyToManyField('Tag', through='Tagged')
 
     search = SphinxSearch(
         mode='SPH_MATCH_EXTENDED2',
@@ -161,14 +162,10 @@ class Item(models.Model):
         params = [self.id, self.id]
         select = ''
         where = ''
-        if category is not None and category:
-            category_id = category.id
 
-        if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
-        else:
-            where += " AND mc.hide = 'f'"
+        # only show stuff for the same category as the element
+        where += ' AND mi.category_id = %s'
+        params.append(self.category.id)
 
         if like:
             where += " AND mo2.rating >= 4"
@@ -235,13 +232,43 @@ class Item(models.Model):
 
     def is_link(self):
         return self.category_id in (9,10,11)
+       
+
+    def add_tag(self, tag_name, user):
+        tag, created = Tag.objects.get_or_create(name=tag_name)
+        tagged, created = Tagged.objects.get_or_create(tag=tag, user=user, item=self)
         
+        action, created = Action.objects.get_or_create(type=Action.types['tagged'], tagged=tagged, user=user)
+        action.save()
+
+
+    def popular_tags(self):
+        return self.tags.annotate(Count('name')).order_by('-name__count')[:5]
 
 
 class ItemProfile(models.Model):
     item = models.OneToOneField(Item, related_name='profile')
 
     page = models.ForeignKey('wiki.Page', null=True)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=200, unique=True, db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Tagged(models.Model):
+    item = models.ForeignKey(Item)
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey('users.User')
+
+    class Meta:
+        unique_together = ('item', 'tag', 'user')
+
+    def __unicode__(self):
+        return '%s tagged %s with %s' % (self.user, self.item, self.tag)
 
 
 class Review(models.Model):
@@ -254,11 +281,13 @@ class Action(models.Model):
     time = models.DateTimeField(auto_now=True, unique=False)
     opinion = models.ForeignKey('Opinion', null=True, blank=True)
     review = models.ForeignKey('Review', null=True, blank=True)
+    tagged = models.ForeignKey('Tagged', null=True, blank=True)
     user = models.ForeignKey('users.User')
 
     types = {
         'rating': 1,
         'review': 2,
+        'tagged': 3,
     }
     types_reverse = dict((v,k) for k, v in types.items())
     TYPE_CHOICES = types_reverse.items()

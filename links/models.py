@@ -26,12 +26,8 @@ class LinkManager(models.Manager):
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
 
              SUM((mo.rating-3)) *
-             (CASE
-               WHEN extract(epoch from now()-ll.time)/86400 < 1
-               THEN 1
-               ELSE 86400/extract(epoch from now()-ll.time)
-              END
-             ) AS recommendation,
+               (86400/extract(epoch from now()-ll.time))^2
+             AS recommendation,
 
              mc.element_singular AS category_element
             FROM main_opinion mo
@@ -45,7 +41,7 @@ class LinkManager(models.Manager):
              
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
-            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
+            ORDER BY date_trunc('day', ll.time) DESC, recommendation DESC) AS recommended WHERE recommendation > 0""",
             params)
 
         return recommended
@@ -77,12 +73,8 @@ class LinkManager(models.Manager):
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
 
              SUM((mo.rating-3)*ms.value) *
-             (CASE
-               WHEN extract(epoch from now()-ll.time)/86400 < 1
-               THEN 1
-               ELSE 86400/extract(epoch from now()-ll.time)
-              END
-             ) AS recommendation,
+               (86400/extract(epoch from now()-ll.time))^2
+             AS recommendation,
 
              mc.element_singular AS category_element
             FROM main_similarity ms
@@ -98,7 +90,7 @@ class LinkManager(models.Manager):
              AND ms.value > 0
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
-            ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
+            ORDER BY date_trunc('day', ll.time) DESC,recommendation DESC) AS recommended WHERE recommendation > 0""",
             params)
 
         return recommended

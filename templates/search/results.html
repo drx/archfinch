@@ -18,23 +18,7 @@
 <br />
 
 {% for result in results %}
-    {% with result.id as item_id %} 
-    {% with 1 as yr_big %}
-    {% with 1 as terse_layout %}
-    {% with 1 as click_hides %}
-    {% with result.name as item_name %}
-    {% with result.category.element_singular as category_singular %}
-    {% with result.rating as your_rating %}
-    {% with forloop.counter as seq_term %}
-        {% include "includes/opinionbox.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+    {% include "includes/opinionbox.html" with item_id=result.id yr_big=1 terse_layout=1 click_hides=1 item_name=result.name category_singular=result.category.element_singular your_rating=result.rating seq_term=forloop.counter %}
 {% endfor %}
 
 {% reverse partial "search" query=query|urlencode as pagination_url %}

@@ -5,31 +5,7 @@
     "success": true,
     "opinions": [
 {% for opinion in opinions %}
-{% with opinion.rating as rating %}
-{% with opinion.item_id as item_id %} 
-{% with your_profile as yr_big %}
-{% with opinion.review as review %}
-{% if your_profile or not user.is_authenticated %}
-    {% with rating as your_rating %}
-    {% with opinion.item.name as item_name %} {# opinion.item_name #}
-    {% with opinion.item.category.element_singular as category_singular %} {# opinion.category_singular #}
-        {% include "includes/opinionbox.json" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-{% else %}
-    {% with opinion.your_rating as your_rating %}
-    {% with opinion.item_name as item_name %} {# opinion.item_name #}
-    {% with opinion.category_singular as category_singular %} {# opinion.category_singular #}
-        {% include "includes/opinionbox.json" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-{% endif %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
-{% endwith %}
+        {% include "includes/opinionbox.json" with rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review your_rating=opinion.your_rating  item_name=opinion.item.name category_singular=opinion.item.category.element_singular %}
         {% if not forloop.last %},{% endif %}
 {% endfor %}
     ],

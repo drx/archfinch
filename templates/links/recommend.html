@@ -13,9 +13,8 @@
     {% endif %}
 {% endblock %}
 
-{% block content %}
 
-<div id="content_left">
+{% block content_left %}
 <h1>
 {% if category %}
     {{ category.element_plural|capfirst }}
@@ -27,21 +26,7 @@
 </h1>
 
 {% for link in recommendations %}
-    {% with link.id as item_id %} 
-    {% with 1 as yr_big %}
-    {% with 1 as terse_layout %}
-    {% with link.name as item_name %}
-    {% with link.category_element as category_singular %}
-    {% with forloop.counter as seq_term %}
-    {% with link.rating as your_rating %}
-        {% include "includes/opinionbox.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+    {% include "includes/opinionbox.html" with item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
 {% empty %}
     {% if not category %}
         <div class="big">
@@ -63,15 +48,19 @@
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
-    <h2>Share a {{ category.element_singular }}</h2>
+{% endblock %}
+{% block content_right %}
+    <h2>Share a 
+    {% if category %}
+        {{ category.element_singular }}
+    {% else %}
+        link
+    {% endif %}
+    </h2>
     <p>Know of something awesome?<br /><a href="{% url submit %}"><b>Submit</b></a> it!</a></p>
     <h2>Like Archfinch?</h2>
     <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
     <fb:like href="http://archfinch.com/" show_faces="true" width="225" font="verdana"></fb:like> 
-</div>
-
 
 {% endblock %}
 {% block media %}
