@@ -162,14 +162,10 @@ class Item(models.Model):
         params = [self.id, self.id]
         select = ''
         where = ''
-        if category is not None and category:
-            category_id = category.id
 
-        if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
-        else:
-            where += " AND mc.hide = 'f'"
+        # only show stuff for the same category as the element
+        where += ' AND mi.category_id = %s'
+        params.append(self.category.id)
 
         if like:
             where += " AND mo2.rating >= 4"
