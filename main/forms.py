@@ -54,7 +54,7 @@ class AddItemWizard(FormWizard):
         item.save()
         request.user.add_points(10)
         if self.model.__name__ == 'Link':
-            tasks.opinion_set.delay(request.user, item, 5)
+            tasks.opinion_set.delay(request.user, item, 4)
         return redirect(reverse('item', args=[int_to_base36(item.id), slugify(item.name)]))
 
     def get_template(self, step):
