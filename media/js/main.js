@@ -187,7 +187,12 @@ $(document).ready(function(){
         },
         show: {
             when: 'click',
-            solo: true
+            solo: true,
+            effect: function() {
+               $(this).fadeIn(90, function() {
+                  $("input", $("a.addtag").qtip("api").elements.content).focus();
+               });
+            }
         },
         hide: 'unfocus',
         style: {
