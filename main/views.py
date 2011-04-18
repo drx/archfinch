@@ -5,7 +5,7 @@ from django.utils.http import base36_to_int, int_to_base36
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.db.models import Count
-from archfinch.main.models import Item, Opinion, Action, Similarity, Category
+from archfinch.main.models import Item, Opinion, Action, Similarity, Category, Tag
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from archfinch.users.models import User
 from django.contrib.auth.decorators import login_required
@@ -77,105 +77,106 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @allow_lazy_user
-def recommend(request, category_slug=None, page=None, usernames=None):
+def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None):
     '''
     Shows a list of recommendations.
     '''
-    if request.user.is_authenticated() or usernames is not None:
-        if page is None:
-            page = 1
-        else:
-            page = int(page)
-         
-        fresh = False
-        if category_slug is not None and category_slug:
-            if category_slug == 'fresh':
-                fresh = True
-                category = None
-            else:
-                category = Category.objects.get(slug=category_slug)
-        else:
+    if page is None:
+        page = 1
+    else:
+        page = int(page)
+     
+    fresh = False
+    tags = None
+    if tag_names:
+        fresh = True
+        category = None
+        tag_names = tag_names.split('/')
+        tags = Tag.objects.filter(name__in=tag_names)
+
+    elif category_slug is not None and category_slug:
+        if category_slug == 'fresh':
+            fresh = True
             category = None
-
-        n = 100
-        if category and category.name in ('Videos', 'Pics') or fresh:
-                n = 10
-
-        if usernames is not None:
-            usernames = usernames.split(',')
-            users = list(map(lambda un: get_object_or_404(User, username=un), usernames))
-            usernames_specified = True
-
         else:
-            usernames = [request.user.username]
-            users = [request.user]
-            usernames_specified = False
+            category = Category.objects.get(slug=category_slug)
+    else:
+        category = None
 
-        user_ids = map(lambda u: u.id, users)
-        usernames_k = '+'.join(sorted(set(map(str, user_ids))))
-        usernames_joined = ','.join(usernames)
+    n = 100
+    if category and category.name in ('Videos', 'Pics') or fresh:
+        n = 10
 
-        opinion_count = users[0].__class__.objects.filter(pk__in=user_ids).aggregate(Count('opinion'))['opinion__count']
-        if opinion_count < 10:
-            generic = True
-            usernames_k = '#generic'
+    if usernames is not None:
+        usernames = usernames.split(',')
+        users = list(map(lambda un: get_object_or_404(User, username=un), usernames))
+        usernames_specified = True
+
+    else:
+        usernames = [request.user.username]
+        users = [request.user]
+        usernames_specified = False
+
+    user_ids = map(lambda u: u.id, users)
+    usernames_k = '+'.join(sorted(set(map(str, user_ids))))
+    usernames_joined = ','.join(usernames)
+
+    opinion_count = users[0].__class__.objects.filter(pk__in=user_ids).aggregate(Count('opinion'))['opinion__count']
+    if opinion_count < 10:
+        generic = True
+        usernames_k = '#generic'
+    else:
+        generic = False
+
+    cache_key = 'recommend,%s,%s,%s' % (usernames_k, category_slug, tag_names)
+    if settings.DEBUG:
+        cache_timeout = 30
+    else:
+        cache_timeout = 15*60
+
+    cached_value = cache.get(cache_key)
+
+    computed = False
+    if cached_value is not None:
+        if type(cached_value) == tuple and cached_value[0] == 'task':
+            recommendations = celery.result.AsyncResult(cached_value[1])
         else:
-            generic = False
-    
-        cache_key = 'recommend,%s,%s' % (usernames_k, category_slug)
-        if settings.DEBUG:
-            cache_timeout = 30
-        else:
-            cache_timeout = 15*60
-
-        cached_value = cache.get(cache_key)
-
-        computed = False
-        if cached_value is not None:
-            if type(cached_value) == tuple and cached_value[0] == 'task':
-                recommendations = celery.result.AsyncResult(cached_value[1])
-            else:
-                recommendations = cached_value
-                computed = True
-
-        else:
-            if generic:
-                recommendations = tasks.recommend_generic.delay(category, fresh)
-            else:
-                recommendations = tasks.recommend.delay(category, fresh, users)
-            task_id = recommendations.task_id
-            cache.set(cache_key, ('task', task_id), cache_timeout)
-
-        if not computed and recommendations.ready():
-            recommendations = recommendations.result
-            cache.set(cache_key, recommendations, cache_timeout)
+            recommendations = cached_value
             computed = True
 
-        if not computed:
-            wait_page = 'recommend'
-            return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
-        else:
-
-            # pagination
-            recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
-
-            if category is not None and category.id in (9,10,11) or fresh:
-                # links
-                for r in recommendations:
-                    try:
-                        r.rating = request.user.opinion_set.get(item__id=r.id).rating
-                    except Opinion.DoesNotExist:
-                        pass
-                return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
-            else:
-                user_categories = request.user.categories()
-                categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')
-                return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
-
-
-            
     else:
-        return render_to_response("main/recommend_anonymous.html", context_instance=RequestContext(request))
+        if generic:
+            recommendations = tasks.recommend_generic.delay(category, fresh, tags)
+        else:
+            recommendations = tasks.recommend.delay(category, fresh, tags, users)
+        task_id = recommendations.task_id
+        cache.set(cache_key, ('task', task_id), cache_timeout)
+
+    if not computed and recommendations.ready():
+        recommendations = recommendations.result
+        cache.set(cache_key, recommendations, cache_timeout)
+        computed = True
+
+    if not computed:
+        wait_page = 'recommend'
+        return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
+    else:
+
+        # pagination
+        recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
+
+        if category is not None and category.id in (9,10,11) or fresh:
+            # links
+            for r in recommendations:
+                try:
+                    r.rating = request.user.opinion_set.get(item__id=r.id).rating
+                except Opinion.DoesNotExist:
+                    pass
+            return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
+        else:
+            user_categories = request.user.categories()
+            categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')
+            return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
 
 
 def opinion_set(request, item_id, rating):

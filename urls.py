@@ -37,6 +37,8 @@ urlpatterns = patterns('',
     (r'^also_liked/(?P<item_id>[0-9a-z]+)/(?P<like>true|false)/(?P<also_like>true|false)$', 'archfinch.main.views.item_also_liked'),
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
+
+    url(r'tags/(?P<tag_names>[\w\-\/]+)', 'archfinch.main.views.recommend', name='fresh-tags'),
     (r'^addtag/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.add_tag'),
 
     url(r'^search$', 'archfinch.search.views.query', {'query': ''}, name='search-base'),

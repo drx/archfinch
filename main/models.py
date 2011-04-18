@@ -21,11 +21,11 @@ class ItemManager(models.Manager):
         '''
         Fetches items recommended generally (i.e. not for a specific user).
         '''
-        params = []
+        params = {}
         where = ''
         if category is not None:
-            where += ' mi.category_id = %s'
-            params.append(category.id)
+            where += ' mi.category_id = %(category_id)s'
+            params['category_id'] = category.id
         else:
             where += " mc.hide = 'f'"
 
@@ -59,13 +59,13 @@ class ItemManager(models.Manager):
         user_ids = map(lambda u: u.id, users)
 
         where = ''
-        params = [tuple(user_ids)]*4
+        params = {'user_ids': tuple(user_ids)}
         if category is not None and category:
             category_id = category.id
 
         if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
+            where += ' AND mi.category_id = %(category_id)s'
+            params['category_id'] = category_id
         else:
             where += " AND mc.hide = 'f'"
 
@@ -88,14 +88,14 @@ class ItemManager(models.Manager):
               ON mo.item_id=mi.id
              INNER JOIN main_category mc
               ON mc.id=mi.category_id
-            WHERE ms.user1_id IN %s
-             AND ms.user2_id NOT IN %s
+            WHERE ms.user1_id IN %(user_ids)s
+             AND ms.user2_id NOT IN %(user_ids)s
              AND ms.value > 0
              AND NOT EXISTS
               (SELECT 1 FROM main_opinion mo2
-               WHERE mo2.item_id=mi.id AND mo2.user_id IN %s)
+               WHERE mo2.item_id=mi.id AND mo2.user_id IN %(user_ids)s)
              AND NOT EXISTS
-              (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id IN %s AND le.item_id=mi.id)
+              (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id IN %(user_ids)s AND le.item_id=mi.id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
             ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",

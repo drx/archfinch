@@ -2,17 +2,21 @@ from django.db import models
 from archfinch.main.models import Item
 
 class LinkManager(models.Manager):
-    def recommended_generic(self, category=None):
+    def recommended_generic(self, category=None, tags=None):
         '''
         Fetches links recommended generally (not for a specific user).
         '''
 
         where = ''
-        params = []
+        params = {}
 
         if category is not None:
-            where += 'WHERE mi.category_id = %s'
-            params.append(category.id)
+            where += 'WHERE mi.category_id = %(category_id)s'
+            params['category_id'] = category.id
+
+        if tags:
+            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id IN %(tag_ids)s)'
+            params['tag_ids'] = tuple(map(lambda x: x.id, tags))
 
         # Select items in order of their recommendation to self
         # 
@@ -47,19 +51,24 @@ class LinkManager(models.Manager):
         return recommended
 
 
-    def recommended(self, user, category=None, category_id=None):
+    def recommended(self, user, category=None, category_id=None, tags=None):
         '''
         Fetches links recommended for the user.
         '''
 
         where = ''
-        params = [user.id]
+        joins = ''
+        params = {'user_id': user.id}
         if category is not None and category:
             category_id = category.id
 
         if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
+            where += ' AND mi.category_id = %(category_id)s'
+            params['category_id'] = category_id
+
+        if tags:
+            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id IN %(tag_ids)s)'
+            params['tag_ids'] = tuple(map(lambda x: x.id, tags))
 
         # Select items in order of their recommendation to self
         # 
@@ -86,7 +95,7 @@ class LinkManager(models.Manager):
               ON mc.id=mi.category_id
              INNER JOIN links_link ll
               ON ll.item_ptr_id=mi.id
-            WHERE ms.user1_id = %s
+            WHERE ms.user1_id = %(user_id)s
              AND ms.value > 0
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
