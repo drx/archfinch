@@ -105,14 +105,31 @@ body > #wrap
 {   margin: 0;
     color: #004c80;
 }
+a#bigsignup:hover
+{
+    background-color: #ede6ba;
+}
 #bigsignup
 {
-
+    background-color: #EEDF84;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+	padding: 8px;
+	color: #000000;
 }
-
-
+a#biglogin:hover
+{
+    background-color: #11a8b0;
+}
 #biglogin
 {
+    background-color: #0e8d94;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+	padding: 8px;
+	color: #ffffff;
 }
 a
 {
