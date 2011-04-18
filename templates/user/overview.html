@@ -16,7 +16,7 @@
  - Archfinch
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
 {% if your_profile %}
     {% if viewed_user|is_lazy_user %}
@@ -25,14 +25,6 @@
     <h1>Welcome {{ viewed_user }}</h1><br />
     {% endif %}
 {% endif %}
-
-{% if not user.is_authenticated %}
-<div class="big" style="color: #000000">
-    <p>See how similar you are to {{ viewed_user }}. <a href="/">Get an account</a> on Archfinch.</p>
-</div>
-{% endif %}
-
-<div id="content_left">
 
 {% if show_controversial %}
     <p>Recommendations are tailored to what you like, so the more you rate the better.</p>
@@ -65,8 +57,8 @@
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 
 <b>{{ viewed_user }}</b>
 
@@ -99,8 +91,6 @@
     {% endif %}
 {% endwith %}
 
-
-</div>
 
 
 {% endblock %}

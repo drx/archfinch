@@ -261,8 +261,6 @@ div.title
 {
     word-wrap: break-word;
     max-width: 580px;
-	padding: 2px;
-	
 }
 .widebox .category_element
 {
@@ -638,10 +636,9 @@ input.search
     border: 1px solid #80ccff;
     background-color: #ffffff;
 }
-.smalltext
+.smalltext p
 {
-    font-size: 0.875em;
-    color: #aaaaaa;
+    font-size: 12px;
 }
 .opinion .loading
 {
@@ -953,4 +950,74 @@ tr.top3
 {
     border-color: #888;
     background-color: #f8f8ff;
+}
+.tags
+{
+    border-bottom: 5px solid transparent;
+    width: 300px;
+    float: right;
+    margin-top: 5px;
+    text-align: right
+}
+.addtag, .addtag:hover
+{
+    margin-right: 10px;
+    font-size: 14px;
+    color: #0E8D94;
+}
+.addtag
+{
+    visibility: hidden;
+}
+.highlight .addtag
+{
+    visibility: visible;
+}
+.tag
+{
+    color: #aaa;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 11px;
+    color: #ccc;
+}
+.tag:hover
+{
+    background-color: #eee;
+    color: #000;
+}
+.tag:hover .taglink
+{
+    color: #000;
+}
+.tag:hover .taglink:hover
+{
+    background-color: #ddd;
+}
+.taglink
+{
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 2px 10px 2px 10px;
+    background-color: #eee; 
+    color: #000;
+}
+.blocktag
+{
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 2px 5px;
+    visibility: hidden;
+}
+.tag:hover .blocktag
+{
+    visibility: visible;
+    color: #000;
+}
+.tag:hover .blocktag:hover
+{
+    color: #fff;
+    background-color: #0e8d94;    
 }

@@ -1,64 +1,12 @@
-<style>
-.tags
-{
-    border-bottom: 5px solid transparent;
-}
-.addtag, .addtag:hover
-{
-    color: #0E8D94;
-    margin-right: 10px;
-    font-size: 14px;
-}
-.tag
-{
-    color: #aaa;
-    padding-top: 2px;
-    padding-bottom: 2px;
-}
-.tag:hover
-{
-    background-color: #eee;
-    color: #000;
-}
-.tag:hover .taglink
-{
-    color: #000;
-}
-.tag:hover .taglink:hover
-{
-    background-color: #ddd;
-}
-.taglink
-{
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    padding: 2px 10px 2px 10px;
-    background-color: #eee; 
-    color: #000;
-}
-.blocktag
-{
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    padding: 2px 5px;
-    visibility: hidden;
-}
-.tag:hover .blocktag
-{
-    visibility: visible;
-    color: #000;
-}
-.tag:hover .blocktag:hover
-{
-    color: #fff;
-    background-color: #0e8d94;    
-}
-</style>
 {% load base36 %}
 {% load markup %}
 <div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
+    <div class="tags">
+        <a class="addtag" href="#">+</a>
+        {% for tag in link.popular_tags %}
+        <span class="tag"><a class="taglink" href="{% url search-base %}/tag:{{ tag.name }}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span>
+        {% endfor %}
+    </div>
     {% if terse_layout and not link %}
         {% if your_rating %}
         <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
@@ -74,12 +22,6 @@
         {% else %}
         <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
         {% endif %}
-        <div class="tags" style="font-size: 11px; color: #ccc; width: 300px; float: right; margin-top: 5px; text-align: right">
-            <a class="addtag" href="#">+</a>
-            {% for tag in link.popular_tags %}
-            <span class="tag"><a class="taglink" href="/tags/{{ tag.name }}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span>
-            {% endfor %}
-        </div>
         <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
         <div class="link_meta" style="width: 300px; height: 40px">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">meta</a>
         </div>

@@ -7,9 +7,8 @@
 {{ list.name }} - Archfinch
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 <h1>Editing <span class='editable noremove' id="list_title">{{ list.name }}</span></h1>
 
 <div class="sortable" id="list" list_id="{{ list.id|base36 }}">
@@ -35,8 +34,8 @@
 </form>
 
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 
 <script>
 {% for entry in list.entries.all %}
@@ -59,6 +58,5 @@
 <img src="/media/images/ajax-loader.gif" class="nodisplay loading">
 </div>
 
-</div>
 
 {% endblock %}

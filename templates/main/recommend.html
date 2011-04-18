@@ -13,9 +13,8 @@
     {% endif %}
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 <h1>
 {% if category %}
     {{ category.element_plural|capfirst }}
@@ -54,8 +53,8 @@
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 {% if user.categories %}
     <p id="user_cats">Show  
     {% for category in user.categories %}
@@ -96,7 +95,6 @@
     </p>
 
 {% endif %}
-</div>
 
 {% endblock %}
 {% block media %}

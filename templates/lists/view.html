@@ -7,9 +7,8 @@
 {{ list.name }} - Archfinch
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 <h1>{{ list.name }}</h1>
 
 {% for entry in entries %}
@@ -24,8 +23,8 @@
 {% endif %}
 {% endfor %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 <p>
 This list was created by <a href="{% url user-overview list.owner.username %}">{{ list.owner }}</a>
 </p>
@@ -59,7 +58,6 @@ This list was created by <a href="{% url user-overview list.owner.username %}">{
 </div>
 </p>
 {% endif %}
-</div>
 
 {% endblock %}
 {% block media %}
