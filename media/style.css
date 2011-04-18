@@ -146,6 +146,7 @@ a.nohover:hover
 {
     color: #0055ee;
 }
+
 #content
 {
     margin: 1em;
@@ -193,6 +194,10 @@ ul.menu
     margin-bottom: 0;
     margin-left: 0.5em;
     margin-top: 0;
+}
+ul.menu a:hover
+{
+	color: #ffffff;
 }
 ul.menu > li, #menu_loggedin li, #menu_notloggedin li
 {
@@ -545,13 +550,7 @@ td
 
 #navbar a
 {
-    color: #ffffff;
-
-    
-}
-#navbar a:hover
-{
-    color: #434d53;
+    color: #ffffff; 
 }
 #navbar ul.menu > li:hover > a
 {
