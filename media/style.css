@@ -35,7 +35,7 @@ body > #wrap
 }
 #header-wrapper
 {
-
+	background-color: #0e8d94;
 	background-image: url("/media/navbg.png");
 }
 #header-main
@@ -86,7 +86,9 @@ body > #wrap
 	position: relative;
 	z-index: 10;
 	height: 3em;
+    line-height: 3em; /* to position the text in the middle vertically */
 	margin-top: -3em;
+    padding: 0 1em;
 }
 .clearfooter
 {
