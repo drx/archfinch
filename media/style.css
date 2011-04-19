@@ -293,11 +293,11 @@ div.title
 }
 .widebox .reviewthis
 {
-    display: none;
+    visibility: hidden;
 }
 .widebox.highlight .reviewthis
 {
-    display: block;
+    visibility: visible;
 }
 .widebox
 {
@@ -325,6 +325,14 @@ div.title
     width: 40em;
     clear: both;
 }
+.box .clear
+{
+    clear: both
+}
+.box.link .clear
+{
+    padding-bottom: 10px;
+}
 .box.itembox
 {
     width: 100%;
@@ -334,6 +342,7 @@ div.title
 .user_opinion
 {
     font-size: 10px;
+    clear: right;
 }
 .link .user_opinion
 {
@@ -469,18 +478,20 @@ td
 .your_opinion
 {
     display: inline;
+    visibility: visible;
 }
 .highlight .your_opinion
 {
-    display: none;
+    visibility: hidden;
 }
 .user_rate
 {
-    display: none;
+    visibility: hidden;
 }
 .pic_rate
 {
     display: inline;
+    visibility: visible;
 }
 .terse .user_rate
 {
@@ -503,11 +514,12 @@ td
 
 .link_comments
 {
-    display: none;
+    visibility: hidden;
+    display: inline;
 }
 .highlight .link_comments
 {
-    display: inline;
+    visibility: visible;
     float: right;
 }
 
@@ -518,6 +530,7 @@ td
 .highlight .user_rate
 {
     display: inline;
+    visibility: visible;
 }
 .nodisplay
 {
@@ -955,7 +968,7 @@ tr.top3
 .tags
 {
     border-bottom: 5px solid transparent;
-    width: 300px;
+    max-width: 300px;
     float: right;
     margin-top: 5px;
     text-align: right
@@ -1021,4 +1034,18 @@ tr.top3
 {
     color: #fff;
     background-color: #0e8d94;    
+}
+
+.commenttext
+{
+    margin: 5px;
+}
+.commenttext p
+{
+    font-size: 13px;
+}
+.commentshift
+{
+    margin-left: 20px;
+    border-left: 1px solid #000;
 }

@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     'archfinch.wiki',
     'archfinch.users',
     'archfinch.search',
+    'archfinch.comments',
     'djcelery',
     'lazysignup',
     'reversetag',

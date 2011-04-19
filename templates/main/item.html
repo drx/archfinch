@@ -4,13 +4,19 @@
 {% load base36 %}
 {% load cache %}
 
-{% block title %}{{ item.name }} - Archfinch{% endblock %}
+{% block title %}
+{% if item.is_comment %}
+{% if item.comment.text|length > 32 %}{{ item.comment.text|slice:":32" }}...{% else %}{{ item.comment.text }}{% endif %} - Archfinch
+{% else %}
+{{ item.name }} - Archfinch
+{% endif %}
+{% endblock %}
 
 {% block media %}
     <!--[if IE]><script language="javascript" type="text/javascript" src="/media/js/flot/excanvas.min.js"></script><![endif]-->
     <script type="text/javascript" src="/media/js/flot/jquery.flot.min.js"></script>
 
-{% if not item.is_link %}
+{% if not item.is_link and not item.is_comment %}
     <script type="text/javascript">
     $(document).ready(function(){
         $.plot($("#ratings_graph"), [
@@ -40,23 +46,28 @@
 
 {% block content_left %}
 <h1>{{ item.name }}</h1>
-    {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 item_name=item.name category_singular=item.category.element_singular seq_term=1 your_rating=opinion.rating link=item.link %}
-
-
-{% if item.profile.page %}
-    <div class="article">
-    {{ item.profile.page.render|markdown }}
-    </div>
-    <span class="smalltext"><p>(<a href='{% url wiki-edit-item item.id|base36 %}'>edit</a>)</p></span>
+{% if item.is_comment %}
+    {% include "includes/comment_tree.html" with comment_tree=item.comment.comment_tree %}
 {% else %}
-    <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id|base36 %}'>Add some.</a></p>
+    {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 item_name=item.name category_singular=item.category.element_singular seq_term=1 your_rating=opinion.rating link=item.link %}
+{% endif %}
+
+{% if not item.is_comment %}
+    {% if item.profile.page %}
+        <div class="article">
+        {{ item.profile.page.render|markdown }}
+        </div>
+        <span class="smalltext"><p>(<a href='{% url wiki-edit-item item.id|base36 %}'>edit</a>)</p></span>
+    {% else %}
+        <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id|base36 %}'>Add some.</a></p>
+    {% endif %}
 {% endif %}
 
 <br /><br />
 
 <h1>People who
 <button class="also_liked" like_type='like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
-{% if item.link %}
+{% if item.link or item.is_comment %}
     this {{ item.category.element_singular }}
 {% else %}
  {{ item.name }}
@@ -76,10 +87,12 @@
 {% endblock %}
 {% block content_right %}
 
-{% if not item.is_link %}
+{% if not item.is_link and not item.is_comment %}
 <div id="ratings_graph"></div>
 {% else %}
+{% if item.is_link %}
 <p>{{ item.link.views }} views</p>
+{% endif %}
 {% endif %}
 
 {% if item.submitter %}

@@ -107,7 +107,7 @@ class ItemManager(models.Manager):
 
 class Item(models.Model):
     category = models.ForeignKey(Category)
-    parent = models.ForeignKey('Item', null=True, blank=True)
+    parent = models.ForeignKey('Item', related_name='children', null=True, blank=True)
     name = models.CharField(max_length=1000)
 
     submitter = models.ForeignKey('users.User', null=True, blank=True)
@@ -123,7 +123,10 @@ class Item(models.Model):
     objects = ItemManager()
 
     def __unicode__(self):
-        return self.name
+        if self.is_comment():
+            return self.comment.__unicode__()
+        else:
+            return self.name
 
     def recommendation(self, user):
         '''
@@ -232,6 +235,9 @@ class Item(models.Model):
 
     def is_link(self):
         return self.category_id in (9,10,11)
+
+    def is_comment(self):
+        return self.category_id == 14
        
 
     def add_tag(self, tag_name, user):
