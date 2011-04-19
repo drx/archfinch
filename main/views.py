@@ -128,7 +128,10 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
     else:
         generic = False
 
-    tag_names_k = ','.join(tag_names)
+    if tag_names:
+        tag_names_k = ','.join(tag_names)
+    else:
+        tag_names_k = ''
 
     cache_key = 'recommend;%s;%s;%s' % (usernames_k, category_slug, tag_names_k)
     if settings.DEBUG:
