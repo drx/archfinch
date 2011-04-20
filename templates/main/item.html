@@ -47,7 +47,6 @@
 {% block content_left %}
 <h1>{{ item.name }}</h1>
 {% if item.is_comment %}
-    {% include "includes/comment_tree.html" with comment_tree=item.comment.comment_tree %}
 {% else %}
     {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 item_name=item.name category_singular=item.category.element_singular seq_term=1 your_rating=opinion.rating link=item.link %}
 {% endif %}
@@ -62,6 +61,12 @@
         <p>There is no information on this {{ item.category.element_singular }}. <a href='{% url wiki-edit-item item.id|base36 %}'>Add some.</a></p>
     {% endif %}
 {% endif %}
+
+<br /><br />
+
+<h1>Comments</h1>
+
+{% include "includes/comment_tree.html" with comment_tree=item.comment_tree %}
 
 <br /><br />
 

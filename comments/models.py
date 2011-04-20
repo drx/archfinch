@@ -14,14 +14,3 @@ class Comment(Item):
         else:
             return self.text
 
-    def comment_tree(self):
-        def traverse(comment):
-            flat = []
-            flat.append({'type': 'comment', 'comment': comment})
-            for child in comment.children.all():
-                flat.append({'type': 'in'})
-                flat.extend(traverse(child))
-                flat.append({'type': 'out'})
-            return flat
-
-        return traverse(self)

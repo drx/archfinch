@@ -201,6 +201,56 @@ class Item(models.Model):
 
         return recommended
 
+
+    def comment_tree(self, count=False):
+        params = {'root_id': self.id}
+        if count:
+            order_by = ''
+            select = 'COUNT(1)'
+        else:
+            order_by = 'ORDER BY path'
+            select = 'id, parent_id, submitter_id, depth, cc.text'
+
+        
+        query = """
+            WITH RECURSIVE cte (id, parent_id, submitter_id, path, depth) AS (
+                SELECT id, parent_id, submitter_id, array[id] as path, 1 FROM main_item WHERE parent_id=%(root_id)s
+                UNION ALL
+                SELECT c.id, c.parent_id, c.submitter_id, cte.path || c.id, cte.depth+1 FROM main_item c JOIN cte ON cte.id = c.parent_id
+            )
+            SELECT
+                """+select+"""
+            FROM cte
+                INNER JOIN comments_comment cc ON cte.id=cc.item_ptr_id
+            """+order_by+"""
+            """
+
+        if count:
+            from django.db import connection
+            cursor = connection.cursor()
+            cursor.execute(query, params)
+            return cursor.fetchone()
+
+        comments = Item.objects.raw(query, params)
+
+        # this is a bit more complicated than doing a sql query for each subtree
+        #  but much much faster
+        comment_tree = []
+        last = None
+        for comment in comments:
+            if last is not None:
+                diff = comment.depth - last
+                if diff > 0:
+                    comment_tree.extend([{'type': 'in'}]*diff)
+                if diff < 0:
+                    comment_tree.extend([{'type': 'out'}]*(-diff))
+            comment_tree.append({'type': 'comment', 'comment': comment})
+            last = comment.depth
+        comment_tree.extend([{'type': 'out'}]*(last-1))
+
+        return comment_tree
+
+
     def ratings_count(self):
         ratings_count = self.opinion_set.all().values('rating').annotate(count=Count('rating'))
         ratings_count = dict((x['rating'], x['count']) for x in ratings_count)
