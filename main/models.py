@@ -202,6 +202,10 @@ class Item(models.Model):
         return recommended
 
 
+    def comment_count(self):
+        return self.comment_tree(count=True)
+
+
     def comment_tree(self, count=False):
         params = {'root_id': self.id}
         if count:
@@ -229,7 +233,7 @@ class Item(models.Model):
             from django.db import connection
             cursor = connection.cursor()
             cursor.execute(query, params)
-            return cursor.fetchone()
+            return cursor.fetchone()[0]
 
         comments = Item.objects.raw(query, params)
 
