@@ -224,9 +224,9 @@ class Item(models.Model):
         
         query = """
             WITH RECURSIVE cte (id, parent_id, submitter_id, path, depth) AS (
-                SELECT id, parent_id, submitter_id, array[id] as path, 1 FROM main_item WHERE parent_id=%(root_id)s
+                (SELECT id, parent_id, submitter_id, array[(1-wilson_score(id), id)] as path, 1 FROM main_item WHERE parent_id=%(root_id)s)
                 UNION ALL
-                SELECT c.id, c.parent_id, c.submitter_id, cte.path || c.id, cte.depth+1 FROM main_item c JOIN cte ON cte.id = c.parent_id
+                SELECT c.id, c.parent_id, c.submitter_id, cte.path || (1-wilson_score(c.id), c.id), cte.depth+1 FROM main_item c JOIN cte ON cte.id = c.parent_id
             )
             SELECT
                 """+select+"""
@@ -234,6 +234,8 @@ class Item(models.Model):
                 INNER JOIN comments_comment cc ON cte.id=cc.item_ptr_id
             """+order_by+"""
             """
+
+        print query % params
 
         if count:
             from django.db import connection

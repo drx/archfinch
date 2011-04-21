@@ -31,7 +31,7 @@
         </a>
         </div>
         {% else %}
-        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="{[ item.get_absolute_url }}">link</a>
+        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="{{ item.get_absolute_url }}">link</a>
         </div>
         {% endif %}
         
