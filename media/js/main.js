@@ -204,7 +204,9 @@ $(document).ready(function(){
             name: 'light'
         }
             
-    })}); 
+    })
+    .bind('click', function(event){ event.preventDefault(); return false; });
+    }); 
     $(".box").live("hover", 
         function(e){
             if (e.type == "mouseenter")
