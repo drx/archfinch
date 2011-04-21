@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION wilson_score(item_id integer) RETURNS real
         END CASE;
     END LOOP;
     total := positive + negative;
-    if total = 0 then return 0; end if;
+    if total = 0 then return 1; end if;
 
     phat := positive::real/total::real;
     return (phat + z*z/(2*total) - z*sqrt((phat*(1-phat)+z*z/(4*total))/total))/(1+z*z/total);
