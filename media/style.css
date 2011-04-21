@@ -349,6 +349,10 @@ div.title
 {
     margin-top: 15px;
 }
+.box.selected_comment
+{
+    background-color: #ffffcc;
+}
 .box.highlight
 {
     background-color: #f7f7f7;

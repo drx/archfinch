@@ -43,6 +43,16 @@ def item(request, item_id):
     item_id = base36_to_int(item_id)
     item = get_object_or_404(Item.objects.select_related('category', 'profile'), pk=item_id)
 
+    if item.is_comment():
+        # item is a comment, so let's show its root and highlight it instead
+        root = item.root()
+        path = root.path
+        item, selected_comment_id = root, item.id
+
+        comment_tree = item.comment_tree(selected_path=path)
+    else:
+        comment_tree = item.comment_tree()
+
     if item.category_id == 8:
         return redirect(reverse('list-view', args=[int_to_base36(item_id), slugify(item.name)]))
 

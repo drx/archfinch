@@ -132,7 +132,11 @@ class Item(models.Model):
     def get_absolute_url(self):
         from django.utils.http import int_to_base36
         from django.template.defaultfilters import slugify
-        return ('item', (int_to_base36(self.id), slugify(self.__unicode__())) )
+        slug = slugify(self.__unicode__())
+        if self.is_comment():
+            slug += '#topcomment'
+        url = ('item', (int_to_base36(self.id), slug))
+        return url 
 
     def recommendation(self, user):
         '''
@@ -207,13 +211,26 @@ class Item(models.Model):
 
         return recommended
 
+    
+    def root(self):
+        params = {'item_id': self.id}
+
+        return Item.objects.raw("""
+            WITH RECURSIVE cte (id, parent_id, path) AS (
+                (SELECT id, parent_id, array[id] FROM main_item WHERE id=%(item_id)s)
+                UNION ALL
+                SELECT mi.id, mi.parent_id, mi.id || cte.path FROM main_item mi JOIN cte ON cte.parent_id=mi.id
+            )
+            SELECT id, path FROM cte WHERE cte.parent_id IS NULL        
+        """, params)[0]
+
 
     def comment_count(self):
         return self.comment_tree(count=True)
 
 
-    def comment_tree(self, count=False):
-        params = {'root_id': self.id}
+    def comment_tree(self, count=False, selected_path=None):
+        params = {'root_id': self.id, 'selected_1': '', 'selected_n': ''}
         if count:
             order_by = ''
             select = 'COUNT(1)'
@@ -221,12 +238,17 @@ class Item(models.Model):
             order_by = 'ORDER BY path'
             select = 'id, parent_id, submitter_id, depth, cc.text'
 
+        if selected_path is not None:
+            # I have a feeling someone, someday, will knife me for this
+            params['selected_1'] = 'id!=%s, ' % selected_path[1]
+            params['selected_n'] = 'c.id!=(array%s)[cte.depth+1], ' % selected_path[1:]
+
         
         query = """
             WITH RECURSIVE cte (id, parent_id, submitter_id, path, depth) AS (
-                (SELECT id, parent_id, submitter_id, array[(1-wilson_score(id), id)] as path, 1 FROM main_item WHERE parent_id=%(root_id)s)
+                (SELECT id, parent_id, submitter_id, array[("""+params['selected_1']+""" 1-wilson_score(id), id)] as path, 1 FROM main_item WHERE parent_id=%(root_id)s)
                 UNION ALL
-                SELECT c.id, c.parent_id, c.submitter_id, cte.path || (1-wilson_score(c.id), c.id), cte.depth+1 FROM main_item c JOIN cte ON cte.id = c.parent_id
+                SELECT c.id, c.parent_id, c.submitter_id, cte.path || ("""+params['selected_n']+""" 1-wilson_score(c.id), c.id), cte.depth+1 FROM main_item c JOIN cte ON cte.id = c.parent_id
             )
             SELECT
                 """+select+"""
@@ -234,8 +256,6 @@ class Item(models.Model):
                 INNER JOIN comments_comment cc ON cte.id=cc.item_ptr_id
             """+order_by+"""
             """
-
-        print query % params
 
         if count:
             from django.db import connection

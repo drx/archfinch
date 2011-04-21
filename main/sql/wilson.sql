@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer) RETURNS real
     AS $$
     DECLARE 
-        z CONSTANT real := 1.5;
+        z CONSTANT real := 2;
         extremity_factor CONSTANT integer := 3;
         positive integer := 0;
         negative integer := 0;

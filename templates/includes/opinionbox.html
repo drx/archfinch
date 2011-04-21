@@ -1,6 +1,6 @@
 {% load base36 %}
 {% load markup %}
-<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
+<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %} {% if selected_comment_id == item_id %}selected_comment{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
     <div class="tags">
         <a class="addtag" href="#">+</a>
         {% for tag in link.popular_tags %}
