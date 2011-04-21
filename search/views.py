@@ -85,7 +85,7 @@ def query(request, query=None, page=None, json=False):
             from django.utils.http import int_to_base36
             from django.core.urlresolvers import reverse
             from django.template.defaultfilters import slugify
-            return redirect(reverse('item', args=[int_to_base36(result.id), slugify(result.name)]))
+            return redirect(result.get_absolute_url())
         except IndexError:
             from django.http import Http404
             raise Http404

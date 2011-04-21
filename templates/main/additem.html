@@ -13,7 +13,7 @@
     {% else %}
         <p>The thing you are trying to add might already be in the database. The candidates are:
         {% for item in potential_conflicts %}
-        <div class="title"><a href="{% url main.views.item item.id|base36 item.name|slugify %}">{{ item }}</a></div>
+        <div class="title"><a href="{% url item.get_absolute_url %}">{{ item }}</a></div>
         {% endfor %}
         <p>Are you sure it's not one of them?</p>
     {% endif %}
