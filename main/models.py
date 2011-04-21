@@ -108,7 +108,7 @@ class ItemManager(models.Manager):
 class Item(models.Model):
     category = models.ForeignKey(Category)
     parent = models.ForeignKey('Item', related_name='children', null=True, blank=True)
-    name = models.CharField(max_length=1000)
+    name = models.CharField(max_length=1000, null=True, blank=True)
 
     submitter = models.ForeignKey('users.User', null=True, blank=True)
     tags = models.ManyToManyField('Tag', through='Tagged')
@@ -127,6 +127,12 @@ class Item(models.Model):
             return self.comment.__unicode__()
         else:
             return self.name
+
+    @models.permalink
+    def get_absolute_url(self):
+        from django.utils.http import int_to_base36
+        from django.template.defaultfilters import slugify
+        return ('item', (int_to_base36(self.id), slugify(self.__unicode__())) )
 
     def recommendation(self, user):
         '''

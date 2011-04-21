@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     
     (r'^account/', include('archfinch.account.urls')),
     (r'^wiki/', include('archfinch.wiki.urls')),
+    (r'^comment/', include('archfinch.comments.urls')),
     (r'^user/', include('archfinch.users.urls')),
     (r'^list/', include('archfinch.lists.urls')),
     (r'^convert/', include('lazysignup.urls')),

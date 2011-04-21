@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 from archfinch.main.models import Item
 
 
@@ -14,3 +15,8 @@ class Comment(Item):
         else:
             return self.text
 
+
+class AddCommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ('tags',)

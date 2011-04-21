@@ -26,7 +26,7 @@
 </h1>
 
 {% for link in recommendations %}
-    {% include "includes/opinionbox.html" with item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
+    {% include "includes/opinionbox.html" with item=link item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
 {% empty %}
     {% if not category %}
         <div class="big">

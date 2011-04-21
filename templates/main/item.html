@@ -3,6 +3,7 @@
 {% load markup %}
 {% load base36 %}
 {% load cache %}
+{% load lazysignup_tags %}
 
 {% block title %}
 {% if item.is_comment %}
@@ -62,15 +63,22 @@
     {% endif %}
 {% endif %}
 
-<br /><br />
+<h3>Comments</h3>
 
-<h1>Comments</h1>
+<form class='addcomment' method='post' action='{% url comment-add %}'>
+    <textarea name='text' style='width: 600px; height: 200px; padding: 3px'></textarea>
+    <input type='submit' value='Leave a comment'>
+    <input type='hidden' name='parent' value='{{ item.id }}'>
+    {% csrf_token %}
+    {% if user|is_lazy_user %}<span style='font-size: 12px; color: #888'>(you don't need an account)</span>{% endif %}
+</form>
+<br /><br />
 
 {% include "includes/comment_tree.html" with comment_tree=item.comment_tree %}
 
 <br /><br />
 
-<h1>People who
+<h4>People who
 <button class="also_liked" like_type='like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 {% if item.link or item.is_comment %}
     this {{ item.category.element_singular }}
@@ -80,7 +88,7 @@
 <span id="also_liked_also">also</span>
 <button class="also_liked" like_type='also_like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 <img src="/media/images/ajax-loader.gif" style='margin-left: 20px' class="loading nodisplay" id="ld_also_liked">
-</h1>
+</h4>
 
 <div id="also_liked_error" class="error"></div>
 
