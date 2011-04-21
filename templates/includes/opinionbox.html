@@ -24,14 +24,14 @@
         {% endif %}
         {% if link %}
         <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
-        <div class="link_meta" style="max-width: 300px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> <br /> <a href="{% url link.get_absolute_url %}">
+        <div class="link_meta" style="max-width: 300px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> <br /> <a href="{{ link.get_absolute_url }}">
             {% with comment_count=item.comment_count %}
             {% if comment_count > 0 %}{{ comment_count }} comments{% else %}discuss this{% endif %}
             {% endwith %}
         </a>
         </div>
         {% else %}
-        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="{% url item.get_absolute_url %}">link</a>
+        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="{[ item.get_absolute_url }}">link</a>
         </div>
         {% endif %}
         
