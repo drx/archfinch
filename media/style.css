@@ -183,6 +183,7 @@ a.nohover:hover
 	-moz-box-shadow: inset -5px -5px 5px #dbdbdb;
 	-webkit-box-shadow: inset -5px -5px 5px #dbdbdb;
 	box-shadow: inset -5px -5px 5px #dbdbdb;
+    word-wrap: break-word;
 }
 p, .article li, #content li
 {
