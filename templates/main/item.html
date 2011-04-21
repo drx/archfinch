@@ -110,7 +110,7 @@
 
 {% if item.submitter %}
 <p>
-Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show.username }}</a>
+Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a>
 </p>
 {% endif %}
 

@@ -17,12 +17,14 @@
 {% block content_left %}
 <h1>
 {% if category %}
-    {{ category.element_plural|capfirst }}
+    {{ category.element_plural|capfirst }} you might like
 {% else %}
-    Things
+    {% if tags %}
+        Tags: {{ tags|join:", " }}
+    {% else %}
+        Things you might like.
+    {% endif %}
 {% endif %}
-    you
- might like.
 </h1>
 
 {% for link in recommendations %}

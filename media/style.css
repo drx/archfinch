@@ -1065,6 +1065,10 @@ tr.top3
     background-color: #eee; 
     color: #000;
 }
+.selected_tag .taglink
+{
+    background-color: #ddd;
+}
 .blocktag
 {
     -webkit-border-radius: 5px;
