@@ -136,17 +136,17 @@ a#biglogin:hover
 a
 {
     text-decoration: none;
-    color: #434d53;
+    color: #0e8d94;
 	
 }
 a:hover
 {
-    color: #434d53;
+    color: #09565a;
 
 }
 a.nohover:hover
 {
-    color: #0055ee;
+    color: #0e8d94;
 }
 
 #content
@@ -350,7 +350,7 @@ div.title
 }
 .box.highlight
 {
-    background-color: #f2f2f2;
+    background-color: #f7f7f7;
 }
 table
 {
@@ -708,21 +708,29 @@ div.grippie
 a.also_liked
 {
     cursor: pointer;
+	
 }
 button.also_liked
 {
-    background: none;
+    background: #0e8d94;
     border: 1px solid transparent;
     margin: 0;
     margin-right: -3px;
-    padding: 0
+    padding: 4px 8px;
+	color: #ffffff;
+	font-size: 19px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+	
 }
 button.also_liked.highlight
 {
-    border: 1px solid #0072cc;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    border: 1px solid #09565a;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+	background: #09565a;
 }
 h1, h1 button
 {
@@ -738,12 +746,51 @@ h1, h1 button
 	-moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 10px;
-	margin: -17px -17px 34px -17px;
+	margin: -16px -16px 34px -16px;
 }
 h2 
 {
-    font-size: 16px;
+    font-size: 19px;
+    margin: -16px -16px 16px -16px;
+	background-color: #778994;
+	padding: 3px 20px;
+	-moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+	color: #ffffff;
+	border: 2px solid #778994;
+
+}
+h3
+{
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 30px;
     margin-top: 0;
+    word-wrap: break-word;
+	background-color: #f2f2f2;
+	color: #000000;
+	padding: 0px 20px;
+	margin: 0px -9px 20px -16px;
+	border: 2px solid #dbdbdb;
+	border-right: none;
+}
+h4
+{
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 30px;
+    margin-top: 0;
+    word-wrap: break-word;
+	background: #0e8d94;
+	color: #ffffff;
+	padding: 2px 20px;
+	-moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 10px;
+	margin: -16px -16px 34px -16px;
 }
 .hide
 {
@@ -821,7 +868,7 @@ h1 form
 }
 .qtip-content
 {
-    font-size: 11px;
+    font-size: 16px;
 }
 .qtip-content ul
 {
