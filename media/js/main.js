@@ -420,6 +420,44 @@ $(document).ready(function(){
         e.preventDefault()
     })
 
+    $("form.addcomment").submit(function(e)
+    {
+        $(this).children(".loading").show()
+        var self = this
+        $.ajax({
+            url: $(self).attr("action")+".json",
+            dataType: "json",
+            type: "POST",
+            data: $(this).serialize(),
+            timeout: 5000,
+            success: function(data)
+            {
+                $(self).children(".loading").hide()
+                if (!data)
+                {
+                    ajaxerror($(self).children(".error"), 'Error: could not communicate with the server')
+                    return;
+                }
+                if (data['success'])
+                {
+                    $(self).siblings('.thankyou').show('fast') 
+                    $(self).hide('fast')
+                    setTimeout('window.location.replace("'+data['redirect_url']+'")', 2000)
+                }
+                else
+                {
+                    ajaxerror($(self).children(".error"), data['error_msg'])
+                }
+            },
+            error: function(request, error)
+            {
+                $(self).children(".loading").hide()
+                ajaxerror($(self).children(".error"), 'Error: could not communicate with the server')
+            }
+        })
+        e.preventDefault()
+    })
+
     /* search */
     if ($("#user_cats").length > 0)
     {
