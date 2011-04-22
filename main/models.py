@@ -282,7 +282,8 @@ class Item(models.Model):
                     comment_tree.extend([{'type': 'out'}]*(-diff))
             comment_tree.append({'type': 'comment', 'comment': comment})
             last = comment.depth
-        comment_tree.extend([{'type': 'out'}]*(last-1))
+        if last is not None:
+            comment_tree.extend([{'type': 'out'}]*(last-1))
 
         return comment_tree
 
