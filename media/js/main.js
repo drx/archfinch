@@ -338,6 +338,11 @@ $(document).ready(function(){
         }
     })
 
+    $('a.replylink').click(function(e){
+        $(this).parent().parent().children('form.addcomment').show();
+        e.preventDefault();
+    });
+
     /* AJAX login forms */
     $("#loginform").submit(function(e)
     {

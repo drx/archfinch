@@ -3,7 +3,6 @@
 {% load markup %}
 {% load base36 %}
 {% load cache %}
-{% load lazysignup_tags %}
 
 {% block title %}
 {% if item.is_comment %}
@@ -65,16 +64,8 @@
 
 <h3>Comments</h3>
 
-<form class='addcomment' method='post' action='{% url comment-add %}'>
-    <textarea name='text' style='width: 600px; height: 200px; padding: 3px'></textarea>
-    <input type='submit' value='Leave a comment'>
-    <input type='hidden' name='parent' value='{{ item.id }}'>
-    {% csrf_token %}
-    {% if user|is_lazy_user %}<span style='font-size: 12px; color: #888'>(you don't need an account)</span>{% endif %}
-    <div class="error"></div>
-    <img src="/media/images/ajax-loader.gif" class="loading nodisplay">
-</form>
-<div class="thankyou nodisplay">Thank you! You will be redirected to your new comment shortly.</div>
+{% include "includes/add_comment_form.html" with parent_id=item.id %}
+
 <br /><br />
 
 {% include "includes/comment_tree.html" with comment_tree=comment_tree %}

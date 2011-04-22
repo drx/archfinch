@@ -31,7 +31,7 @@
         </a>
         </div>
         {% else %}
-        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="{{ item.get_absolute_url }}">link</a>
+        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="javascript: return false;" class="replylink">reply</a> | <a href="{{ item.get_absolute_url }}">link</a>
         </div>
         {% endif %}
         
@@ -111,5 +111,6 @@
     <div class="commenttext">
     {{ item.comment.text|markdown }}
     </div>
+    {% include "includes/add_comment_form.html" with parent_id=item.id hide_form=1 %}
     {% endif %}
 </div>

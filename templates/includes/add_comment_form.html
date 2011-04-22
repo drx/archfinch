@@ -1,0 +1,12 @@
+{% load lazysignup_tags %}
+<form class='addcomment {% if hide_form %}nodisplay{% endif %}' method='post' action='{% url comment-add %}'>
+    <textarea name='text' style='width: 600px; height: 200px; padding: 3px'></textarea>
+    <input type='submit' value='Leave a comment'>
+    <input type='hidden' name='parent' value='{{ parent_id }}'>
+    {% csrf_token %}
+    {% if user|is_lazy_user %}<span style='font-size: 12px; color: #888'>(you don't need an account)</span>{% endif %}
+    <div class="error"></div>
+    <img src="/media/images/ajax-loader.gif" class="loading nodisplay">
+</form>
+<div class="thankyou nodisplay">Thank you! You will be redirected to your new comment shortly.</div>
+
