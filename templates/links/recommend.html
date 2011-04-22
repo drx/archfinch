@@ -30,14 +30,9 @@
 {% for link in recommendations %}
     {% include "includes/opinionbox.html" with item=link item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
 {% empty %}
-    {% if not category %}
-        <div class="big">
-            <p>We don't know {% if usernames_specified %}them{% else %}you{% endif %} well enough to recommend you anything.
-            {% if not usernames_specified %}
-            <p>We would like to, though, so please consider rating more stuff.</p>
-            {% endif %}
-        </div>
-    {% endif %}
+    <div class="big">
+        <p>Nothing to see here, move along.</p>
+    </div>
 {% endfor %}
 {% if tags %}
     {% reverse partial "fresh-tags-paged" tag_names=tag_names|join:"/" as pagination_url %}
