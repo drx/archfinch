@@ -276,6 +276,22 @@ $(document).ready(function(){
         })
         e.preventDefault();
     });
+    $('.tag a.taglink').each(function(){
+        $(this).qtip(
+        {
+            content: '<span class="taglinks"><a href="'+$(this).attr('href')+'">filter by '+$(this).text()+'</a><br><a href="">block this tag</a></span>',
+            position: {
+                corner: {
+                    target: 'bottomLeft'
+                }
+            },
+            show: {
+                when: 'click'
+            },
+            hide: 'unfocus'
+        });
+    })
+    .bind('click', function(event){ event.preventDefault(); return false; });
     $(".user_rate .rating_small:not(img)").live('click', function(e)
     {
         if ($(this).hasClass("rated"))

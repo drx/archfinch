@@ -1073,23 +1073,9 @@ tr.top3
 {
     background-color: #ddd;
 }
-.blocktag
+.taglinks
 {
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    padding: 2px 5px;
-    visibility: hidden;
-}
-.tag:hover .blocktag
-{
-    visibility: visible;
-    color: #000;
-}
-.tag:hover .blocktag:hover
-{
-    color: #fff;
-    background-color: #0e8d94;    
+    font-size: 12px;
 }
 
 .commenttext
