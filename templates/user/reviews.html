@@ -13,7 +13,6 @@
 {% endblock %}
 
 {% block content_left %}
-<div id="content">
 
 {% for review in reviews %}
     <h1><a href="{% url user-overview review_user.username %}">{{ review_user.username }}</a>'s review of <a href="{{ review.item.get_absolute_url }}">{{ review.item.name }}</a></h1>
@@ -37,6 +36,5 @@
     {% include "includes/pagination.html" %}
 {% endif %}
 
-</div>
 
 {% endblock %}

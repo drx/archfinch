@@ -737,7 +737,7 @@ button.also_liked.highlight
     border-radius: 5px;
 	background: #09565a;
 }
-h1, h1 button
+#content_left > h1, h1 button
 {
     font-family: Helvetica, Verdana, Arial, sans-serif;
     font-weight: bold;
@@ -753,7 +753,7 @@ h1, h1 button
     border-radius: 10px;
 	margin: -16px -16px 34px -16px;
 }
-h2 
+#content_right > h2 
 {
     font-size: 19px;
     margin: -16px -16px 16px -16px;
@@ -766,7 +766,7 @@ h2
 	border: 2px solid #778994;
 
 }
-h3
+#content_left > h3
 {
     font-family: Helvetica, Verdana, Arial, sans-serif;
     font-weight: bold;
@@ -781,7 +781,7 @@ h3
 	border: 2px solid #dbdbdb;
 	border-right: none;
 }
-h4
+#content_left > h4
 {
 	font-family: Helvetica, Verdana, Arial, sans-serif;
     font-weight: bold;
