@@ -88,6 +88,18 @@ if DEBUG:
     INSTALLED_APPS += (
         'devserver',
     )
+    DEVSERVER_MODULES = (
+        'devserver.modules.sql.SQLRealTimeModule',
+        'devserver.modules.sql.SQLSummaryModule',
+        'devserver.modules.profile.ProfileSummaryModule',
+
+        # Modules not enabled by default
+        'devserver.modules.ajax.AjaxDumpModule',
+        #'devserver.modules.profile.MemoryUseModule',
+        'devserver.modules.cache.CacheSummaryModule',
+    )
+
+    STATIC_URL = 'media'
 
 AUTHENTICATION_BACKENDS = (
     'archfinch.users.auth_backends.ModelBackend',
@@ -110,3 +122,4 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
     'cloudkick',
     'facebook',
 )
+
