@@ -8,7 +8,7 @@
         </div>
     {% endif %}
     {% if node.type == 'comment' %}
-        {% include "includes/opinionbox.html" with item=node.comment item_id=node.comment.id yr_big=1 terse_layout=1 item_name=node.comment category_singular=node.comment.category.element_singular seq_term=forloop.counter your_rating=node.comment.rating %}
+        {% include "includes/opinionbox.html" with item=node.comment item_id=node.comment.id yr_big=1 terse_layout=1 item_name=node.comment category_singular=node.comment.category.element_singular seq_term=forloop.counter|stringformat:"d"|add:"_comment" your_rating=node.comment.rating %}
     {% endif %}
 {% endfor %}
 </div>

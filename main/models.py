@@ -229,7 +229,7 @@ class Item(models.Model):
         return self.comment_tree(count=True)
 
 
-    def comment_tree(self, count=False, selected_path=None):
+    def comment_tree(self, count=False, selected_path=None, user=None):
         params = {'root_id': self.id, 'selected_1': '', 'selected_n': ''}
         if count:
             order_by = ''
@@ -237,6 +237,10 @@ class Item(models.Model):
         else:
             order_by = 'ORDER BY path'
             select = 'id, parent_id, submitter_id, depth, cc.text'
+
+        if user is not None:
+            select += ', COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=cte.id)) AS rating'
+            params['user_id'] = user.id
 
         if selected_path is not None:
             # I have a feeling someone, someday, will knife me for this
