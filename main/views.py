@@ -86,7 +86,39 @@ def item_also_liked(request, item_id, like, also_like):
     return HttpResponse(json, mimetype='application/json')
 
 
+def expire_view_cache(request):
+    from django.utils.cache import get_cache_key
+    key = get_cache_key(request)
+    cache.delete(key)
+
+
+from django.views.decorators.cache import cache_page
+def cache_page_if_generic_user(cache_length=60):
+    def decorator(func):
+        def inner(*args, **kwargs):
+            request = args[0]
+            if request.user.is_generic():
+                category_slug = kwargs['category_slug']
+                tag_names = kwargs.get('tag_names_k', None)
+                if tag_names is None:
+                    tag_names_k = ''
+                else:
+                    tag_names_k = ','.join(tag_names.split('/'))
+                cache_key = 'recommend;#generic;%s;%s' % (category_slug, tag_names_k)
+                cached_recommendations = cache.get(cache_key)
+                if cached_recommendations and type(cached_recommendations) != tuple:
+                    return cache_page(cache_length)(func)(*args, **kwargs)
+
+            return func(*args, **kwargs)
+        return inner
+
+    return decorator
+
+
+# the order of these decorators is important
+#@cache_page(600)
 @allow_lazy_user
+@cache_page_if_generic_user()
 def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None):
     '''
     Shows a list of recommendations.

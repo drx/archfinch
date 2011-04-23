@@ -83,6 +83,9 @@ class User(BaseUser):
         else:
             return Category.objects.filter(name__in=['TV shows', 'Films', 'Video games', 'Books']).values('element_plural', 'slug')
 
+    def is_generic(self):
+        return not self.opinion_set.exists()
+
     def __unicode__(self):
         if is_lazy_user(self):
             return 'anonymous user'
