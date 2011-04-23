@@ -1,6 +1,13 @@
 {% load base36 %}
 {% load markup %}
+{% load cache %}
 <div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %} {% if selected_comment_id == item_id %}selected_comment{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
+    {% if your_rating %}
+    <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
+    {% else %}
+    <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
+    {% endif %}
+    {% cache 120 opinionbox item_id %}
     <div class="tags">
         <a class="addtag" href="#">+</a>
         {% for tag in item.popular_tags %}
@@ -8,20 +15,10 @@
         {% endfor %}
     </div>
     {% if terse_layout and not link and not item.is_comment %}
-        {% if your_rating %}
-        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
-        {% else %}
-        <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
-        {% endif %}
         <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
         <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
     {% else %}
     {% if link or item.is_comment %}
-        {% if your_rating %}
-        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
-        {% else %}
-        <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
-        {% endif %}
         {% if link %}
         <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
         <div class="link_meta" style="max-width: 300px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> <br /> <a href="{{ link.get_absolute_url }}">
@@ -113,4 +110,5 @@
     </div>
     {% include "includes/add_comment_form.html" with parent_id=item.id hide_form=1 %}
     {% endif %}
+    {% endcache %}
 </div>
