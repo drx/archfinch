@@ -87,6 +87,7 @@ INSTALLED_APPS = (
 if DEBUG:
     INSTALLED_APPS += (
         'devserver',
+        'django_extensions',
     )
     DEVSERVER_MODULES = (
         'devserver.modules.sql.SQLRealTimeModule',
