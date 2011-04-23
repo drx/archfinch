@@ -98,6 +98,7 @@ if DEBUG:
         #'devserver.modules.profile.MemoryUseModule',
         'devserver.modules.cache.CacheSummaryModule',
     )
+    DEVSERVER_TRUNCATE_SQL = False
 
     STATIC_URL = 'media'
 
