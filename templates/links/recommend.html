@@ -55,7 +55,7 @@
     {% if tags %}
         <h2>Selected tags</h2>
         {% for tag in tags %}
-        <p><span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span></p>
+        <p><span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}">{{ tag.name }}</a>{% if tags|length > 1 %} <a class="blocktag" href="#" onClick="remove_tag('{{ tag.name }}');return false">x</a>{% endif %}</span></p>
         {% endfor %}
         <form style="display: inline" onSubmit="enter_tag(this.tag.value);return false"><input class="tag_autocomplete" type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form><br /><br />
     {% endif %}
@@ -80,6 +80,10 @@
     <script>
     function enter_tag(tag_name) {
         window.location.replace('{% url fresh-tags tag_names|join:"/" %}/'+tag_name);
+    }
+    function remove_tag(tag_name) {
+        loc = window.location.href;
+        window.location.replace(loc.replace('/'+tag_name, ''));
     }
     </script>
 {% endif %}
