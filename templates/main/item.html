@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block media %}
-    <!--[if IE]><script language="javascript" type="text/javascript" src="/media/js/flot/excanvas.min.js"></script><![endif]-->
-    <script type="text/javascript" src="/media/js/flot/jquery.flot.min.js"></script>
+    <!--[if IE]><script language="javascript" type="text/javascript" src="/media/js/lib/flot/excanvas.min.js"></script><![endif]-->
+    <script type="text/javascript" src="/media/js/lib/flot/jquery.flot.min.js"></script>
 
 {% if not item.is_link and not item.is_comment %}
     <script type="text/javascript">
@@ -62,15 +62,17 @@
     {% endif %}
 {% endif %}
 
-<br /><br />
+<h3>Comments</h3>
 
-<h1>Comments</h1>
-
-{% include "includes/comment_tree.html" with comment_tree=item.comment_tree %}
+{% include "includes/add_comment_form.html" with parent_id=item.id %}
 
 <br /><br />
 
-<h1>People who
+{% include "includes/comment_tree.html" with comment_tree=comment_tree %}
+
+<br /><br />
+
+<h4>People who
 <button class="also_liked" like_type='like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 {% if item.link or item.is_comment %}
     this {{ item.category.element_singular }}
@@ -80,7 +82,7 @@
 <span id="also_liked_also">also</span>
 <button class="also_liked" like_type='also_like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 <img src="/media/images/ajax-loader.gif" style='margin-left: 20px' class="loading nodisplay" id="ld_also_liked">
-</h1>
+</h4>
 
 <div id="also_liked_error" class="error"></div>
 
@@ -102,7 +104,7 @@
 
 {% if item.submitter %}
 <p>
-Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show.username }}</a>
+Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a>
 </p>
 {% endif %}
 

@@ -1,37 +1,34 @@
 {% load base36 %}
 {% load markup %}
-<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
+{% load cache %}
+<div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %} {% if selected_comment_id == item_id %}selected_comment{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
+    {% if your_rating %}
+    <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
+    {% else %}
+    <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
+    {% endif %}
+    {% cache 120 opinionbox item_id %}
     <div class="tags">
-        <a class="addtag" href="#">+</a>
-        {% for tag in link.popular_tags %}
-        <span class="tag"><a class="taglink" href="{% if link %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span>
+        <a class="addtag" href="#">Tag it</a>
+        {% for tag in item.popular_tags %}
+        <span class="tag {% if tag in tags %}selected_tag{% endif %} {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}">{{ tag.name }}</a></span>
         {% endfor %}
     </div>
     {% if terse_layout and not link and not item.is_comment %}
-        {% if your_rating %}
-        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
-        {% else %}
-        <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
-        {% endif %}
         <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
         <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
     {% else %}
     {% if link or item.is_comment %}
-        {% if your_rating %}
-        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
-        {% else %}
-        <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
-        {% endif %}
         {% if link %}
         <div class="title"><a href="{{ link.url }}">{{ link.name }}</a></div><br/>
-        <div class="link_meta" style="max-width: 300px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">
+        <div class="link_meta" style="max-width: 300px;">{{ link.time|timesince }} ago by <a href="{% url user-overview link.submitter_show.username %}">{{ link.submitter_show }}</a> <br /> <a href="{{ link.get_absolute_url }}">
             {% with comment_count=item.comment_count %}
             {% if comment_count > 0 %}{{ comment_count }} comments{% else %}discuss this{% endif %}
             {% endwith %}
         </a>
         </div>
         {% else %}
-        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="{% url main.views.item item_id|base36 item_name|slugify %}">link</a>
+        <div class="link_meta" style="max-width: 300px;">{{ item.comment.created|timesince }} ago by <a href="{% url user-overview item.submitter_show.username %}">{{ item.submitter_show }}</a> | <a href="javascript: return false;" class="replylink">reply</a> | <a href="{{ item.get_absolute_url }}">link</a>
         </div>
         {% endif %}
         
@@ -103,7 +100,9 @@
             <br /><br />
         {% endif %}
         {% if category_singular == 'video' and not no_src %}
+            <div class="embed">
             {{ link.html|safe }}
+            </div>
             <br /><br />
         {% endif %}
     {% endif %}
@@ -111,5 +110,7 @@
     <div class="commenttext">
     {{ item.comment.text|markdown }}
     </div>
+    {% include "includes/add_comment_form.html" with parent_id=item.id hide_form=1 %}
     {% endif %}
+    {% endcache %}
 </div>
