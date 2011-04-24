@@ -838,6 +838,35 @@ $(document).ready(function(){
 			}
 		});
 
+    /* search autocomplete */
+    $("#search").autocomplete({
+
+            source: function( request, response ) {
+                $.getJSON( "/search/"+encodeURIComponent(this.term)+"*.autocomplete", response);
+                
+            },
+            search: function() {
+                var lastword = this.value.split(" ").pop();
+                if ( lastword.length < 3 ) {
+                    return false;
+                }
+            },
+			select: function( event, ui ) {
+                if (ui.item)
+                {
+                    window.location.replace(ui.item.url);
+                }
+			}
+		})
+        .data( "autocomplete" )._renderItem = function( ul, item ) {
+            re = new RegExp("("+this.term.split(" ").join("|")+")", "ig");
+            label = item.name.replace(re, "<b>$1</b>");
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>" + label + "</a>" )
+				.appendTo( ul );
+		};
+
     /* rating graphs */
     $("#ratings_graph").qtip({
         content: "a",

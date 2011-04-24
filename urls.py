@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$',     'archfinch.main.views.welcome'),
+    url(r'^$',     'archfinch.main.views.recommend', {'category_slug': 'fresh'}),
     url(r'^missing$', 'archfinch.main.views.missing', name='missing'),
     url(r'^submit$', 'archfinch.links.views.submit', name='submit'),
 
@@ -44,7 +44,7 @@ urlpatterns = patterns('',
     (r'^addtag/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.add_tag'),
 
     url(r'^search$', 'archfinch.search.views.query', {'query': ''}, name='search-base'),
-    url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?$', 'archfinch.search.views.query', name='search'),
+    url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?(?P<autocomplete>\.autocomplete)?$', 'archfinch.search.views.query', name='search'),
     url(r'^usersearch$', 'archfinch.search.views.user_search', name='user-search'),
 
     url(r'^ref/(?P<username>[\w@\+\.-]+)$', 'archfinch.users.views.referral', name='referral'),

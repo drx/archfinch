@@ -82,6 +82,9 @@
 
     <br />
 
+
+{% endif %}
+
     <p>
         {% if users|length > 1 %}
         Want to add someone else?<br />
@@ -93,9 +96,6 @@
         Type in their username to include them in your recommendations.
         {% endif %}
     </p>
-
-{% endif %}
-
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}

@@ -884,10 +884,10 @@ h1 form
 .ui-autocomplete
 {
     list-style-type: none;
-    font-size: 14px;
+    font-size: 12px;
     background-color: white;
     padding: 12px;
-    border: 2px solid #0099ff;
+    border: 2px solid #434D53;
     width: 100px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -901,7 +901,7 @@ h1 form
 }
 .ui-state-hover
 {
-    background-color: #f8f8ff;
+    background-color: #f7f7f7;
 }
 
 a.delete-link, a.delete-undelete

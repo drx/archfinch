@@ -15,7 +15,7 @@ import re
 
 
 @allow_lazy_user
-def query(request, query=None, page=None, json=False):
+def query(request, query=None, page=None, json=False, autocomplete=False):
     def invalid_search():
         if json:
             return render_to_response('search/invalid.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
@@ -33,6 +33,9 @@ def query(request, query=None, page=None, json=False):
 
     modifiers = {'tag': []}
     words = query.split()
+
+    if autocomplete:
+        json = True
 
     if len(words) > 1 and words[0] == '!':
         modifiers['bang'] = True
@@ -112,6 +115,9 @@ def query(request, query=None, page=None, json=False):
     results, paginator, current_page, page_range = paginate(results, page, n)
 
     if json:
+        if autocomplete:
+            for result in results:
+                result.highlighted_name = result.name
         return render_to_response('search/results.json', locals(), context_instance=RequestContext(request), mimetype='application/json')
     else:
         return render_to_response('search/results.html', locals(), context_instance=RequestContext(request))
