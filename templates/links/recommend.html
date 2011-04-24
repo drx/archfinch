@@ -57,7 +57,7 @@
         {% for tag in tags %}
         <p><span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span></p>
         {% endfor %}
-        <form style="display: inline" onSubmit="window.location.href='{% url fresh-tags tag_names|join:"/" %}/'+this.tag.value;return false"><input type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form><br /><br />
+        <form style="display: inline" onSubmit="enter_tag(this.tag.value);return false"><input class="tag_autocomplete" type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form><br /><br />
     {% endif %}
 
     <h2>Share a 
@@ -76,4 +76,11 @@
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}
+{% if tags %}
+    <script>
+    function enter_tag(tag_name) {
+        window.location.replace('{% url fresh-tags tag_names|join:"/" %}/'+tag_name);
+    }
+    </script>
+{% endif %}
 {% endblock %}

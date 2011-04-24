@@ -46,6 +46,7 @@ urlpatterns = patterns('',
     url(r'^search$', 'archfinch.search.views.query', {'query': ''}, name='search-base'),
     url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?(?P<autocomplete>\.autocomplete)?$', 'archfinch.search.views.query', name='search'),
     url(r'^usersearch$', 'archfinch.search.views.user_search', name='user-search'),
+    url(r'^tagsearch$', 'archfinch.search.views.tag_search', name='tag-search'),
 
     url(r'^ref/(?P<username>[\w@\+\.-]+)$', 'archfinch.users.views.referral', name='referral'),
 

@@ -838,6 +838,17 @@ $(document).ready(function(){
 			}
 		});
 
+    /* tags autocomplete */
+    $("input.tag_autocomplete").autocomplete({
+			source: "/tagsearch",
+			minLength: 2,
+			select: function( event, ui ) {
+                if (ui.item)
+                {
+                    enter_tag(ui.item.value);
+                }
+			}
+		});
     /* search autocomplete */
     $("#search").autocomplete({
 

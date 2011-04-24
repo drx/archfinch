@@ -31,7 +31,7 @@
         {% for tag in tags %}
         <p><span class="tag"><a class="taglink" href="{% url search-base %}/tag:{{ tag.name }}">{{ tag.name }}</a><a class="blocktag" href="#">x</a></span></p>
         {% endfor %}
-        <form style="display: inline" onSubmit="window.location.href='{% url search-base %}/{{ query|urlencode }} tag:'+this.tag.value;return false"><input type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form>
+        <form style="display: inline" onSubmit="enter_tag(this.tag.value);return false"><input class="tag_autocomplete" type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form>
     {% endif %}
     {% if category_counts|length > 1 %}
         <h2>Categories</h2>
@@ -65,4 +65,11 @@
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}
+{% if tags %}
+    <script>
+    function enter_tag(tag_name) {
+        window.location.replace('{% url search-base %}/{{ query|urlencode }} tag:'+tag_name);
+    }
+    </script>
+{% endif %}
 {% endblock %}

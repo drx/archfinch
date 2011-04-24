@@ -136,3 +136,23 @@ def user_search(request):
  
     json = simplejson.dumps(map(str,users))
     return HttpResponse(json, mimetype='application/json')
+
+
+def tag_search(request):
+    query = request.GET['term']
+ 
+    if settings.DEBUG: 
+        tags = Tag.objects.filter(name__contains=query)
+    else:
+        tags = Tag.objects.filter(name__icontains=query)
+
+    tags = tags.annotate(count=Count('tagged'))
+
+    # can't use order_by here (doesn't work for many-to-many relations it seems)
+    # how silly...
+
+    tags = sorted(tags, key=lambda x: x.count, reverse=True)[:10]
+    tags = map(lambda x: str(x.name), tags)
+ 
+    json = simplejson.dumps(tags)
+    return HttpResponse(json, mimetype='application/json')
