@@ -175,7 +175,7 @@ function generate_lists_tip(){
 
 $(document).ready(function(){
     $("a.addtag").each(function(){$(this).qtip({
-        content: "<div style='float: left' class='tip'>Tag with:<br /><br /><form class='tagthis' item_id='"+get_item_id($(this))+"'><input type='text' name='tag'></form><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
+        content: "<div style='float: left' class='tip'><form class='tagthis' item_id='"+get_item_id($(this))+"'><input type='text' name='tag' style='border-color: #0E8D94; outline: none'></form><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
             position: {
             corner: {
                 target: 'topRight',
@@ -197,9 +197,12 @@ $(document).ready(function(){
         hide: 'unfocus',
         style: {
             tip: true,
+            background: '#0E8D94',
+            padding: 0,
             border: {
-                width: 1,
-                radius: 5
+                width: 0,
+                radius: 0,
+                color: '#0E8D94'
             },
             name: 'light'
         }
@@ -220,7 +223,7 @@ $(document).ready(function(){
             }
         }
     )
-    $(".user_rate .rating_small, a.addtag").live("hover", 
+    $(".user_rate .rating_small").live("hover", 
         function(e){
             if (e.type == "mouseenter")
             {
@@ -279,19 +282,19 @@ $(document).ready(function(){
     $('.tag a.taglink').each(function(){
         $(this).qtip(
         {
-            content: '<span class="taglinks"><a href="'+$(this).attr('href')+'">filter by '+$(this).text()+'</a><br><a href="">block this tag</a></span>',
+            content: '<span class="taglinks"><a href="">block this tag</a></span>',
             position: {
                 corner: {
                     target: 'bottomLeft'
                 }
             },
             show: {
-                when: 'click'
+                solo: true,
+                when: 'mouseenter'
             },
             hide: 'unfocus'
         });
-    })
-    .bind('click', function(event){ event.preventDefault(); return false; });
+    });
     $(".user_rate .rating_small:not(img)").live('click', function(e)
     {
         if ($(this).hasClass("rated"))
