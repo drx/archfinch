@@ -1,0 +1,67 @@
+Requirement 'git+git://github.com/dcramer/django-devserver#egg=django-devserver' looks like a filename, but the file does not exist
+Unpacking ./git+git:/github.com/dcramer/django-devserver#egg=django-devserver
+Exception:
+Traceback (most recent call last):
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 252, in main
+    self.run(options, args)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 408, in run
+    requirement_set.install_files(finder, force_root_egg_info=self.bundle)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1757, in install_files
+    self.unpack_url(url, location)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1817, in unpack_url
+    self.unpack_file(source, location, content_type, link)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1917, in unpack_file
+    or tarfile.is_tarfile(filename)
+  File "/usr/lib/python2.6/tarfile.py", line 2529, in is_tarfile
+    t = open(name)
+  File "/usr/lib/python2.6/tarfile.py", line 1653, in open
+    return func(name, "r", fileobj, **kwargs)
+  File "/usr/lib/python2.6/tarfile.py", line 1715, in gzopen
+    fileobj = bltn_open(name, mode + "b")
+IOError: [Errno 2] No such file or directory: '/var/django/archfinch/git+git:/github.com/dcramer/django-devserver#egg=django-devserver'
+------------------------------------------------------------
+/usr/bin/pip run on Fri Apr 22 20:20:14 2011
+Requirement 'git+git://github.com/dcramer/django-devserver#egg=django-devserver' looks like a filename, but the file does not exist
+Unpacking ./git+git:/github.com/dcramer/django-devserver#egg=django-devserver
+Exception:
+Traceback (most recent call last):
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 252, in main
+    self.run(options, args)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 408, in run
+    requirement_set.install_files(finder, force_root_egg_info=self.bundle)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1757, in install_files
+    self.unpack_url(url, location)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1817, in unpack_url
+    self.unpack_file(source, location, content_type, link)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1917, in unpack_file
+    or tarfile.is_tarfile(filename)
+  File "/usr/lib/python2.6/tarfile.py", line 2529, in is_tarfile
+    t = open(name)
+  File "/usr/lib/python2.6/tarfile.py", line 1653, in open
+    return func(name, "r", fileobj, **kwargs)
+  File "/usr/lib/python2.6/tarfile.py", line 1715, in gzopen
+    fileobj = bltn_open(name, mode + "b")
+IOError: [Errno 2] No such file or directory: '/var/django/archfinch/git+git:/github.com/dcramer/django-devserver#egg=django-devserver'
+------------------------------------------------------------
+/usr/bin/pip run on Fri Apr 22 20:20:30 2011
+Requirement 'git+git://github.com/dcramer/django-devserver#egg=django-devserver' looks like a filename, but the file does not exist
+Unpacking ./git+git:/github.com/dcramer/django-devserver#egg=django-devserver
+Exception:
+Traceback (most recent call last):
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 252, in main
+    self.run(options, args)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 408, in run
+    requirement_set.install_files(finder, force_root_egg_info=self.bundle)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1757, in install_files
+    self.unpack_url(url, location)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1817, in unpack_url
+    self.unpack_file(source, location, content_type, link)
+  File "/usr/lib/python2.6/dist-packages/pip.py", line 1917, in unpack_file
+    or tarfile.is_tarfile(filename)
+  File "/usr/lib/python2.6/tarfile.py", line 2529, in is_tarfile
+    t = open(name)
+  File "/usr/lib/python2.6/tarfile.py", line 1653, in open
+    return func(name, "r", fileobj, **kwargs)
+  File "/usr/lib/python2.6/tarfile.py", line 1715, in gzopen
+    fileobj = bltn_open(name, mode + "b")
+IOError: [Errno 2] No such file or directory: '/var/django/archfinch/git+git:/github.com/dcramer/django-devserver#egg=django-devserver'

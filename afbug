@@ -1,0 +1,18 @@
+root@archfinch:/var/django/archfinch# [2011-03-27 17:49:31,504: ERROR/MainProcess] Task archfinch.main.tasks.opinion_set[7054c239-90c5-4a19-ba8d-dc32c9c883d6] raised exception: MultipleObjectsReturned("get() returned more than one Opinion -- it returned 2! Lookup parameters were {'item': <Item: Sonic Adventure>, 'user': <User: anonymous user>}",)
+Traceback (most recent call last):
+  File "/usr/lib/python2.5/site-packages/celery-2.1.4-py2.5.egg/celery/execute/trace.py", line 34, in trace
+    return cls(states.SUCCESS, retval=fun(*args, **kwargs))
+  File "/usr/lib/python2.5/site-packages/celery-2.1.4-py2.5.egg/celery/task/base.py", line 248, in __call__
+    return self.run(*args, **kwargs)
+  File "/usr/lib/python2.5/site-packages/celery-2.1.4-py2.5.egg/celery/decorators.py", line 52, in run
+    return fun(*args, **kwargs)
+  File "/var/django/archfinch/main/tasks.py", line 27, in opinion_set
+    defaults={'rating': rating})
+  File "/usr/lib/python2.5/site-packages/django/db/models/manager.py", line 135, in get_or_create
+    return self.get_query_set().get_or_create(**kwargs)
+  File "/usr/lib/python2.5/site-packages/django/db/models/query.py", line 366, in get_or_create
+    return self.get(**kwargs), False
+  File "/usr/lib/python2.5/site-packages/django/db/models/query.py", line 343, in get
+    % (self.model._meta.object_name, num, kwargs))
+MultipleObjectsReturned: get() returned more than one Opinion -- it returned 2! Lookup parameters were {'item': <Item: Sonic Adventure>, 'user': <User: anonymous user>}
+a
