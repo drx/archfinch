@@ -289,10 +289,12 @@ $(document).ready(function(){
                 }
             },
             show: {
-                solo: true,
-                when: 'mouseenter'
+                delay: 500,
+                solo: true
             },
-            hide: 'unfocus'
+            hide: {
+                fixed: true
+            }
         });
     });
     $(".user_rate .rating_small:not(img)").live('click', function(e)
