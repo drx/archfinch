@@ -282,7 +282,7 @@ $(document).ready(function(){
     $('.tag a.taglink').each(function(){
         $(this).qtip(
         {
-            content: '<span class="taglinks"><a href="">block this tag</a></span>',
+            content: '<span class="taglinks"><a href="'+$(this).attr('block_url')+'">block this tag</a></span>',
             position: {
                 corner: {
                     target: 'bottomLeft'

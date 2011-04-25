@@ -1,11 +1,11 @@
-from django.shortcuts import get_object_or_404, HttpResponse, redirect
+from django.shortcuts import get_object_or_404, HttpResponse, HttpResponseRedirect, redirect
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.http import base36_to_int, int_to_base36
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.db.models import Count
-from archfinch.main.models import Item, Opinion, Action, Similarity, Category, Tag
+from archfinch.main.models import Item, Opinion, Action, Similarity, Category, Tag, TagBlock
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from archfinch.users.models import User
 from django.contrib.auth.decorators import login_required
@@ -19,13 +19,6 @@ from django.core.cache import cache
 from lazysignup.decorators import allow_lazy_user
 from django.conf import settings
 from archfinch.utils import paginate
-
-@allow_lazy_user
-def welcome(request):
-    if request.user.is_authenticated():
-        return redirect(reverse('fresh'))
-    else:
-        return render_to_response("main/welcome_anonymous.html", context_instance=RequestContext(request))
 
 
 @allow_lazy_user
@@ -93,22 +86,12 @@ def expire_view_cache(request):
 
 
 from django.views.decorators.cache import cache_page
-def cache_page_if_generic_user(cache_length=60):
+def cache_page_if_anonymous_user(cache_length=60):
     def decorator(func):
         def inner(*args, **kwargs):
             request = args[0]
-            if request.user.is_generic():
-                category_slug = kwargs['category_slug']
-                tag_names = kwargs.get('tag_names_k', None)
-                if tag_names is None:
-                    tag_names_k = ''
-                else:
-                    tag_names_k = ','.join(tag_names.split('/'))
-                cache_key = 'recommend;#generic;%s;%s' % (category_slug, tag_names_k)
-                cached_recommendations = cache.get(cache_key)
-                if cached_recommendations and type(cached_recommendations) != tuple:
-                    return cache_page(cache_length)(func)(*args, **kwargs)
-
+            if request.user.is_anonymous():
+                return cache_page(cache_length)(func)(*args, **kwargs)
             return func(*args, **kwargs)
         return inner
 
@@ -117,8 +100,8 @@ def cache_page_if_generic_user(cache_length=60):
 
 # the order of these decorators is important
 #@cache_page(600)
+@cache_page_if_anonymous_user()
 @allow_lazy_user
-@cache_page_if_generic_user()
 def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None):
     '''
     Shows a list of recommendations.
@@ -288,6 +271,17 @@ def add_tag(request, item_id):
 
     json = simplejson.dumps({'success': True})
     return HttpResponse(json, mimetype='application/json')
+
+
+def block_tag(request, tag_name):
+    '''
+    Remove a tag for a user.
+    '''
+    tag = get_object_or_404(Tag, name=tag_name)
+    TagBlock.objects.get_or_create(tag=tag, user=request.user)
+
+    redirect_url = request.META['HTTP_REFERER'] or '/'
+    return HttpResponseRedirect(redirect_url)    
 
 
 def task_wait_error(request):

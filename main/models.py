@@ -96,6 +96,8 @@ class ItemManager(models.Manager):
                WHERE mo2.item_id=mi.id AND mo2.user_id IN %(user_ids)s)
              AND NOT EXISTS
               (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id IN %(user_ids)s AND le.item_id=mi.id)
+             AND NOT EXISTS 
+              (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id IN %(user_ids)s AND mtgd.item_id=mi.id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
             ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
@@ -362,6 +364,17 @@ class Tagged(models.Model):
 
     def __unicode__(self):
         return '%s tagged %s with %s' % (self.user, self.item, self.tag)
+
+
+class TagBlock(models.Model):
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey('users.User')
+
+    class Meta:
+        unique_together = ('tag', 'user')
+
+    def __unicode__(self):
+        return '%s blocked %s' % (self.user, self.tag)
 
 
 class Review(models.Model):

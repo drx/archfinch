@@ -97,6 +97,7 @@ class LinkManager(models.Manager):
               ON ll.item_ptr_id=mi.id
             WHERE ms.user1_id = %(user_id)s
              AND ms.value > 0
+             AND NOT EXISTS (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id=%(user_id)s AND mtgd.item_id=ll.item_ptr_id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
             ORDER BY date_trunc('day', ll.time) DESC,recommendation DESC) AS recommended WHERE recommendation > 0""",
