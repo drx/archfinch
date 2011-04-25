@@ -1,5 +1,6 @@
 {% load cache %}
 {% load lazysignup_tags %}
+{% load anaphoric %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -111,9 +112,13 @@
 						<div id="content_left">
 						{% block content_left %}{% endblock %}
 						</div>
+					    {% aifnotempty %}
+    						{% block content_right %}{% endblock %}
+						{% then %}
 						<div id="content_right">
-						{% block content_right %}{% endblock %}
+						    {{ it }}
 						</div>
+						{% endaifnotempty %}
 					{% endblock %}
 					</div>
 					
