@@ -4,10 +4,13 @@ from django.template import RequestContext
 from django.shortcuts import get_object_or_404
 from django.utils.http import base36_to_int
 from django.utils import simplejson
+from lazysignup.decorators import allow_lazy_user
 from archfinch.utils import render_to_response, form_error_msg
 from archfinch.comments.models import AddCommentForm
 from archfinch.main.models import Item
 
+
+@allow_lazy_user
 def add_comment(request, json=False):
     if json:
         return_data = {'success': False}

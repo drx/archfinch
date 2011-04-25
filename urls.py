@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     (r'^wiki/', include('archfinch.wiki.urls')),
     (r'^comment/', include('archfinch.comments.urls')),
     (r'^user/', include('archfinch.users.urls')),
+    url(r'^me$', 'archfinch.users.views.overview_me', name='user-overview-me'),
     (r'^list/', include('archfinch.lists.urls')),
     (r'^convert/', include('lazysignup.urls')),
 

@@ -84,6 +84,7 @@ class LinkManager(models.Manager):
              SUM((mo.rating-3)*ms.value) *
                (86400/extract(epoch from now()-ll.time))^2
              AS recommendation,
+             COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=mi.id)) AS rating,
 
              mc.element_singular AS category_element
             FROM main_similarity ms

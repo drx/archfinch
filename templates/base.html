@@ -44,17 +44,14 @@
 		<div id="header-main">
 			<div id="topnav">
 				<ul class="menu">
-					{% if user.is_authenticated %}
 					<span id="menu_loggedin">
 					<li> <a href="{% url logout %}" id="menu_logout" style="color: #ffffff">logout</a>
-					<li> logged in as: <a href="{% url users.views.overview user.username %}" id="menu_user" style="color: #ffffff">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
-					</span>
+					{% if not user.is_authenticated %}
+					<li> logged in as: <a href="{% url user-overview-me %}" id="menu_user" style="color: #ffffff"><i>temporary user</i></a>
 					{% else %}
-					<span id="menu_notloggedin">
-					<li> <a href="{% url lazysignup_convert %}" id="menu_signup">signup</a>
-					<li> <a href="{% url login %}" id="menu_login" style="color: #ffffff">login</a>
-					</span>
+					<li> logged in as: <a href="{% url user-overview user.username %}" id="menu_user" style="color: #ffffff">{% if user|is_lazy_user %}<i>temporary user</i>{% else %}{{ user }}{% endif %}</a>
 					{% endif %}
+					</span>
 				</ul>
 			</div>
 			<div id="logo">
@@ -68,7 +65,6 @@
 
 				<div id="navbar">
 					<ul class="menu">
-						{% if user.is_authenticated %}
 						<li> <a href="{% url recommend-slugged "fresh" %}">fresh</a>
 							<ul class="submenu" style='width: 75px'>
 								<li> <a href="{% url recommend-slugged "videos" %}">videos</a>
@@ -86,9 +82,6 @@
 								<li> <a href="{% url users.views.similar %}">similar</a>
 								<li> <a href="{% url top-users %}">top users</a>
 							</ul>
-						{% else %}
-						<li style='border: 0'> &nbsp;
-						{% endif %}
 						  </ul>
 						
 				</div>
@@ -100,7 +93,7 @@
 	 <div id="main-wrapper">
 		<div id="main">
 				{% block message %}
-				{% if user|is_lazy_user %}
+				{% if not user.is_authenticated or user|is_lazy_user %}
 
 					<div id="message">
 						<div class="messagecontent">

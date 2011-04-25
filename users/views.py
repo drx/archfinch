@@ -127,6 +127,11 @@ def review_edit(request, item_id):
 
 
 @allow_lazy_user
+def overview_me(request):
+    return HttpResponseRedirect(reverse('user-overview', args=[request.user.username]))
+
+
+@allow_lazy_user
 def overview(request, username, category_slug=None, page=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
 

@@ -27,7 +27,7 @@ def missing(request):
     return wiz(request, model=Item)
 
 
-@allow_lazy_user
+#@allow_lazy_user
 def item(request, item_id):
     '''
     Item page.
@@ -79,29 +79,10 @@ def item_also_liked(request, item_id, like, also_like):
     return HttpResponse(json, mimetype='application/json')
 
 
-def expire_view_cache(request):
-    from django.utils.cache import get_cache_key
-    key = get_cache_key(request)
-    cache.delete(key)
-
-
-from django.views.decorators.cache import cache_page
-def cache_page_if_anonymous_user(cache_length=60):
-    def decorator(func):
-        def inner(*args, **kwargs):
-            request = args[0]
-            if request.user.is_anonymous():
-                return cache_page(cache_length)(func)(*args, **kwargs)
-            return func(*args, **kwargs)
-        return inner
-
-    return decorator
-
-
 # the order of these decorators is important
 #@cache_page(600)
-@cache_page_if_anonymous_user()
-@allow_lazy_user
+#@cache_page_if_anonymous_user()
+#@allow_lazy_user
 def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None):
     '''
     Shows a list of recommendations.
@@ -146,12 +127,17 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
     usernames_k = '+'.join(sorted(set(map(str, user_ids))))
     usernames_joined = ','.join(usernames)
 
-    opinion_count = users[0].__class__.objects.filter(pk__in=user_ids).aggregate(Count('opinion'))['opinion__count']
-    if opinion_count < 10:
+    try:
+        opinion_count = users[0].__class__.objects.filter(pk__in=user_ids).aggregate(Count('opinion'))['opinion__count']
+        if opinion_count < 10:
+            generic = True
+        else:
+            generic = False
+    except AttributeError:
         generic = True
+
+    if generic:
         usernames_k = '#generic'
-    else:
-        generic = False
 
     if tag_names:
         tag_names_k = ','.join(tag_names)
@@ -197,11 +183,6 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
 
         if category is not None and category.id in (9,10,11) or fresh:
             # links
-            for r in recommendations:
-                try:
-                    r.rating = request.user.opinion_set.get(item__id=r.id).rating
-                except Opinion.DoesNotExist:
-                    pass
             return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
         else:
             user_categories = request.user.categories()
@@ -209,6 +190,7 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
             return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
 
 
+@allow_lazy_user
 def opinion_set(request, item_id, rating):
     '''
     Set rating for a (user, item) pair.
@@ -231,6 +213,7 @@ def opinion_set(request, item_id, rating):
     return HttpResponse(json, mimetype='application/json')
 
 
+@allow_lazy_user
 def opinion_remove(request, item_id):
     '''
     Remove rating for a (user, item) pair.
@@ -252,6 +235,7 @@ def opinion_remove(request, item_id):
     return HttpResponse(json, mimetype='application/json')
 
 
+@allow_lazy_user
 def add_tag(request, item_id):
     '''
     Add a tag.
@@ -273,6 +257,7 @@ def add_tag(request, item_id):
     return HttpResponse(json, mimetype='application/json')
 
 
+@allow_lazy_user
 def block_tag(request, tag_name):
     '''
     Remove a tag for a user.
