@@ -109,3 +109,5 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
     'cloudkick',
     'facebook',
 )
+
+DOMAIN = 'archfinch.com'
