@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.markup.templatetags.markup import markdown
 from django.views.decorators.csrf import csrf_exempt
 from archfinch.utils import render_to_response
+from archfinch.utils.cache import publish_static
 from archfinch.main import tasks
 import celery.result
 from django.core.cache import cache
@@ -27,7 +28,7 @@ def missing(request):
     return wiz(request, model=Item)
 
 
-#@allow_lazy_user
+@publish_static
 def item(request, item_id):
     '''
     Item page.
@@ -60,7 +61,9 @@ def item(request, item_id):
         opinion = None
         also_liked = item.also_liked()
 
-    return render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
+    response = render_to_response("main/item.html", locals(), context_instance=RequestContext(request))
+    response.publish_static = True
+    return response
 
 
 def item_also_liked(request, item_id, like, also_like):
@@ -79,10 +82,7 @@ def item_also_liked(request, item_id, like, also_like):
     return HttpResponse(json, mimetype='application/json')
 
 
-# the order of these decorators is important
-#@cache_page(600)
-#@cache_page_if_anonymous_user()
-#@allow_lazy_user
+@publish_static
 def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None):
     '''
     Shows a list of recommendations.
@@ -183,11 +183,14 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
 
         if category is not None and category.id in (9,10,11) or fresh:
             # links
-            return render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
+            response = render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
         else:
             user_categories = request.user.categories()
             categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')
-            return render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
+            response = render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
+
+        response.publish_static = True
+        return response
 
 
 @allow_lazy_user
