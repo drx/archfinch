@@ -289,7 +289,7 @@ $(document).ready(function(){
                 }
             },
             show: {
-                delay: 500,
+                delay: 0,
                 solo: true
             },
             hide: {
