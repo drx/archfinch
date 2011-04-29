@@ -52,12 +52,12 @@ def opinion_remove(user, item):
     user.add_points(-1)
 
 
-@periodic_task(run_every=timedelta(minutes=1))
+@periodic_task(run_every=timedelta(hours=1))
 def static_delete():
     recursive_delete('/')
 
 
-def static_delete_items(sender, **kwargs):
-    recursive_delete('/item')
-
-post_save.connect(static_delete_items, sender=Comment)
+@periodic_task(run_every=timedelta(minutes=1))
+def static_republish():
+    from archfinch.utils.cache import republish_static
+    republish_static()

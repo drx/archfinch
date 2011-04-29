@@ -29,7 +29,7 @@ def missing(request):
 
 
 @publish_static
-def item(request, item_id):
+def item(request, item_id, publish=False):
     '''
     Item page.
     '''
@@ -83,7 +83,7 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @publish_static
-def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None):
+def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None, publish=False):
     '''
     Shows a list of recommendations.
     '''
@@ -170,6 +170,11 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
 
     if not computed and recommendations.ready():
         recommendations = recommendations.result
+        cache.set(cache_key, recommendations, cache_timeout)
+        computed = True
+
+    if not computed and publish:
+        recommendations = recommendations.get()
         cache.set(cache_key, recommendations, cache_timeout)
         computed = True
 
