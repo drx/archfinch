@@ -3,9 +3,9 @@
 {% block title %}Account login - Archfinch{% endblock %}
 
 {% block content_left %}
-
+<h1>Log in to your account </h1>
 <div class="big">
-    Log in to your account <br /><br />
+    
     <form method="post" action="{% url login %}" id="loginform">
     {% csrf_token %}
     <table>

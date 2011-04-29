@@ -1,9 +1,13 @@
 body
 {
     font-family: Verdana;
-    background-color: #ffffff;
     border: 0;
     margin: 0;
+	background-color: #f2f2f2;
+	background-image: url("/media/bgyellow.png");
+	background-repeat: repeat-y;
+	background-position: 50% 50%;
+	
 }
 html, body
 {
@@ -11,40 +15,63 @@ html, body
 }
 
 
-html, body, #wrap
+html, body, #wrap, #yellowwrap, #treewrap
 {
-min-height: 100%; 
+	min-height: 100%; 
 }
 body > #wrap
 {
- height: auto; 
- min-height: 100%; 
- }
+}
 
 #main-wrapper
 {
-	background: #f2f2f2;
-	
+}
+#submitit:hover
+{
+    color: #ffce6d;
+}
+#submitit
+{
+   color: #ffab07;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+	padding: 5px;
+	margin-top: 10px;
+	font-size: 17px;
+
+	display: block;
+	width: 150px;
+}
+
+body > #yellowwrap
+{	
+	height: auto; 
+	min-height: 100%; 
+	background-image: url("/media/treestamp.png");
+	background-repeat: no-repeat;
+	background-position: 50% 100%;
 }
 #main
 {
     width: 1100px;
     margin: 0 auto;
     padding: 30px 0 0 0;
-	background-image: url("/media/yellow.png");
+
 }
 #header-wrapper
 {
 	background-color: #0e8d94;
 	background-image: url("/media/navbg.png");
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
 }
 #header-main
 {
     margin: 0 auto;
     padding: 0;
-    width: 1000px;
+    width: 1100px;
     height: 80px;
-
     position: relative;
 }
 #navbar-wrapper
@@ -72,8 +99,7 @@ body > #wrap
     padding: 0;
 }
 #search-right
-{
-    float: right;
+    { float: right;
 	margin-top: 4px;
 	margin-right: -15px;
 }
@@ -158,7 +184,7 @@ a.nohover:hover
     float: left;
     margin-bottom: 1em;
     width: 700px;
-	padding: 15px;
+	padding: 0px;
     border: 2px solid #dbdbdb;
 	background: #ffffff;
 	-moz-border-radius: 10px 10px 10px 10px;
@@ -184,6 +210,10 @@ p, .article li, #content li
 {
     font-size: 14px;
     line-height: 1.5em;
+}
+p
+{
+	padding: 0 10px;
 }
 ul.menu
 {
@@ -266,6 +296,7 @@ div.title
     max-width: 580px;
 }
 
+
 .widebox .category_element
 {
     float: right;
@@ -319,8 +350,8 @@ div.title
 }
 .box
 {
-    width: 710px;
     clear: both;
+    border-top: 1px solid #f2f2f2;
 }
 .box .clear
 {
@@ -534,8 +565,8 @@ td
 
 .terse
 {
-    margin: 0 0 0 -15px;
-	padding: 10px 0 0 20px;
+    margin: 0;
+	padding: 0 15px;
 }
 .highlight .user_rate
 {
@@ -555,7 +586,7 @@ td
 #logo
 {
     margin-top: 7px;
-	margin-left: -20px;
+	margin-left: 0px;
     font-family: Trebuchet MS;
     font-weight: bold;
     font-size: 24px;
@@ -583,7 +614,7 @@ td
 }
 input[type="text"], input[type="button"], input[type="password"], input[type="submit"], textarea, select
 {
-    border: 2px solid #434d53;
+    border: 1px solid #e5e5e5;
     color: #333333;
     background-color: #ffffff;
     -moz-border-radius: 5px;
@@ -599,6 +630,17 @@ input.search
 {
     background: url("/media/images/search.png") no-repeat scroll 3px 3px #ffffff;
     padding: 1px 5px 1px 20px;
+}
+form.signup input[type="text"]
+{ 
+	background-color: #e5e5e5;
+	color: #000000;
+	border: none;
+}
+
+form.signup input[type="submit"]
+{
+	border: none;
 }
 #search, #search_inline
 {
@@ -699,8 +741,22 @@ div.grippie
     font-size: 20px;
     font-family: Arial;
     font-weight: bold;
-    color: #434d53;
+    color: #000000;
     padding: 10px 20px;
+	background-color: #e5e5e5;
+}
+
+form.signup input[type="submit"], #loginform input[type="submit"], .big input[type="submit"]
+{
+	background-color: #0e8d94;
+	color: #ffffff;
+	border: none;
+}
+form.signup input[type="submit"]:hover, form.signup input[type="submit"]:focus, #loginform input[type="submit"]:hover, .big input[type="submit"]:hover
+{
+	background-color: #11a8b0;
+	color: #ffffff;
+	border: none;
 }
 .big select
 {
@@ -742,7 +798,7 @@ button.also_liked.highlight
     border-radius: 5px;
 	background: #09565a;
 }
-#content_left > h1, h1 button
+#content_left > h1, h1 button, #content_left > #big > h1
 {
     font-family: Helvetica, Verdana, Arial, sans-serif;
     font-weight: bold;
@@ -756,7 +812,7 @@ button.also_liked.highlight
 	-moz-border-radius: 10px 10px 0 0;
     -webkit-border-radius: 10px 10px 0 0;
     border-radius: 10px 10px 0 0;
-	margin: -16px -16px 16px -16px;
+	margin: -2px -2px 10px -2px;
 }
 #content_right > h2 
 {
@@ -777,9 +833,9 @@ button.also_liked.highlight
 	background-color: #f2f2f2;
 	color: #000000;
 	padding: 0px 20px;
-	margin: 0px -9px 20px -16px;
+	margin: -2px -2px 10px -2px;
 	border: 2px solid #dbdbdb;
-	border-right: none;
+
 }
 #content_left > h4
 {
@@ -795,7 +851,7 @@ button.also_liked.highlight
 	-moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 10px;
-	margin: -16px -16px 34px -16px;
+	margin: -2px -2px 10px -2px;
 }
 .hide
 {
