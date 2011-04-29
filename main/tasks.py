@@ -1,6 +1,10 @@
-from celery.decorators import task
+from datetime import timedelta
+from django.db.models.signals import post_save
+from celery.decorators import task, periodic_task
+from staticgenerator import recursive_delete
 from archfinch.main.models import Item, Opinion, Action, Similarity
 from archfinch.links.models import Link
+from archfinch.comments.models import Comment
 
 @task
 def recommend(category, fresh, tags, users):
@@ -47,3 +51,13 @@ def opinion_remove(user, item):
     Similarity.objects.update_item_delta(user, delta)
     user.add_points(-1)
 
+
+@periodic_task(run_every=timedelta(hours=1))
+def static_delete():
+    recursive_delete('/')
+
+
+@periodic_task(run_every=timedelta(minutes=1))
+def static_republish():
+    from archfinch.utils.cache import republish_static
+    republish_static()

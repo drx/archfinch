@@ -5,7 +5,8 @@ killa ()
 start ()
 {
     /var/rabbitmq_server-2.2.0/sbin/rabbitmq-server&
-    python manage.py celeryd&
+    sleep 1
+    python manage.py celeryd -B&
     memcached&
     python manage.py runserver 0.0.0.0:8000
     #sudo searchd&

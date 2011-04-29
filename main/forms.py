@@ -3,6 +3,7 @@ from django.template.defaultfilters import slugify
 from django.utils.http import int_to_base36
 from django.contrib.formtools.wizard import FormWizard
 from django import forms
+from django.conf import settings
 from archfinch.main import tasks
 from archfinch.main.models import Item, ItemProfile, Category
 from archfinch.links.models import Link
@@ -54,7 +55,11 @@ class AddItemWizard(FormWizard):
         item.save()
         request.user.add_points(10)
         if self.model.__name__ == 'Link':
-            tasks.opinion_set.delay(request.user, item, 5)
+            tasks.opinion_set.delay(request.user, item, 4)
+
+        from archfinch.utils.bot import bot
+        bot.send_message('%s just submitted %s (http://%s%s)' % (request.user, item.name, settings.DOMAIN, item.get_absolute_url()))
+
         return redirect(item.get_absolute_url())
 
     def get_template(self, step):

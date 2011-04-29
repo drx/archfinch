@@ -35,6 +35,8 @@ MEDIA_ROOT = '/var/django/archfinch/media'
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
+WEB_ROOT = '/var/www/archfinch/cache/'
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -126,3 +128,4 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
     'facebook',
 )
 
+DOMAIN = 'archfinch.com'
