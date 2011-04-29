@@ -21,11 +21,11 @@ class ItemManager(models.Manager):
         '''
         Fetches items recommended generally (i.e. not for a specific user).
         '''
-        params = []
+        params = {}
         where = ''
         if category is not None:
-            where += ' mi.category_id = %s'
-            params.append(category.id)
+            where += ' mi.category_id = %(category_id)s'
+            params['category_id'] = category.id
         else:
             where += " mc.hide = 'f'"
 
@@ -59,13 +59,13 @@ class ItemManager(models.Manager):
         user_ids = map(lambda u: u.id, users)
 
         where = ''
-        params = [tuple(user_ids)]*4
+        params = {'user_ids': tuple(user_ids)}
         if category is not None and category:
             category_id = category.id
 
         if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
+            where += ' AND mi.category_id = %(category_id)s'
+            params['category_id'] = category_id
         else:
             where += " AND mc.hide = 'f'"
 
@@ -88,14 +88,16 @@ class ItemManager(models.Manager):
               ON mo.item_id=mi.id
              INNER JOIN main_category mc
               ON mc.id=mi.category_id
-            WHERE ms.user1_id IN %s
-             AND ms.user2_id NOT IN %s
+            WHERE ms.user1_id IN %(user_ids)s
+             AND ms.user2_id NOT IN %(user_ids)s
              AND ms.value > 0
              AND NOT EXISTS
               (SELECT 1 FROM main_opinion mo2
-               WHERE mo2.item_id=mi.id AND mo2.user_id IN %s)
+               WHERE mo2.item_id=mi.id AND mo2.user_id IN %(user_ids)s)
              AND NOT EXISTS
-              (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id IN %s AND le.item_id=mi.id)
+              (SELECT 1 FROM lists_list ll JOIN lists_entry le ON ll.item_ptr_id=le.list_id WHERE ll.owner_id IN %(user_ids)s AND le.item_id=mi.id)
+             AND NOT EXISTS 
+              (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id IN %(user_ids)s AND mtgd.item_id=mi.id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
             ORDER BY recommendation DESC) AS recommended WHERE recommendation > 0""",
@@ -107,10 +109,11 @@ class ItemManager(models.Manager):
 
 class Item(models.Model):
     category = models.ForeignKey(Category)
-    parent = models.ForeignKey('Item', null=True, blank=True)
-    name = models.CharField(max_length=1000)
+    parent = models.ForeignKey('Item', related_name='children', null=True, blank=True)
+    name = models.CharField(max_length=1000, null=True, blank=True)
 
     submitter = models.ForeignKey('users.User', null=True, blank=True)
+    tags = models.ManyToManyField('Tag', through='Tagged')
 
     search = SphinxSearch(
         mode='SPH_MATCH_EXTENDED2',
@@ -122,7 +125,20 @@ class Item(models.Model):
     objects = ItemManager()
 
     def __unicode__(self):
-        return self.name
+        if self.is_comment():
+            return self.comment.__unicode__()
+        else:
+            return self.name
+
+    @models.permalink
+    def get_absolute_url(self):
+        from django.utils.http import int_to_base36
+        from django.template.defaultfilters import slugify
+        slug = slugify(self.__unicode__())
+        if self.is_comment():
+            slug += '#topcomment'
+        url = ('item', (int_to_base36(self.id), slug))
+        return url 
 
     def recommendation(self, user):
         '''
@@ -161,14 +177,10 @@ class Item(models.Model):
         params = [self.id, self.id]
         select = ''
         where = ''
-        if category is not None and category:
-            category_id = category.id
 
-        if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
-        else:
-            where += " AND mc.hide = 'f'"
+        # only show stuff for the same category as the element
+        where += ' AND mi.category_id = %s'
+        params.append(self.category.id)
 
         if like:
             where += " AND mo2.rating >= 4"
@@ -200,6 +212,83 @@ class Item(models.Model):
             params)
 
         return recommended
+
+    
+    def root(self):
+        params = {'item_id': self.id}
+
+        return Item.objects.raw("""
+            WITH RECURSIVE cte (id, parent_id, path) AS (
+                (SELECT id, parent_id, array[id] FROM main_item WHERE id=%(item_id)s)
+                UNION ALL
+                SELECT mi.id, mi.parent_id, mi.id || cte.path FROM main_item mi JOIN cte ON cte.parent_id=mi.id
+            )
+            SELECT id, path FROM cte WHERE cte.parent_id IS NULL        
+        """, params)[0]
+
+
+    def comment_count(self):
+        return self.comment_tree(count=True)
+
+
+    def comment_tree(self, count=False, selected_path=None, user=None):
+        params = {'root_id': self.id, 'selected_1': '', 'selected_n': ''}
+        if count:
+            order_by = ''
+            select = 'COUNT(1)'
+        else:
+            order_by = 'ORDER BY path'
+            select = 'id, parent_id, submitter_id, depth, cc.text'
+
+        if user is not None:
+            select += ', COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=cte.id)) AS rating'
+            params['user_id'] = user.id
+
+        if selected_path is not None:
+            # I have a feeling someone, someday, will knife me for this
+            params['selected_1'] = 'id!=%s, ' % selected_path[1]
+            params['selected_n'] = 'c.id!=(array%s)[cte.depth+1], ' % selected_path[1:]
+
+        
+        query = """
+            WITH RECURSIVE cte (id, parent_id, submitter_id, path, depth) AS (
+                (SELECT id, parent_id, submitter_id, array[("""+params['selected_1']+""" 1-wilson_score(id), id)] as path, 1 FROM main_item WHERE parent_id=%(root_id)s)
+                UNION ALL
+                SELECT c.id, c.parent_id, c.submitter_id, cte.path || ("""+params['selected_n']+""" 1-wilson_score(c.id), c.id), cte.depth+1 FROM main_item c JOIN cte ON cte.id = c.parent_id
+            )
+            SELECT
+                """+select+"""
+            FROM cte
+                INNER JOIN comments_comment cc ON cte.id=cc.item_ptr_id
+            """+order_by+"""
+            """
+
+        if count:
+            from django.db import connection
+            cursor = connection.cursor()
+            cursor.execute(query, params)
+            return cursor.fetchone()[0]
+
+        comments = Item.objects.raw(query, params)
+
+        # this is a bit more complicated than doing a sql query for each subtree
+        #  but much much faster
+        comment_tree = []
+        last = None
+        for comment in comments:
+            if last is not None:
+                diff = comment.depth - last
+                if diff > 0:
+                    comment_tree.extend([{'type': 'in'}]*diff)
+                if diff < 0:
+                    comment_tree.extend([{'type': 'out'}]*(-diff))
+            comment_tree.append({'type': 'comment', 'comment': comment})
+            last = comment.depth
+        if last is not None:
+            comment_tree.extend([{'type': 'out'}]*(last-1))
+
+        return comment_tree
+
 
     def ratings_count(self):
         ratings_count = self.opinion_set.all().values('rating').annotate(count=Count('rating'))
@@ -235,13 +324,57 @@ class Item(models.Model):
 
     def is_link(self):
         return self.category_id in (9,10,11)
+
+    def is_comment(self):
+        return self.category_id == 14
+       
+
+    def add_tag(self, tag_name, user):
+        tag, created = Tag.objects.get_or_create(name=tag_name)
+        tagged, created = Tagged.objects.get_or_create(tag=tag, user=user, item=self)
         
+        action, created = Action.objects.get_or_create(type=Action.types['tagged'], tagged=tagged, user=user)
+        action.save()
+
+
+    def popular_tags(self):
+        return self.tags.annotate(Count('name')).order_by('-name__count')[:5]
 
 
 class ItemProfile(models.Model):
     item = models.OneToOneField(Item, related_name='profile')
 
     page = models.ForeignKey('wiki.Page', null=True)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=200, unique=True, db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Tagged(models.Model):
+    item = models.ForeignKey(Item)
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey('users.User')
+
+    class Meta:
+        unique_together = ('item', 'tag', 'user')
+
+    def __unicode__(self):
+        return '%s tagged %s with %s' % (self.user, self.item, self.tag)
+
+
+class TagBlock(models.Model):
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey('users.User')
+
+    class Meta:
+        unique_together = ('tag', 'user')
+
+    def __unicode__(self):
+        return '%s blocked %s' % (self.user, self.tag)
 
 
 class Review(models.Model):
@@ -254,11 +387,13 @@ class Action(models.Model):
     time = models.DateTimeField(auto_now=True, unique=False)
     opinion = models.ForeignKey('Opinion', null=True, blank=True)
     review = models.ForeignKey('Review', null=True, blank=True)
+    tagged = models.ForeignKey('Tagged', null=True, blank=True)
     user = models.ForeignKey('users.User')
 
     types = {
         'rating': 1,
         'review': 2,
+        'tagged': 3,
     }
     types_reverse = dict((v,k) for k, v in types.items())
     TYPE_CHOICES = types_reverse.items()

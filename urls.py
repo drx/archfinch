@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$',     'archfinch.main.views.welcome'),
+    url(r'^$',     'archfinch.main.views.recommend', {'category_slug': 'fresh'}),
     url(r'^missing$', 'archfinch.main.views.missing', name='missing'),
     url(r'^submit$', 'archfinch.links.views.submit', name='submit'),
 
@@ -23,7 +23,9 @@ urlpatterns = patterns('',
     
     (r'^account/', include('archfinch.account.urls')),
     (r'^wiki/', include('archfinch.wiki.urls')),
+    (r'^comment/', include('archfinch.comments.urls')),
     (r'^user/', include('archfinch.users.urls')),
+    url(r'^me$', 'archfinch.users.views.overview_me', name='user-overview-me'),
     (r'^list/', include('archfinch.lists.urls')),
     (r'^convert/', include('lazysignup.urls')),
 
@@ -38,9 +40,15 @@ urlpatterns = patterns('',
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 
+    url(r'tags/(?P<tag_names>[\w\-\/]+)/(?P<page>\d+)', 'archfinch.main.views.recommend', name='fresh-tags-paged'),
+    url(r'tags/(?P<tag_names>[\w\-\/]+)', 'archfinch.main.views.recommend', name='fresh-tags'),
+    (r'^addtag/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.add_tag'),
+    url(r'^blocktag/(?P<tag_name>[\w\-]+)$', 'archfinch.main.views.block_tag', name='block-tag'),
+
     url(r'^search$', 'archfinch.search.views.query', {'query': ''}, name='search-base'),
-    url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?$', 'archfinch.search.views.query', name='search'),
+    url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?(?P<autocomplete>\.autocomplete)?$', 'archfinch.search.views.query', name='search'),
     url(r'^usersearch$', 'archfinch.search.views.user_search', name='user-search'),
+    url(r'^tagsearch$', 'archfinch.search.views.tag_search', name='tag-search'),
 
     url(r'^ref/(?P<username>[\w@\+\.-]+)$', 'archfinch.users.views.referral', name='referral'),
 

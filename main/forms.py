@@ -57,11 +57,10 @@ class AddItemWizard(FormWizard):
         if self.model.__name__ == 'Link':
             tasks.opinion_set.delay(request.user, item, 4)
 
-        item_url = reverse('item', args=[int_to_base36(item.id), slugify(item.name)])
         from archfinch.utils.bot import bot
-        bot.send_message('%s just submitted %s (http://%s%s)' % (request.user, item.name, settings.DOMAIN, item_url))
+        bot.send_message('%s just submitted %s (http://%s%s)' % (request.user, item.name, settings.DOMAIN, item.get_absolute_url()))
 
-        return redirect(item_url)
+        return redirect(item.get_absolute_url())
 
     def get_template(self, step):
         return 'main/additem.html'

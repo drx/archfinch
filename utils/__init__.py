@@ -20,3 +20,10 @@ def paginate(objects, page, n):
     objects = current_page.object_list
 
     return objects, paginator, current_page, page_range
+
+
+def form_error_msg(errors):
+    msg = ''
+    for field, error_list in errors.iteritems():
+        msg += ' '.join(error_list) + ' '
+    return msg

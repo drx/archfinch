@@ -5,17 +5,14 @@
 
 {% block title %}{{ query }} search results - Archfinch{% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 {% if results %}
-    Search results for <b>{{ query }}</b>
+    <h1>Search results{% if title %} for {{ title }}{% endif %}</h1>
 {% else %}
     No results for <b>{{ query }}</b>
 {% endif %}
 
-<br />
-<br />
 
 {% for result in results %}
     {% include "includes/opinionbox.html" with item_id=result.id yr_big=1 terse_layout=1 click_hides=1 item_name=result.name category_singular=result.category.element_singular your_rating=result.rating seq_term=forloop.counter %}
@@ -27,13 +24,20 @@
 <span class="smalltext">
 <p>Are we missing something? Please <a href="{% url missing %}">add it</a>!</p>
 </span>
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
+    {% if tags %}
+        <h2>Selected tags</h2>
+        {% for tag in tags %}
+        <p><span class="tag"><a class="taglink" href="{% url search-base %}/tag:{{ tag.name }}">{{ tag.name }}</a>{% if tags|length > 1 %} <a class="blocktag" href="#" onClick="remove_tag('{{ tag.name }}');return false">x</a>{% endif %}</span></p>
+        {% endfor %}
+        <form style="display: inline" onSubmit="enter_tag(this.tag.value);return false"><input class="tag_autocomplete" type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form>
+    {% endif %}
     {% if category_counts|length > 1 %}
-        <p>Show:</p>
+        <h2>Categories</h2>
         <p>
         {% for c in category_counts %}
-            <a href='{% url search-base %}/{{ title|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
+            <a style='{% if c.category == category %}font-weight: bold{% endif %}' href='{% url search-base %}/{{ query|urlencode }}%20in:{{ c.category.slug|urlencode }}'>{{ c.category.element_plural }}</a> {% if c.count >= 1000 %}1000+{% else %}{{ c.count }}{% endif %} <br />
         {% endfor %}
         </p>
     {% endif %}
@@ -47,6 +51,7 @@
             <p>
             Phrases: <a href="{% url search "\"lion king\""|urlencode %}">"lion king"</a> <br />
             Filter by category: <a href="{% url search "angel in:tv-shows"|urlencode %}">angel in:tv-shows</a> <br />
+            Filter by tag: <a href="{% url search "tag:co-op"|urlencode %}">tag:co-op</a> <br />
             Exclude words: <a href="{% url search "dexter -laboratory"|urlencode %}">dexter -laboratory</a> <br />
             One OR the other: <a href="{% url search "sonic | mario"|urlencode %}">sonic | mario</a> <br />
             Title start: <a href="{% url search "^hannibal"|urlencode %}">^hannibal</a><br />
@@ -56,9 +61,19 @@
             <p>(<a href="#" class="showhide">hide</a>)</p>
         </div>
     </div>
-</div>
 
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}
+{% if tags %}
+    <script>
+    function enter_tag(tag_name) {
+        window.location.replace('{% url search-base %}/{{ query|urlencode }} tag:'+tag_name);
+    }
+    function remove_tag(tag_name) {
+        loc = window.location.href;
+        window.location.replace(loc.replace('tag:'+tag_name, ''));
+    }
+    </script>
+{% endif %}
 {% endblock %}

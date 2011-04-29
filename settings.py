@@ -35,6 +35,8 @@ MEDIA_ROOT = '/var/django/archfinch/media'
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
+WEB_ROOT = '/var/www/archfinch/cache/'
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -48,6 +50,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -79,6 +82,7 @@ INSTALLED_APPS = (
     'archfinch.wiki',
     'archfinch.users',
     'archfinch.search',
+    'archfinch.comments',
     'djcelery',
     'lazysignup',
     'reversetag',
@@ -86,7 +90,21 @@ INSTALLED_APPS = (
 if DEBUG:
     INSTALLED_APPS += (
         'devserver',
+        'django_extensions',
     )
+    DEVSERVER_MODULES = (
+        'devserver.modules.sql.SQLRealTimeModule',
+        'devserver.modules.sql.SQLSummaryModule',
+        'devserver.modules.profile.ProfileSummaryModule',
+
+        # Modules not enabled by default
+        'devserver.modules.ajax.AjaxDumpModule',
+        #'devserver.modules.profile.MemoryUseModule',
+        'devserver.modules.cache.CacheSummaryModule',
+    )
+    DEVSERVER_TRUNCATE_SQL = False
+
+    STATIC_URL = 'media'
 
 AUTHENTICATION_BACKENDS = (
     'archfinch.users.auth_backends.ModelBackend',

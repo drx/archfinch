@@ -82,12 +82,12 @@ function list_serialize()
 
 function get_item_id(self)
 {
-    return $(self).parents(".user_opinion").attr("item")
+    return $(self).parents(".opinion").attr("item")
 }
 
 function get_seq_term(self)
 {
-    return $(self).parents(".user_opinion").attr("seq_term")
+    return $(self).parents(".opinion").attr("seq_term")
 }
 
 function rating_to_hint(obj)
@@ -108,6 +108,7 @@ function rating_to_hint(obj)
         case '4': return 'Like it'
         case '5': return 'Love it'
         case 'x': return 'Nevermind'
+        case '+': return 'Tag this'
         case 'list': return 'Add to a list'
     }
     return '?'
@@ -119,6 +120,12 @@ function ajaxerror(obj, error_msg)
 
 function task_wait(task_id)
 {
+    if (task_id == "")
+    {
+        $.getJSON("/task_wait_error?task_id="+encodeURIComponent(task_id), function(data){});
+        setTimeout('window.location.reload()', 200);
+        return true;
+    }
     setTimeout("window.location.reload()", 20000);
     $.ajax({
         url: "/task_wait/"+task_id,
@@ -131,7 +138,7 @@ function task_wait(task_id)
         },
         error: function(request, error)
         {
-            ajaxerror($("#wait_error"), 'There has been an error communicating with the server.<br><br>The error has been logged and we will try to fix it as soon as possible.<br><br>Will try refreshing in 4 seconds.')
+            //ajaxerror($("#wait_error"), 'There has been an error communicating with the server.<br><br>The error has been logged and we will try to fix it as soon as possible.<br><br>Will try refreshing in 4 seconds.')
             $.getJSON("/task_wait_error?task_id="+encodeURIComponent(task_id), function(data){});
             setTimeout('window.location.reload()', 4000);
         }
@@ -167,6 +174,42 @@ function generate_lists_tip(){
 }
 
 $(document).ready(function(){
+    $("a.addtag").each(function(){$(this).qtip({
+        content: "<div style='float: left' class='tip'><form class='tagthis' item_id='"+get_item_id($(this))+"'><input type='text' name='tag' style='border-color: #0E8D94; outline: none'></form><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
+            position: {
+            corner: {
+                target: 'topRight',
+                tooltip: 'bottomLeft'
+            },
+            adjust: {
+                screen: true
+            }
+        },
+        show: {
+            when: 'click',
+            solo: true,
+            effect: function() {
+               $(this).fadeIn(90, function() {
+                  $("input", $("a.addtag").qtip("api").elements.content).focus();
+               });
+            }
+        },
+        hide: 'unfocus',
+        style: {
+            tip: true,
+            background: '#0E8D94',
+            padding: 0,
+            border: {
+                width: 0,
+                radius: 0,
+                color: '#0E8D94'
+            },
+            name: 'light'
+        }
+            
+    })
+    .bind('click', function(event){ event.preventDefault(); return false; });
+    }); 
     $(".box").live("hover", 
         function(e){
             if (e.type == "mouseenter")
@@ -197,6 +240,63 @@ $(document).ready(function(){
             }
         }
     )
+    $(".qtip form.tagthis").live("submit", function(e){
+        
+        $(this).parents('.tip').siblings(".loading").show()
+        item_id = $(this).attr('item_id')
+        var self = this
+        $.ajax({
+            url: "/addtag/"+item_id,
+            data: $(this).serialize(),
+            dataType: "json",
+            type: "GET",
+            timeout: 2000,
+            success: function(data)
+            {
+                $(self).parents('.tip').siblings(".loading").hide()
+                if (!data)
+                {
+                    /* this is due to a bug(?) in jQuery 1.4.2 */
+                    ajaxerror($(self).parents('.tip').siblings('.error'), 'Error: could not communicate with the server')
+                    return;
+                }
+                if (data['success'])
+                {
+                    tooltip = $(self).parents('.qtip');
+                    tooltip.qtip('hide');
+                    return;
+                }
+                else
+                {
+                    ajaxerror($(self).parents('.tip').siblings('.error'), data['error_msg'])
+                }
+            },
+            error: function(request, error)
+            {
+                $(self).parents('.tip').siblings(".loading").hide()
+                ajaxerror($(self).parents('.tip').siblings('.error'), 'Error: could not communicate with the server')
+            }
+        })
+        e.preventDefault();
+    });
+    $('.tag a.taglink').each(function(){
+        $(this).qtip(
+        {
+            content: '<span class="taglinks"><a href="'+$(this).attr('block_url')+'">block this tag</a></span>',
+            position: {
+                corner: {
+                    target: 'bottomLeft'
+                }
+            },
+            show: {
+                delay: 0,
+                solo: true
+            },
+            hide: {
+                fixed: true
+            }
+        });
+    });
     $(".user_rate .rating_small:not(img)").live('click', function(e)
     {
         if ($(this).hasClass("rated"))
@@ -242,6 +342,11 @@ $(document).ready(function(){
             })
         }
     })
+
+    $('a.replylink').click(function(e){
+        $(this).parent().parent().children('form.addcomment').show();
+        e.preventDefault();
+    });
 
     /* AJAX login forms */
     $("#loginform").submit(function(e)
@@ -320,6 +425,44 @@ $(document).ready(function(){
             {
                 $(self).children(".loading").hide()
                 ajaxerror($("#"+id+"_error"), 'Error: could not communicate with the server')
+            }
+        })
+        e.preventDefault()
+    })
+
+    $("form.addcomment").submit(function(e)
+    {
+        $(this).children(".loading").show()
+        var self = this
+        $.ajax({
+            url: $(self).attr("action")+".json",
+            dataType: "json",
+            type: "POST",
+            data: $(this).serialize(),
+            timeout: 5000,
+            success: function(data)
+            {
+                $(self).children(".loading").hide()
+                if (!data)
+                {
+                    ajaxerror($(self).children(".error"), 'Error: could not communicate with the server')
+                    return;
+                }
+                if (data['success'])
+                {
+                    $(self).siblings('.thankyou').show('fast') 
+                    $(self).hide('fast')
+                    setTimeout('window.location.replace("'+data['redirect_url']+'")', 2000)
+                }
+                else
+                {
+                    ajaxerror($(self).children(".error"), data['error_msg'])
+                }
+            },
+            error: function(request, error)
+            {
+                $(self).children(".loading").hide()
+                ajaxerror($(self).children(".error"), 'Error: could not communicate with the server')
             }
         })
         e.preventDefault()
@@ -699,6 +842,46 @@ $(document).ready(function(){
                 }
 			}
 		});
+
+    /* tags autocomplete */
+    $("input.tag_autocomplete").autocomplete({
+			source: "/tagsearch",
+			minLength: 2,
+			select: function( event, ui ) {
+                if (ui.item)
+                {
+                    enter_tag(ui.item.value);
+                }
+			}
+		});
+    /* search autocomplete */
+    $("#search").autocomplete({
+
+            source: function( request, response ) {
+                $.getJSON( "/search/"+encodeURIComponent(this.term)+"*.autocomplete", response);
+                
+            },
+            search: function() {
+                var lastword = this.value.split(" ").pop();
+                if ( lastword.length < 3 ) {
+                    return false;
+                }
+            },
+			select: function( event, ui ) {
+                if (ui.item)
+                {
+                    window.location.replace(ui.item.url);
+                }
+			}
+		})
+        .data( "autocomplete" )._renderItem = function( ul, item ) {
+            re = new RegExp("("+this.term.split(" ").join("|")+")", "ig");
+            label = item.name.replace(re, "<b>$1</b>");
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>" + label + "</a>" )
+				.appendTo( ul );
+		};
 
     /* rating graphs */
     $("#ratings_graph").qtip({

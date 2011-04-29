@@ -16,7 +16,7 @@
  - Archfinch
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
 {% if your_profile %}
     {% if viewed_user|is_lazy_user %}
@@ -26,19 +26,11 @@
     {% endif %}
 {% endif %}
 
-{% if not user.is_authenticated %}
-<div class="big" style="color: #000000">
-    <p>See how similar you are to {{ viewed_user }}. <a href="/">Get an account</a> on Archfinch.</p>
-</div>
-{% endif %}
-
-<div id="content_left">
-
 {% if show_controversial %}
     <p>Recommendations are tailored to what you like, so the more you rate the better.</p>
     <p>You haven't rated much, so here's a list of things we suggest you rate if you have opinions about them.</p>
     {% for item in controversial %}
-        {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item.name category_singular=item.category_element seq_term=forloop.counter %}
+        {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter %}
     {% endfor %}
 {% endif %}
 
@@ -47,7 +39,7 @@
     {% for date in date_list %}
         <h2>{{ date.grouper|capfirst }}</h2>
         {% for opinion in date.list %}
-            {% include "includes/opinionbox.html" with rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter your_rating=opinion.your_rating item_name=opinion.item.name category_singular=opinion.item.category.element_singular no_src=1 %}
+            {% include "includes/opinionbox.html" with rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter your_rating=opinion.your_rating item_name=opinion.item category_singular=opinion.item.category.element_singular no_src=1 %}
         {% endfor %}
     {% endfor %}
 {% else %}
@@ -65,8 +57,8 @@
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 
 <b>{{ viewed_user }}</b>
 
@@ -99,8 +91,6 @@
     {% endif %}
 {% endwith %}
 
-
-</div>
 
 
 {% endblock %}

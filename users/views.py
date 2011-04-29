@@ -127,6 +127,11 @@ def review_edit(request, item_id):
 
 
 @allow_lazy_user
+def overview_me(request):
+    return HttpResponseRedirect(reverse('user-overview', args=[request.user.username]))
+
+
+@allow_lazy_user
 def overview(request, username, category_slug=None, page=None, json=None):
     viewed_user = get_object_or_404(User, username=username)
 
@@ -162,14 +167,6 @@ def overview(request, username, category_slug=None, page=None, json=None):
         select_params += [request.user.id]
 
     show_controversial = False
-    if your_profile:
-        opinion_count = viewed_user.opinion_set.aggregate(Count('id'))['id__count']
-        if opinion_count == 0:
-            show_controversial = True
-            controversial = cache.get('controversial')
-            if controversial is None:
-                controversial = Item.objects.filter(category__hide=False).annotate(count=Count('opinion'), stddev=StdDev('opinion__rating')).filter(count__gt=26).order_by('-count')[:100]
-                cache.set('controversial', controversial, 60*60*24)
 
     select = SortedDict(select)
 

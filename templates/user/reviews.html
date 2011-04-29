@@ -12,11 +12,10 @@
 {% endif %}
 {% endblock %}
 
-{% block content %}
-<div id="content">
+{% block content_left %}
 
 {% for review in reviews %}
-    <h1><a href="{% url user-overview review_user.username %}">{{ review_user.username }}</a>'s review of <a href="{% url item review.item.id|base36 review.item.name|slugify %}">{{ review.item.name }}</a></h1>
+    <h1><a href="{% url user-overview review_user.username %}">{{ review_user.username }}</a>'s review of <a href="{{ review.item.get_absolute_url }}">{{ review.item.name }}</a></h1>
 
     {% if review.rating %}
     <div style='float: left; width: 75%'>
@@ -37,6 +36,5 @@
     {% include "includes/pagination.html" %}
 {% endif %}
 
-</div>
 
 {% endblock %}

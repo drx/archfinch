@@ -13,9 +13,8 @@
     {% endif %}
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 <h1>
 {% if category %}
     {{ category.element_plural|capfirst }}
@@ -31,7 +30,7 @@
 </h1>
 
 {% for item in recommendations %}
-    {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item.name category_singular=item.category_element seq_term=forloop.counter %}
+    {% include "includes/opinionbox.html" with item=item item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter %}
 {% empty %}
     {% if not category %}
         <div class="big">
@@ -54,8 +53,8 @@
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 {% if user.categories %}
     <p id="user_cats">Show  
     {% for category in user.categories %}
@@ -83,6 +82,9 @@
 
     <br />
 
+
+{% endif %}
+
     <p>
         {% if users|length > 1 %}
         Want to add someone else?<br />
@@ -94,10 +96,6 @@
         Type in their username to include them in your recommendations.
         {% endif %}
     </p>
-
-{% endif %}
-</div>
-
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}

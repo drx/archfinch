@@ -13,44 +13,53 @@
     {% endif %}
 {% endblock %}
 
-{% block content %}
 
-<div id="content_left">
+{% block content_left %}
 <h1>
 {% if category %}
-    {{ category.element_plural|capfirst }}
+    {{ category.element_plural|capfirst }} you might like
 {% else %}
-    Things
+    {% if tags %}
+        Tags: {{ tags|join:", " }}
+    {% else %}
+        Things you might like.
+    {% endif %}
 {% endif %}
-    you
- might like.
 </h1>
 
 {% for link in recommendations %}
-    {% include "includes/opinionbox.html" with item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
+    {% include "includes/opinionbox.html" with item=link item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
 {% empty %}
-    {% if not category %}
-        <div class="big">
-            <p>We don't know {% if usernames_specified %}them{% else %}you{% endif %} well enough to recommend you anything.
-            {% if not usernames_specified %}
-            <p>We would like to, though, so please consider rating more stuff.</p>
-            {% endif %}
-        </div>
-    {% endif %}
+    <div class="big">
+        <p>Nothing to see here, move along.</p>
+    </div>
 {% endfor %}
-{% if usernames_specified %}
-    {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
+{% if tags %}
+    {% reverse partial "fresh-tags-paged" tag_names=tag_names|join:"/" as pagination_url %}
 {% else %}
-    {% if category_slug %}
-        {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
+    {% if usernames_specified %}
+        {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
     {% else %}
-        {% reverse partial "recommend-paged" as pagination_url %}
+        {% if category_slug %}
+            {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
+        {% else %}
+            {% reverse partial "recommend-paged" as pagination_url %}
+        {% endif %}
     {% endif %}
 {% endif %}
 {% include "includes/pagination.html" %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
+
+    {% if tags %}
+        <h2>Selected tags</h2>
+        {% for tag in tags %}
+        <p><span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}">{{ tag.name }}</a>{% if tags|length > 1 %} <a class="blocktag" href="#" onClick="remove_tag('{{ tag.name }}');return false">x</a>{% endif %}</span></p>
+        {% endfor %}
+        <form style="display: inline" onSubmit="enter_tag(this.tag.value);return false"><input class="tag_autocomplete" type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form><br /><br />
+    {% endif %}
+
     <h2>Share a 
     {% if category %}
         {{ category.element_singular }}
@@ -58,14 +67,24 @@
         link
     {% endif %}
     </h2>
-    <p>Know of something awesome?<br /><a href="{% url submit %}"><b>Submit</b></a> it!</a></p>
+    <p>Know of something awesome?<br /><a href="{% url submit %}"><b>Submit</b></a> it!</p>
+
     <h2>Like Archfinch?</h2>
     <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
     <fb:like href="http://archfinch.com/" show_faces="true" width="225" font="verdana"></fb:like> 
-</div>
-
 
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}
+{% if tags %}
+    <script>
+    function enter_tag(tag_name) {
+        window.location.replace('{% url fresh-tags tag_names|join:"/" %}/'+tag_name);
+    }
+    function remove_tag(tag_name) {
+        loc = window.location.href;
+        window.location.replace(loc.replace('/'+tag_name, ''));
+    }
+    </script>
+{% endif %}
 {% endblock %}

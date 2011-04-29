@@ -7,9 +7,8 @@
 {{ list.name }} - Archfinch
 {% endblock %}
 
-{% block content %}
+{% block content_left %}
 
-<div id="content_left">
 <h1>{{ list.name }}</h1>
 
 {% for entry in entries %}
@@ -20,12 +19,12 @@
 <div>{{ entry.text|markdown }}</div>
 {% endif %}
 {% if entry.get_type_display == 'item' %}
-    {% include "includes/opinionbox.html" with item_id=entry.item_id yr_big=1 item_name=entry.item.name category_singular=entry.item.category.element_singular annotation=entry.text seq_term=forloop.counter rating=entry.your_rating your_rating=entry.your_rating %}
+    {% include "includes/opinionbox.html" with item_id=entry.item_id yr_big=1 item_name=entry.item category_singular=entry.item.category.element_singular annotation=entry.text seq_term=forloop.counter rating=entry.your_rating your_rating=entry.your_rating %}
 {% endif %}
 {% endfor %}
 
-</div>
-<div id="content_right">
+{% endblock %}
+{% block content_right %}
 <p>
 This list was created by <a href="{% url user-overview list.owner.username %}">{{ list.owner }}</a>
 </p>
@@ -59,7 +58,6 @@ This list was created by <a href="{% url user-overview list.owner.username %}">{
 </div>
 </p>
 {% endif %}
-</div>
 
 {% endblock %}
 {% block media %}

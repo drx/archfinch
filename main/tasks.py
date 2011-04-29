@@ -1,22 +1,26 @@
-from celery.decorators import task
+from datetime import timedelta
+from django.db.models.signals import post_save
+from celery.decorators import task, periodic_task
+from staticgenerator import recursive_delete
 from archfinch.main.models import Item, Opinion, Action, Similarity
 from archfinch.links.models import Link
+from archfinch.comments.models import Comment
 
 @task
-def recommend(category, fresh, users):
+def recommend(category, fresh, tags, users):
     if category is not None and category.id in (9,10,11) or fresh:
         # links
-        recommendations = list(Link.objects.recommended(users[0], category=category))
+        recommendations = list(Link.objects.recommended(users[0], category=category, tags=tags))
     else:
         recommendations = list(Item.objects.recommended(users, category=category))
     return recommendations
 
 
 @task
-def recommend_generic(category, fresh):
+def recommend_generic(category, fresh, tags):
     if category is not None and category.id in (9,10,11) or fresh:
         # links
-        return list(Link.objects.recommended_generic(category=category))
+        return list(Link.objects.recommended_generic(category=category, tags=tags))
     else:
         return list(Item.objects.recommended_generic(category=category))
 
@@ -47,3 +51,13 @@ def opinion_remove(user, item):
     Similarity.objects.update_item_delta(user, delta)
     user.add_points(-1)
 
+
+@periodic_task(run_every=timedelta(hours=1))
+def static_delete():
+    recursive_delete('/')
+
+
+@periodic_task(run_every=timedelta(minutes=1))
+def static_republish():
+    from archfinch.utils.cache import republish_static
+    republish_static()

@@ -5,7 +5,7 @@ from django.contrib.auth import login as auth_login
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.utils import simplejson
-from archfinch.utils import render_to_response
+from archfinch.utils import render_to_response, form_error_msg
 from archfinch.main.models import Similarity
 from archfinch.account.models import SignupForm, AuthenticationForm
 from lazysignup.utils import is_lazy_user
@@ -33,13 +33,6 @@ def logout(request):
         return HttpResponseRedirect(reverse('loggedout'))
 
 
-def error_msg(errors):
-    msg = ''
-    for field, error_list in errors.iteritems():
-        msg += ' '.join(error_list) + ' '
-    return msg
-
-
 @csrf_protect
 def signup_ajax(request):
     """Handles AJAX signups."""
@@ -56,7 +49,7 @@ def signup_ajax(request):
             data['username'] = new_user.username
 
         else:
-            data['error_msg'] = error_msg(form.errors)
+            data['error_msg'] = form_error_msg(form.errors)
     else:
         data['error_msg'] = 'Wrong request method'
 
@@ -87,7 +80,7 @@ def login_ajax(request):
             data['username'] = form.cleaned_data['username']
 
         else:
-            data['error_msg'] = error_msg(form.errors)
+            data['error_msg'] = form_error_msg(form.errors)
 
     else:
         data['error_msg'] = 'Wrong request method'

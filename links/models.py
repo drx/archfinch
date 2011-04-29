@@ -2,17 +2,21 @@ from django.db import models
 from archfinch.main.models import Item
 
 class LinkManager(models.Manager):
-    def recommended_generic(self, category=None):
+    def recommended_generic(self, category=None, tags=None):
         '''
         Fetches links recommended generally (not for a specific user).
         '''
 
         where = ''
-        params = []
+        params = {}
 
         if category is not None:
-            where += 'WHERE mi.category_id = %s'
-            params.append(category.id)
+            where += 'WHERE mi.category_id = %(category_id)s'
+            params['category_id'] = category.id
+
+        if tags:
+            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id IN %(tag_ids)s)'
+            params['tag_ids'] = tuple(map(lambda x: x.id, tags))
 
         # Select items in order of their recommendation to self
         # 
@@ -47,19 +51,24 @@ class LinkManager(models.Manager):
         return recommended
 
 
-    def recommended(self, user, category=None, category_id=None):
+    def recommended(self, user, category=None, category_id=None, tags=None):
         '''
         Fetches links recommended for the user.
         '''
 
         where = ''
-        params = [user.id]
+        joins = ''
+        params = {'user_id': user.id}
         if category is not None and category:
             category_id = category.id
 
         if category_id is not None:
-            where += ' AND mi.category_id = %s'
-            params.append(category_id)
+            where += ' AND mi.category_id = %(category_id)s'
+            params['category_id'] = category_id
+
+        if tags:
+            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id IN %(tag_ids)s)'
+            params['tag_ids'] = tuple(map(lambda x: x.id, tags))
 
         # Select items in order of their recommendation to self
         # 
@@ -75,6 +84,7 @@ class LinkManager(models.Manager):
              SUM((mo.rating-3)*ms.value) *
                (86400/extract(epoch from now()-ll.time))^2
              AS recommendation,
+             COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=mi.id)) AS rating,
 
              mc.element_singular AS category_element
             FROM main_similarity ms
@@ -86,8 +96,9 @@ class LinkManager(models.Manager):
               ON mc.id=mi.category_id
              INNER JOIN links_link ll
               ON ll.item_ptr_id=mi.id
-            WHERE ms.user1_id = %s
+            WHERE ms.user1_id = %(user_id)s
              AND ms.value > 0
+             AND NOT EXISTS (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id=%(user_id)s AND mtgd.item_id=ll.item_ptr_id)
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
             ORDER BY date_trunc('day', ll.time) DESC,recommendation DESC) AS recommended WHERE recommendation > 0""",
