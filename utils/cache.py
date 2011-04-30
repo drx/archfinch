@@ -27,7 +27,10 @@ def publish_static(func):
 
         try:
             if ('publish' in kwargs and kwargs['publish']) or (request.user.is_anonymous() and response.publish_static):
-                StaticGenerator().publish_from_path(request.path, '', response.content)
+                path = request.path
+                if not path.endswith('/'):
+                    path += '/'
+                StaticGenerator().publish_from_path(path, '', response.content)
         except (AttributeError, KeyError) as err:
             pass
 
