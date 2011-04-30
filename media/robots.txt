@@ -1,3 +1,8 @@
 User-agent: *
 Disallow: /me
 Disallow: /convert
+Disallow: /submit
+Disallow: /missing
+Disallow: /addtag
+Disallow: /blocktag
+Disallow: /wiki/edit
