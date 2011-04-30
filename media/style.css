@@ -1156,8 +1156,12 @@ tr.top3
 }
 .commentshift
 {
-    margin-left: 20px;
+    margin-left: 40px;
     border-left: 1px solid #ccc;
+}
+.commentshift .box 
+{
+    padding-left: 0;
 }
 
 blockquote 
