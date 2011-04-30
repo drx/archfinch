@@ -182,9 +182,10 @@ a.nohover:hover
 #content_left
 {
     float: left;
-    margin-bottom: 1em;
-    width: 700px;
+    margin-bottom: 2em;
 	padding: 0px;
+    padding-bottom: 1em;
+    width: 700px;
     border: 2px solid #dbdbdb;
 	background: #ffffff;
 	-moz-border-radius: 10px 10px 10px 10px;
@@ -197,7 +198,7 @@ a.nohover:hover
     margin-left: 10px;
 	margin-right: 20px;
 	float: right;
-	padding: 0 15px 15px 15px;
+	padding: 0 15px;
     border: 2px solid #ffffff;
 	background: #ffffff;
 	width: 230px;
@@ -642,6 +643,11 @@ form.signup input[type="submit"]
 {
 	border: none;
 }
+form.addcomment
+{
+    padding: 10px;
+}
+
 #search, #search_inline
 {
     border: 2px solid #434d53;
