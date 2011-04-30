@@ -94,6 +94,10 @@ class ReviewForm(forms.Form):
 
 @allow_lazy_user
 def review_edit(request, item_id):
+    if request.user.is_anonymous():
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden()
+
     item = get_object_or_404(Item, pk=base36_to_int(item_id))
 
     try:
