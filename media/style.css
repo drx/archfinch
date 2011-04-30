@@ -1156,3 +1156,9 @@ tr.top3
     margin-left: 20px;
     border-left: 1px solid #ccc;
 }
+
+blockquote 
+{
+    border-left: 3px solid #ffab07;
+}
+}
