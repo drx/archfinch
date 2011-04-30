@@ -128,3 +128,4 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
     'facebook',
 )
 
+DOMAIN = 'archfinch.com'

@@ -3,10 +3,11 @@
 {% block title %}Account signup - Archfinch{% endblock %}
 
 {% block content_left %}
+<h1>Create an account</h1>
 <div class="big">
-    Create an account<br /><br />
 
-    <form method="post" action="{% url lazysignup_convert %}">
+
+    <form method="post" action="{% url lazysignup_convert %}" class="signup">
         {% csrf_token %}
         <table>
         {{ form.as_table }}
