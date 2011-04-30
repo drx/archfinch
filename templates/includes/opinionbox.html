@@ -44,7 +44,6 @@
     </div>
     {% endif %}
     {% endif %}
-    {% if user.is_authenticated %}
     <div class="user_opinion">
 
     {% if not yr_big %}
@@ -82,7 +81,6 @@
     <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">
     {% endif %}
     </div>
-    {% endif %}
     <div class='clear'></div>
     {% if annotation %}
     <div class="annotation">
