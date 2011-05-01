@@ -50,6 +50,8 @@ def republish_static(path=''):
             filename = os.path.join(root, name)
             relpath = '/'+os.path.relpath(filename, settings.WEB_ROOT)
             relpath = relpath.replace('/index.html', '')
+            if relpath == '':
+                relpath = '/'
 
             request = HttpRequest()
             request.path_info = relpath
