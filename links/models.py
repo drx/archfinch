@@ -15,8 +15,8 @@ class LinkManager(models.Manager):
             params['category_id'] = category.id
 
         if tags:
-            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id IN %(tag_ids)s)'
-            params['tag_ids'] = tuple(map(lambda x: x.id, tags))
+            for tag in tags:
+                where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
 
         # Select items in order of their recommendation to self
         # 
