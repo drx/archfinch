@@ -155,7 +155,8 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
     computed = False
     if cached_value is not None:
         if type(cached_value) == tuple and cached_value[0] == 'task':
-            recommendations = celery.result.AsyncResult(cached_value[1])
+            task_id = cached_value[1]
+            recommendations = celery.result.AsyncResult(task_id)
         else:
             recommendations = cached_value
             computed = True
