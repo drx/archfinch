@@ -54,7 +54,7 @@ def opinion_remove(user, item):
 
 @periodic_task(run_every=timedelta(hours=1))
 def static_delete():
-    recursive_delete('/')
+    recursive_delete('/item')
 
 
 @periodic_task(run_every=timedelta(minutes=1))
