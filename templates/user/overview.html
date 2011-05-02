@@ -24,6 +24,8 @@
     {% else %}
     <h1>Welcome {{ viewed_user }}</h1><br />
     {% endif %}
+{% else %}
+    <h1>{{ viewed_user }}</h1>
 {% endif %}
 
 {% if show_controversial %}
@@ -60,9 +62,8 @@
 {% endblock %}
 {% block content_right %}
 
-<b>{{ viewed_user }}</b>
+<h2>{{ viewed_user }}</h2>
 
-<br /><br />
 {% if not your_profile and user.is_authenticated %}
 <div style='float: left; font-size: 12px; padding: 0 1.5em 2em 0;'>Similarity:</div> <div style='float: left; margin-top: 3px'>{% include "includes/similarity_bar.html" %}</div>
 <br /><br />
@@ -81,16 +82,19 @@
 
 {% with review_count=viewed_user.review_set.count %}
     {% if review_count > 0 %}
+    <p>
     <span style='font-size: 11px'>{{ viewed_user }} has written {{ review_count }} review{{ review_count|pluralize }}. <a href="{% url user-reviews viewed_user.username %}">Read&nbsp;{{ review_count|pluralize:"it,them" }}</a>.</span><br>
+    </p>
     {% endif %}
 {% endwith %}
 
 {% with list_count=lists.count %}
     {% if list_count > 0 %}
+        <p>
         <span style='font-size: 11px'>{{ viewed_user }} has created {{ list_count }} list{{ list_count|pluralize }}. <a href="{% url lists-user viewed_user.username %}">See&nbsp;{{ list_count|pluralize:"it,them" }}</a>.</span>
+        </p>
     {% endif %}
 {% endwith %}
-
 
 
 {% endblock %}
