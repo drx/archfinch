@@ -191,8 +191,9 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
             # links
             response = render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
         else:
-            user_categories = request.user.categories()
-            categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')
+            if not request.user.is_anonymous():
+                user_categories = request.user.categories()
+                categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')
             response = render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
 
         response.publish_static = True
