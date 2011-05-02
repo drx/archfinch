@@ -48,7 +48,7 @@
 <h1>{{ item.name }}</h1>
 {% if item.is_comment %}
 {% else %}
-    {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 item_name=item.name category_singular=item.category.element_singular seq_term=1 your_rating=opinion.rating link=item.link %}
+    {% include "includes/opinionbox.html" with page_id="item" item_id=item.id yr_big=1 terse_layout=1 item_name=item.name category_singular=item.category.element_singular seq_term=1 your_rating=opinion.rating link=item.link %}
 {% endif %}
 
 {% if not item.is_comment %}

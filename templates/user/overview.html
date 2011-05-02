@@ -30,7 +30,7 @@
     <p>Recommendations are tailored to what you like, so the more you rate the better.</p>
     <p>You haven't rated much, so here's a list of things we suggest you rate if you have opinions about them.</p>
     {% for item in controversial %}
-        {% include "includes/opinionbox.html" with item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter %}
+        {% include "includes/opinionbox.html" with page_id="controversial" item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter %}
     {% endfor %}
 {% endif %}
 
@@ -39,7 +39,7 @@
     {% for date in date_list %}
         <h2>{{ date.grouper|capfirst }}</h2>
         {% for opinion in date.list %}
-            {% include "includes/opinionbox.html" with rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter your_rating=opinion.your_rating item_name=opinion.item category_singular=opinion.item.category.element_singular no_src=1 %}
+            {% include "includes/opinionbox.html" with page_id="user_overview" terse_layout=1 your_rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter my_rating=opinion.your_rating item_name=opinion.item category_singular=opinion.item.category.element_singular no_src=1 %}
         {% endfor %}
     {% endfor %}
 {% else %}
