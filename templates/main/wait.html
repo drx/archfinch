@@ -14,7 +14,9 @@ We are computing your recommendations as fast as we can.
 <div id="wait_error" class="error"></div>
 
 <script type="text/javascript">
-task_wait("{{ task_id }}");
+$(document).ready(function(){
+    task_wait("{{ task_id }}");
+});
 </script>
 
 {% endblock %}
