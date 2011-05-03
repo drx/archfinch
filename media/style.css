@@ -367,6 +367,10 @@ div.title
 {
     padding-bottom: 10px;
 }
+.box.link .rating
+{
+    margin-bottom: 25px;
+}
 .box.itembox
 {
     width: 100%;
