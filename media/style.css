@@ -360,6 +360,8 @@ div.title
 .box.link
 {
     border-top: 1px solid #f2f2f2;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .box.link .clear
 {
@@ -452,7 +454,7 @@ td
 .rating
 {
     padding: 0 0 0 0;
-    margin: 5px 8px 5px 5px;
+    margin: 0px 8px 5px 5px;
     width: 30px;
     height: 30px;
     line-height: 27px;
@@ -1085,10 +1087,9 @@ tr.top3
 .tags
 {
     border-bottom: 5px solid transparent;
-    max-width: 300px;
-    float: right;
     margin: 5px 15px 0 0;
     text-align: right;
+    clear: both;
 	
 }
 .addtag, .addtag:hover
