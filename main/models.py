@@ -316,8 +316,9 @@ class Item(models.Model):
 
         # if the submitter is drx, fake the user
         if submitter.id == 1:
-            new_id = self.id%128 + 100
-            submitter = submitter.__class__.objects.get(id=new_id)
+            if not self.options.filter(option="showrealsubmitter").exists():
+                new_id = self.id%128 + 100
+                submitter = submitter.__class__.objects.get(id=new_id)
 
         return submitter
 
@@ -345,6 +346,11 @@ class ItemProfile(models.Model):
     item = models.OneToOneField(Item, related_name='profile')
 
     page = models.ForeignKey('wiki.Page', null=True)
+
+class ItemOption(models.Model):
+    item = models.ForeignKey(Item, related_name='options')
+
+    option = models.CharField(max_length=50)
 
 
 class Tag(models.Model):
