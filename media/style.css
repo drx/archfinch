@@ -1173,4 +1173,8 @@ blockquote
 {
     border-left: 3px solid #ffab07;
 }
+
+pre
+{
+    margin-left: 1em;
 }
