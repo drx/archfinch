@@ -37,6 +37,8 @@ def item(request, item_id, publish=False):
     item_id = base36_to_int(item_id)
     item = get_object_or_404(Item.objects.select_related('category', 'profile'), pk=item_id)
 
+    title = item.__unicode__()
+
     if item.is_comment():
         # item is a comment, so let's show its root and highlight it instead
         root = item.root()

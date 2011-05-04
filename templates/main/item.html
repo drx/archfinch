@@ -5,11 +5,7 @@
 {% load cache %}
 
 {% block title %}
-{% if item.is_comment %}
-{% if item.comment.text|length > 32 %}{{ item.comment.text|slice:":32" }}...{% else %}{{ item.comment.text }}{% endif %} - Archfinch
-{% else %}
-{{ item.name }} - Archfinch
-{% endif %}
+{{ title }} - Archfinch
 {% endblock %}
 
 {% block media %}
