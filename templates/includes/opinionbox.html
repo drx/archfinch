@@ -105,10 +105,10 @@
             {% endif %}
         {% endif %}
         {% if category_singular == 'comment' %}
+            {% include "includes/add_comment_form.html" with parent_id=item.id hide_form=1 %}
             <div class="commenttext">
                 {{ item.comment.text|markdown }}
             </div>
-            {% include "includes/add_comment_form.html" with parent_id=item.id hide_form=1 %}
         {% endif %}
     {% endcache %}
 </div>
