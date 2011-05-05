@@ -514,7 +514,8 @@ class Similarity(models.Model):
 
     objects = SimilarityManager()
 
-    unique_together = ('user1', 'user2')
+    class Meta:
+        unique_together = ('user1', 'user2')
 
     def __unicode__(self):
         return "S(%s, %s) = %d" % (self.user1.username,
