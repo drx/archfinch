@@ -81,6 +81,7 @@
 </h4>
 
 <div id="also_liked_error" class="error"></div>
+<div id="item" item_id="{{ item.id|base36 }}"></div>
 
 <div class="also_liked">
 {% include "includes/also_liked.html" with items=also_liked %}
