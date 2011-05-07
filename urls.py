@@ -40,10 +40,10 @@ urlpatterns = patterns('',
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 
-    url(r'tags/(?P<tag_names>[\w\-\/]+)/(?P<page>\d+)', 'archfinch.main.views.recommend', name='fresh-tags-paged'),
-    url(r'tags/(?P<tag_names>[\w\-\/]+)', 'archfinch.main.views.recommend', name='fresh-tags'),
+    url(r'tags/(?P<tag_names>[\w\-\/ ]+)/(?P<page>\d+)', 'archfinch.main.views.recommend', name='fresh-tags-paged'),
+    url(r'tags/(?P<tag_names>[\w\-\/ ]+)', 'archfinch.main.views.recommend', name='fresh-tags'),
     (r'^addtag/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.add_tag'),
-    url(r'^blocktag/(?P<tag_name>[\w\-]+)$', 'archfinch.main.views.block_tag', name='block-tag'),
+    url(r'^blocktag/(?P<tag_name>[\w \-]+)$', 'archfinch.main.views.block_tag', name='block-tag'),
 
     url(r'^search$', 'archfinch.search.views.query', {'query': ''}, name='search-base'),
     url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?(?P<autocomplete>\.autocomplete)?$', 'archfinch.search.views.query', name='search'),
