@@ -68,6 +68,15 @@
 
 <br /><br />
 
+
+<h4>Similar</h4>
+
+<div class="similar">
+{% for similar_item in item.similar_by_tags %}
+    {% include "includes/opinionbox.html" with item=similar_item selected_tags=item_popular_tags page_id="similar_by_tags" item_id=similar_item.id yr_big=1 terse_layout=1 item_name=similar_item your_rating=similar_item.rating seq_term=forloop.counter %}
+{% endfor %}
+</div>
+
 <h4>People who
 <button class="also_liked" like_type='like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 {% if item.link or item.is_comment %}
@@ -79,7 +88,6 @@
 <button class="also_liked" like_type='also_like'><span class="like_dislike">like</span> <img src="/media/images/arrow-s.gif" style='padding: 2px; margin-left: -3px;'></button>
 <img src="/media/images/ajax-loader.gif" style='margin-left: 20px' class="loading nodisplay" id="ld_also_liked">
 </h4>
-
 <div id="also_liked_error" class="error"></div>
 <div id="item" item_id="{{ item.id|base36 }}"></div>
 

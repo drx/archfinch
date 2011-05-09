@@ -167,6 +167,24 @@ class Item(models.Model):
         else:
             return 0
 
+    def similar_by_tags(self):
+        '''
+        Fetches items with co-occuring tags, ordered by the number of co-occurences.
+        '''
+        items = Item.objects.raw("""
+            SELECT item_id as id, similarity
+            FROM (
+              SELECT item_id, count(CASE WHEN tag_id in %(tag_ids)s THEN 1 ELSE NULL END) as similarity
+              FROM main_tagged
+              GROUP BY item_id
+            ) AS related_items
+            WHERE similarity > 0
+             AND item_id != %(item_id)s
+            ORDER BY similarity desc""",
+            {'item_id': self.id, 'tag_ids': tuple(map(lambda x: x.id, self.popular_tags()))})
+
+        return items
+
     def also_liked(self, user=None, category=None, category_id=None, like=True, also_like=True):
         '''
         Fetches items (dis)liked by users who (dis)like a given item for the user (which the user has not already rated)
