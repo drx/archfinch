@@ -27,5 +27,17 @@
         <input type="submit" value="{% if step == 1 %}Submit{% else %}I'm sure{% endif %}">
     </form>
 </div>
+{% if model == 'Link' %}
+<br><br>
+<h4>Guidelines</h4>
+<p><b>What should I submit?</b>
+</p>
+<p>Anything that makes you go "Wow, that is really _____", where _____ is any of the following: thought-provoking, interesting, cool, insightful, awesome, beautiful, informative.</p><p>You should avoid submitting seemingly interesting but shallow topics, such as celebrity gossip or disaster news, as they push off the more interesting and profound but less flashy things, thus reducing the average quality.</p>
+<p><b>Things to keep in mind</b></p>
+<p>Don't sensationalize submissions. If the original title is terrible, try to edit your own one.</p>
+<p>Always try to link to the original source.</p>
+<p><b>Thanks</b></p>
+<p>Thank you for submitting and reading this far. You're making Archfinch a better place for everyone.</p>
+{% endif %}
 {% endblock %}
 
