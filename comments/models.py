@@ -1,6 +1,6 @@
 from django.db import models
-from django.forms import ModelForm
 from archfinch.main.models import Item
+from archfinch.utils.spam import AntiSpamModelForm
 
 
 class Comment(Item):
@@ -18,7 +18,7 @@ class Comment(Item):
     post_save_verb = 'commented:'
 
 
-class AddCommentForm(ModelForm):
+class AddCommentForm(AntiSpamModelForm):
     class Meta:
         model = Comment
         exclude = ('tags',)

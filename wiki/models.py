@@ -1,6 +1,7 @@
 from django import forms
 from django.db import models
 from archfinch.users.models import User
+from archfinch.utils.spam import AntiSpamForm
 
 
 class Page(models.Model):
@@ -49,7 +50,7 @@ class Revision(models.Model):
         get_latest_by = 'time'
 
 
-class PageForm(forms.Form):
+class PageForm(AntiSpamForm):
     text = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 80, 'rows': 20, 'class': 'resizable'})
     )

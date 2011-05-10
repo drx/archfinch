@@ -6,6 +6,9 @@
     {% csrf_token %}
     {% if user|is_lazy_user %}<span style='font-size: 12px; color: #888'>(you don't need an account)</span>{% endif %}
     <div class="error"></div>
+    {% for hidden in add_comment_form.hidden_fields %}
+    {{ hidden }}
+    {% endfor %}
     <img src="/media/images/ajax-loader.gif" class="loading nodisplay">
 </form>
 <div class="thankyou nodisplay">Thank you! You will be redirected to your new comment shortly.</div>

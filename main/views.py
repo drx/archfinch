@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.db.models import Count
 from archfinch.main.models import Item, Opinion, Action, Similarity, Category, Tag, TagBlock
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
+from archfinch.comments.models import AddCommentForm
 from archfinch.users.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -47,6 +48,8 @@ def item(request, item_id, publish=False):
 
     else:
         selected_path = None
+
+    add_comment_form = AddCommentForm()
 
     comment_tree = item.comment_tree(selected_path=selected_path, user=request.user)
     if item.category_id == 8:

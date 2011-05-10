@@ -26,7 +26,7 @@ Editing
 
 <form method="post">
 {% csrf_token %}
-<p>{{ form.text }}</p>
+{{ form.as_p }}
 <input type="submit" value="Edit" />
 </form>
 

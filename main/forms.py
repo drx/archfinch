@@ -8,6 +8,7 @@ from archfinch.main import tasks
 from archfinch.main.models import Item, ItemProfile, Category
 from archfinch.links.models import Link
 from archfinch.links.scraper import scrape, generate_thumbnail
+from archfinch.utils.spam import AntiSpamModelForm
 from django.shortcuts import redirect
 
 
