@@ -564,7 +564,7 @@ def bot_post_save(sender, **kwargs):
             return
         public = sender.post_save_public
     except AttributeError:
-        message = '%s #%s has been %s (%s)' % (sender.__name__, instance.id, 'created' if created else 'edited', unicode(instance))
+        message = '%s #%s has been %s (%s)' % (sender.__name__, instance.pk, 'created' if created else 'edited', unicode(instance))
         public = False
         
 
