@@ -564,7 +564,9 @@ def bot_post_save(sender, **kwargs):
             return
         public = sender.post_save_public
     except AttributeError:
-        return
+        message = '%s #%s has been %s (%s)' % (sender.__name__, instance.id, 'created' if created else 'edited', unicode(instance))
+        public = False
+        
 
     channels = ['#archfinch-log']
     if public:
