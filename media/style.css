@@ -48,9 +48,7 @@ body > #yellowwrap
 {	
 	height: auto; 
 	min-height: 100%; 
-	background-image: url("/media/treestamp.png");
-	background-repeat: no-repeat;
-	background-position: 50% 100%;
+
 }
 #main
 {
@@ -62,9 +60,7 @@ body > #yellowwrap
 #header-wrapper
 {
 	background-color: #0e8d94;
-	background-image: url("/media/navbg.png");
-	background-repeat: no-repeat;
-	background-position: 50% 50%;
+
 }
 #header-main
 {
@@ -674,9 +670,9 @@ form.addcomment
 #topnav
 {
     margin-right: -10px;
-    padding: 0;
+    padding-right: 5px;
     float: right;
-	background: #0e8d94;
+	background: #11a8b0;
 }
 
 .ajaxform

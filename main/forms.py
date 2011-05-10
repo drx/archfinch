@@ -47,18 +47,15 @@ class AddItemWizard(FormWizard):
                 generate_thumbnail(item)
 
                     
+        item.submitter = request.user
         item.save()
         item_profile = ItemProfile(item=item)
         item_profile.save()
         item.profile = item_profile
-        item.submitter = request.user
         item.save()
         request.user.add_points(10)
         if self.model.__name__ == 'Link':
             tasks.opinion_set.delay(request.user, item, 4)
-
-        from archfinch.utils.bot import bot
-        bot.send_message('%s just submitted %s (http://%s%s)' % (request.user, item.name, settings.DOMAIN, item.get_absolute_url()))
 
         return redirect(item.get_absolute_url())
 
