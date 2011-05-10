@@ -34,25 +34,16 @@ class AddItemForm2(forms.Form):
 class AddItemWizard(FormWizard):
     def done(self, request, form_list):
         item = form_list[0]
+        try:
+            url = item.cleaned_data['url']
+            existing_items = Item.objects.filter(link__url=url)
+            if existing_items:
+                return redirect(existing_items[0].get_absolute_url())
+        except KeyError:
+            pass
         item = item.save(commit=False)
-        if self.model.__name__ == 'Link':
-            scraped_data = scrape(item.url)
-            item.category_id = scraped_data['category_id']
-            if 'thumbnail_url' in scraped_data:
-                item.thumbnail = {'url': scraped_data['thumbnail_url'], 'width': scraped_data['thumbnail_width'], 'height': scraped_data['thumbnail_height']}
-            if 'url' in scraped_data:
-                item.image = {'url': scraped_data['url'], 'width': scraped_data['width'], 'height': scraped_data['height']}
-            if 'html' in scraped_data:
-                item.html = scraped_data['html']
-            if scraped_data['category'] == 'pic':
-                generate_thumbnail(item)
-
-                    
         item.submitter = request.user
-        item.save()
-        item_profile = ItemProfile(item=item)
-        item_profile.save()
-        item.profile = item_profile
+        item.get_meta_data()
         item.save()
         request.user.add_points(10)
         if self.model.__name__ == 'Link':

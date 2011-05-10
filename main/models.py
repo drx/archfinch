@@ -141,6 +141,29 @@ class Item(models.Model):
         url = ('item', (int_to_base36(self.id), slug))
         return url 
 
+    def get_meta_data(self):
+        from django.core.exceptions import ObjectDoesNotExist
+        from archfinch.links.scraper import scrape, generate_thumbnail
+
+        if self.__class__.__name__ == 'Link':
+            scraped_data = scrape(self.url)
+            self.category_id = scraped_data['category_id']
+            if 'thumbnail_url' in scraped_data:
+                self.thumbnail = {'url': scraped_data['thumbnail_url'], 'width': scraped_data['thumbnail_width'], 'height': scraped_data['thumbnail_height']}
+            if 'url' in scraped_data:
+                self.image = {'url': scraped_data['url'], 'width': scraped_data['width'], 'height': scraped_data['height']}
+            if 'html' in scraped_data:
+                self.html = scraped_data['html']
+            if scraped_data['category'] == 'pic':
+                generate_thumbnail(self)
+                    
+        self.save()
+        item_profile = ItemProfile(item=self)
+        item_profile.save()
+        self.profile = item_profile
+        self.save()
+        
+
     def post_save_message(self, created):
         if created:
             return '%s has just %s %s' % (self.submitter, self.post_save_verb, self.__unicode__())
