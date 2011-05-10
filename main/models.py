@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models import Count
 from djangosphinx.models import SphinxSearch
-
+from django.db.models.signals import post_save
+from django.conf import settings
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -139,6 +140,14 @@ class Item(models.Model):
             slug += '#topcomment'
         url = ('item', (int_to_base36(self.id), slug))
         return url 
+
+    def post_save_message(self, created):
+        if created:
+            return '%s has just %s %s' % (self.submitter, self.post_save_verb, self.__unicode__())
+        else:
+            return None
+    post_save_verb = 'submitted'
+    post_save_public = True
 
     def recommendation(self, user):
         '''
@@ -520,3 +529,33 @@ class Similarity(models.Model):
     def __unicode__(self):
         return "S(%s, %s) = %d" % (self.user1.username,
             self.user2.username, self.value)
+
+
+def bot_post_save(sender, **kwargs):
+    from archfinch.utils.bot import bot 
+    instance = kwargs['instance']
+    created = kwargs['created']
+
+    try:
+        message = instance.post_save_message(created)
+        if message is None:
+            return
+        public = sender.post_save_public
+    except AttributeError:
+        return
+
+    channels = ['#archfinch-log']
+    if public:
+        channels.append('#archfinch')
+
+    try:
+        path = instance.get_absolute_url()
+        urlstr = ' (http://%s%s)' % (settings.DOMAIN, path)
+    except AttributeError:
+        urlstr = ''
+
+    for channel in channels:
+        bot.send_message(channel, '%s %s' % (message, urlstr))
+
+post_save.connect(bot_post_save)
+

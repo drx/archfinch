@@ -15,6 +15,8 @@ class Comment(Item):
         else:
             return self.text
 
+    post_save_verb = 'commented:'
+
 
 class AddCommentForm(ModelForm):
     class Meta:
