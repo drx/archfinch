@@ -73,7 +73,7 @@ def sync_hn():
         tags = ['hn']
         url = item['url']
         if not url.startswith('http://'):
-            url = 'http://news.ycombinator.com/item?id=' + item['id']
+            url = 'http://news.ycombinator.com/item?id=' + str(item['id'])
             tags.append('askhn')
         try:
             link = Link.objects.get(url=url)
@@ -156,7 +156,7 @@ def scrape_tags():
             import logging
 
             logger = logging.getLogger(__name__)
-            logger.warning('%s: %s' % (err.__class__.__name__, err, params['url']))
+            logger.warning('%s: %s (%s)' % (err.__class__.__name__, err, params['url']))
 
             continue
 
