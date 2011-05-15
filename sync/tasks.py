@@ -88,7 +88,7 @@ def sync_hn():
             elif t_factor == 'hours ago':
                 delta = timedelta(hours=int(t))
             elif t_factor == 'days ago':
-                delta = timehttp://api.ihackernews.com/page?format=xmldelta(hours=int(t)*24)
+                delta = timedelta(hours=int(t)*24)
             if delta:
                 link.time -= delta
                 link.save()

@@ -75,6 +75,13 @@
         <fb:like href="http://archfinch.com/" show_faces="true" width="225" font="verdana"></fb:like> 
     </div>
 
+    {% if related_tags %}
+    <h2>Related tags</h2><p>
+    {% for tag in related_tags %}
+        <span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}">{{ tag.name }}</a></span> <span style='float: right'>{{ tag.count }}</span><br />
+    {% endfor %}</p>
+    {% endif %}
+
 {% endblock %}
 {% block media %}
 {% include "includes/generate_lists_tip.html" %}
