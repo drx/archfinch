@@ -136,7 +136,7 @@ class ImageURLField(models.CharField):
 
 class Link(Item):
     url = models.URLField(verify_exists=False, max_length=1000, blank=True, null=True)
-    time = models.DateTimeField(auto_now=True, unique=False)
+    time = models.DateTimeField(auto_now_add=True, unique=False)
 
     thumbnail = ImageURLField(max_length=1000, blank=True, null=True)
     image = ImageURLField(max_length=1000, blank=True, null=True)
