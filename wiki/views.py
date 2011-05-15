@@ -49,7 +49,10 @@ def edit(request, page_id=None, item_id=None):
             return HttpResponseRedirect(redirect_url)
     else:
         if page is not None:
-            text = page.current().text.render()
+            try:
+                text = page.current().text.render()
+            except Revision.DoesNotExist:
+                text = ''
         else:
             text = ''
         form = PageForm(initial={'text': text})
