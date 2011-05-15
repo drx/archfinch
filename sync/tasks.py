@@ -76,9 +76,9 @@ def sync_hn():
             url = 'http://news.ycombinator.com/item?id=' + str(item['id'])
             tags.append('askhn')
         try:
-            link = Link.objects.get(url=url)
+            link = Link.objects.filter(url=url)[0]
             created = False
-        except Link.DoesNotExist:
+        except IndexError:
             link = Link(url=url, name=item['title'])
             created = True
 
