@@ -13,6 +13,7 @@ except ImportError:
     except ImportError:
         raise ImportError("Need a json decoder")
 
+from archfinch.main.models import Opinion
 from archfinch.links.models import Link
 from archfinch.users.models import User
 from archfinch.sync.models import Synced, Source
@@ -74,8 +75,13 @@ def sync_hn():
         if not url.startswith('http://'):
             url = 'http://news.ycombinator.com/item?id=' + item['id']
             tags.append('askhn')
-        link = Link(name=item['title'], url=url)
-        link, created = Link.objects.get_or_create(url=url, defaults={'name': item['title']})
+        try:
+            link = Link.objects.get(url=url)
+            created = False
+        except Link.DoesNotExist:
+            link = Link(url=url, name=item['title'])
+            created = True
+
         if created:
             link.submitter = archfinch_user
             link.get_meta_data()
@@ -103,6 +109,7 @@ def sync_hn():
 
         for tag in tags:
             link.add_tag(tag, archfinch_user)
+        Opinion.objects.create(user=archfinch_user, item_id=link.id, rating=4)
 
     scrape_tags()
 
