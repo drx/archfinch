@@ -87,17 +87,20 @@ def sync_hn():
             link.get_meta_data()
             link.save()
 
-            t, sep, t_factor = item['postedAgo'].partition(' ')
-            delta = None
-            if t_factor == 'minutes ago':
-                delta = timedelta(minutes=int(t))
-            elif t_factor == 'hours ago':
-                delta = timedelta(hours=int(t))
-            elif t_factor == 'days ago':
-                delta = timedelta(hours=int(t)*24)
-            if delta:
-                link.time -= delta
-                link.save()
+            try:
+                t, sep, t_factor = item['postedAgo'].partition(' ')
+                delta = None
+                if t_factor == 'minutes ago':
+                    delta = timedelta(minutes=int(t))
+                elif t_factor == 'hours ago':
+                    delta = timedelta(hours=int(t))
+                elif t_factor == 'days ago':
+                    delta = timedelta(hours=int(t)*24)
+                if delta:
+                    link.time -= delta
+                    link.save()
+            except AttributeError:
+                pass
 
         synced = Synced(link=link, source=hn_source, original_id=str(item['id']))
         synced.save()
