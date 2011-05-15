@@ -4,8 +4,16 @@
 <div class="box opinion {% if not terse_layout %}widebox{% else %}terse{% endif %} {% if click_hides %}click_hides{% endif %} {% if link %}link{% endif %} {% if selected_comment_id == item_id %}selected_comment{% endif %}" seq_term="{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" item="{{ item_id|base36 }}">
     <div class="tags">
         <a class="addtag" href="#">Tag it</a>
+        {# show selected tags last #}
         {% for tag in item.popular_tags %}
+            {% if tag not in selected_tags or not selected_tags %}
             <span class="tag {% if tag in selected_tags %}selected_tag{% endif %} {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" block_url="{% url block-tag tag.name %}">{{ tag.name }}</a></span>
+            {% endif %}
+        {% endfor %}
+        {% for tag in item.popular_tags %}
+            {% if tag in selected_tags %}
+            <span class="tag {% if tag in selected_tags %}selected_tag{% endif %} {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" block_url="{% url block-tag tag.name %}">{{ tag.name }}</a></span>
+            {% endif %}
         {% endfor %}
     </div>
     {% if your_rating %}
@@ -13,7 +21,7 @@
     {% else %}
         <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
     {% endif %}
-    {% cache 1 fopinionbox item_id page_id %}
+    {% cache 120 opinionbox item_id page_id %}
         {% if terse_layout and not link and not item.is_comment %}
             <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
             <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
@@ -42,45 +50,45 @@
                 </div>
             {% endif %}
         {% endif %}
-        <div class="user_opinion">
-            {% if not yr_big %}
-                <div class="your_opinion {% if not my_rating %}nodisplay{% endif %}">
-                    <span class="rating_label">Your opinion:</span> <div id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" class="rating_small rating{{ my_rating }}">{{ my_rating }}</div>
-                </div>
-            {% endif %}
-        
-            {% if terse_layout %}
-                <div class="rating_small_hint" id="rsh_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"></div>
-                <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">
-            {% else %}
-                <div class="reviewthis"><a href="{% url review-edit item_id|base36 %}">
-                {% if your_profile and review %}
-                    edit your review
-                {% else %}
-                    write a review
-                {% endif %}
-                </a></div>
-            {% endif %}
-            {% if review %}<span class="review"><a href="{% url review viewed_user.username item_id|base36 item_name|slugify %}">review</a></span>{% endif %}
     {% endcache %}
-            <div class="user_rate" {% if terse_layout %}style="float: right"{% endif %}>
-                <span class="rating_label">Rate:</span>
-                <span class="rating_small rate {% if yr_big and your_rating == 1 or my_rating == 1 %}rated{% endif %} rating1">1</span>
-                <span class="rating_small rate {% if yr_big and your_rating == 2 or my_rating == 2 %}rated{% endif %} rating2">2</span>
-                <span class="rating_small rate {% if yr_big and your_rating == 3 or my_rating == 3 %}rated{% endif %} rating3">3</span>
-                <span class="rating_small rate {% if yr_big and your_rating == 4 or my_rating == 4 %}rated{% endif %} rating4">4</span>
-                <span class="rating_small rate {% if yr_big and your_rating == 5 or my_rating == 5 %}rated{% endif %} rating5">5</span>
-                {% if your_rating %}
-                    <span class="rating_small rate delete">x</span>
-                {% endif %}
-                <img src="/media/list.png" class="rating_small rate add_to_list">
+    <div class="user_opinion">
+        {% if not yr_big %}
+            <div class="your_opinion {% if not my_rating %}nodisplay{% endif %}">
+                <span class="rating_label">Your opinion:</span> <div id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}" class="rating_small rating{{ my_rating }}">{{ my_rating }}</div>
             </div>
-            {% if not terse_layout %}
-                <div class="rating_small_hint" id="rsh_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"></div>
-                <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">
+        {% endif %}
+    
+        {% if terse_layout %}
+            <div class="rating_small_hint" id="rsh_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"></div>
+            <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">
+        {% else %}
+            <div class="reviewthis"><a href="{% url review-edit item_id|base36 %}">
+            {% if your_profile and review %}
+                edit your review
+            {% else %}
+                write a review
             {% endif %}
+            </a></div>
+        {% endif %}
+        {% if review %}<span class="review"><a href="{% url review viewed_user.username item_id|base36 item_name|slugify %}">review</a></span>{% endif %}
+        <div class="user_rate" {% if terse_layout %}style="float: right"{% endif %}>
+            <span class="rating_label">Rate:</span>
+            <span class="rating_small rate {% if yr_big and your_rating == 1 or my_rating == 1 %}rated{% endif %} rating1">1</span>
+            <span class="rating_small rate {% if yr_big and your_rating == 2 or my_rating == 2 %}rated{% endif %} rating2">2</span>
+            <span class="rating_small rate {% if yr_big and your_rating == 3 or my_rating == 3 %}rated{% endif %} rating3">3</span>
+            <span class="rating_small rate {% if yr_big and your_rating == 4 or my_rating == 4 %}rated{% endif %} rating4">4</span>
+            <span class="rating_small rate {% if yr_big and your_rating == 5 or my_rating == 5 %}rated{% endif %} rating5">5</span>
+            {% if your_rating %}
+                <span class="rating_small rate delete">x</span>
+            {% endif %}
+            <img src="/media/list.png" class="rating_small rate add_to_list">
         </div>
-    {% cache 1 fopinionbox2 item_id page_id %}
+        {% if not terse_layout %}
+            <div class="rating_small_hint" id="rsh_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"></div>
+            <img src="/media/images/ajax-loader.gif" class="loading nodisplay" id="ld_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}">
+        {% endif %}
+    </div>
+    {% cache 120 opinionbox2 item_id page_id %}
         <div class='clear'></div>
         {% if annotation %}
             <div class="annotation">

@@ -75,7 +75,7 @@ def sync_hn():
             url = 'http://news.ycombinator.com/item?id=' + item['id']
             tags.append('askhn')
         link = Link(name=item['title'], url=url)
-        link, created = Link.objects.get_or_create(url=url, defaults={'title': item['title']})
+        link, created = Link.objects.get_or_create(url=url, defaults={'name': item['title']})
         if created:
             link.submitter = archfinch_user
             link.get_meta_data()
