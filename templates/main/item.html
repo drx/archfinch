@@ -73,7 +73,7 @@
         <h4>Similar</h4>
         <div class="similar">
         {% for similar_item in similar_items %}
-            {% include "includes/opinionbox.html" with item=similar_item selected_tags=item_popular_tags page_id="similar_by_tags" item_id=similar_item.id yr_big=1 terse_layout=1 item_name=similar_item your_rating=similar_item.rating seq_term=forloop.counter %}
+            {% include "includes/opinionbox.html" with item=similar_item selected_tags=item.popular_tags page_id="similar_by_tags" item_id=similar_item.id yr_big=1 terse_layout=1 item_name=similar_item your_rating=similar_item.rating seq_term=forloop.counter %}
         {% endfor %}
         </div>
     {% endif %}

@@ -410,15 +410,16 @@ class ItemOption(models.Model):
 class TagManager(models.Manager):
     def related_tags(self, tags):
         params = {'tag_ids': tuple(map(lambda tag: tag.id, tags))}
+        where = ''
+        for tag in tags:
+            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mtgd1.item_id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
         return Tag.objects.raw("""
             SELECT mt.id, mt.name, count(1) as count
             FROM main_tagged mtgd1
-             INNER JOIN main_tagged mtgd2 
-              ON mtgd1.item_id=mtgd2.item_id
              INNER JOIN main_tag mt
-              ON mt.id=mtgd2.tag_id
-            WHERE mtgd1.tag_id!=mtgd2.tag_id
-             AND mtgd1.tag_id IN %(tag_ids)s
+              ON mt.id=mtgd1.tag_id
+            WHERE mtgd1.tag_id NOT IN %(tag_ids)s
+             """+where+"""
             GROUP BY mt.id, mt.name
             HAVING count(1) >= 2
             ORDER BY count(1) DESC""", params)

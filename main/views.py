@@ -104,6 +104,7 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
         category = None
         tag_names = tag_names.split('/')
         tags = Tag.objects.filter(name__in=tag_names)
+        selected_tags = tags
         related_tags = list(Tag.objects.related_tags(tags))
 
     elif category_slug is not None and category_slug:
