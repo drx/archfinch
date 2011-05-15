@@ -162,6 +162,13 @@ class Item(models.Model):
         item_profile.save()
         self.profile = item_profile
         self.save()
+        if scraped_data['category'] in ('pic', 'video'):
+            if scraped_data['category'] == 'pic':
+                tag = 'pics'
+            else:
+                tag = 'videos'
+            archfinch_user = models.get_model('users', 'user').objects.get(username='archfinch')
+            self.add_tag(tag, archfinch_user)
         
 
     def post_save_message(self, created):

@@ -69,13 +69,16 @@ def scrape(url):
         keys.remove('thumbnail_url')
 
     elif global_pic_re.match(url):
-        req = urllib2.urlopen(urllib2.Request(url))
-        content = req.read(max_filesize)
-        if 'image' in req.headers.get('content-type'):
-            img = str_to_image(content)
-            data['url'] = url
-            data['width'], data['height'] = img.size
-            data['category'] = 'pic'
+        try:
+            req = urllib2.urlopen(urllib2.Request(url))
+            content = req.read(max_filesize)
+            if 'image' in req.headers.get('content-type'):
+                img = str_to_image(content)
+                data['url'] = url
+                data['width'], data['height'] = img.size
+                data['category'] = 'pic'
+        except:
+            pass
 
     if keys: 
         for key in keys: 
