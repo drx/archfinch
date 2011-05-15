@@ -1,5 +1,6 @@
 from django.db import models
 from archfinch.main.models import Item
+from archfinch.users.models import User
 
 class LinkManager(models.Manager):
     def recommended_generic(self, category=None, tags=None):
@@ -67,8 +68,14 @@ class LinkManager(models.Manager):
             params['category_id'] = category_id
 
         if tags:
-            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id IN %(tag_ids)s)'
-            params['tag_ids'] = tuple(map(lambda x: x.id, tags))
+            for tag in tags:
+                where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
+
+            archfinch_user = User.objects.get(username='archfinch')
+            ms_union = 'UNION SELECT %d, %d, 1' % (user.id, archfinch_user.id)
+
+        else:
+            ms_union = ''
 
         # Select items in order of their recommendation to self
         # 
@@ -87,7 +94,7 @@ class LinkManager(models.Manager):
              COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=mi.id)) AS rating,
 
              mc.element_singular AS category_element
-            FROM main_similarity ms
+            FROM (SELECT user1_id, user2_id, value FROM main_similarity ms """+ms_union+""") as ms
              INNER JOIN main_opinion mo
               ON ms.user2_id=mo.user_id
              INNER JOIN main_item mi

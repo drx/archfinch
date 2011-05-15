@@ -69,8 +69,13 @@ def sync_hn():
 
     for item in items:
         # change to get_or_create
-        link = Link(name=item['title'], url=item['url'])
-        link, created = Link.objects.get_or_create(url=item['url'], defaults={'title': item['title']})
+        tags = ['hn']
+        url = item['url']
+        if not url.startswith('http://'):
+            url = 'http://news.ycombinator.com/item?id=' + item['id']
+            tags.append('askhn')
+        link = Link(name=item['title'], url=url)
+        link, created = Link.objects.get_or_create(url=url, defaults={'title': item['title']})
         if created:
             link.submitter = archfinch_user
             link.get_meta_data()
@@ -83,7 +88,7 @@ def sync_hn():
             elif t_factor == 'hours ago':
                 delta = timedelta(hours=int(t))
             elif t_factor == 'days ago':
-                delta = timedelta(hours=int(t)*24)
+                delta = timehttp://api.ihackernews.com/page?format=xmldelta(hours=int(t)*24)
             if delta:
                 link.time -= delta
                 link.save()
@@ -96,7 +101,10 @@ def sync_hn():
                 synced.scraped = True
                 synced.save()
 
-        link.add_tag('hn', archfinch_user)
+        for tag in tags:
+            link.add_tag(tag, archfinch_user)
+
+    scrape_tags()
 
 
 def parse_tags(content):
@@ -108,7 +116,7 @@ def parse_tags(content):
 
 def scrape_tags():
     synced = Synced.objects.filter(scraped=False).order_by('-id')
-    synced = synced[:10]
+    synced = synced[:400]
 
     archfinch_user = User.objects.get(username='archfinch')
 

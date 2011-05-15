@@ -393,7 +393,7 @@ class Item(models.Model):
 
 
     def popular_tags(self):
-        return self.tags.annotate(Count('name')).order_by('-name__count')[:5]
+        return self.tags.annotate(Count('name')).order_by('-name__count')[:6]
 
 
 class ItemProfile(models.Model):
