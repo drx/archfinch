@@ -17,6 +17,7 @@ from archfinch.main.models import Opinion
 from archfinch.links.models import Link
 from archfinch.users.models import User
 from archfinch.sync.models import Synced, Source
+from django.conf import settings
 
 def get_url(url, userpwd=None):
     content = StringIO.StringIO()
@@ -114,7 +115,8 @@ def sync_hn():
             link.add_tag(tag, archfinch_user)
         Opinion.objects.create(user=archfinch_user, item_id=link.id, rating=4)
 
-    scrape_tags()
+    if not settings.DEBUG:
+        scrape_tags()
 
 
 def parse_tags(content):
