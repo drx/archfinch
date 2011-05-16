@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer) RETURNS real
+CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer, lower_bound boolean) RETURNS real
     AS $$
     DECLARE 
         z CONSTANT real := 2;
@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer) RETURNS real
         positive integer := 0;
         negative integer := 0;
         total integer := 0;
+        bound_factor integer := 1;
         phat real;
         rating_row record;
     BEGIN
@@ -22,7 +23,9 @@ CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer) RETURNS real
     total := positive + negative;
     if total = 0 then return 0; end if;
 
+    if lower_bound then bound_factor = -1; else bound_factor = 1; end if;
+
     phat := positive::real/total::real;
-    return (phat + z*z/(2*total) - z*sqrt((phat*(1-phat)+z*z/(4*total))/total))/(1+z*z/total);
+    return (phat + z*z/(2*total) + bound_factor*z*sqrt((phat*(1-phat)+z*z/(4*total))/total))/(1+z*z/total);
     END;
     $$ LANGUAGE plpgsql;
