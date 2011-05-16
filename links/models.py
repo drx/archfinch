@@ -38,7 +38,6 @@ class LinkManager(SlicedRawManager):
               ON ll.item_ptr_id=mi.id
              
              """+where+"""
-            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
             ORDER BY time DESC) AS recommended""",
             params)
 

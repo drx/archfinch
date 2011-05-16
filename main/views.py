@@ -198,7 +198,6 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
         wait_page = 'recommend'
         return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
     else:
-        print repr(recommendations)
         # pagination
         recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
 
