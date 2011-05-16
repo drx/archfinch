@@ -438,6 +438,8 @@ class Item(models.Model):
        
 
     def add_tag(self, tag_name, user):
+        if '/' in tag_name:
+            return None
         tag, created = Tag.objects.get_or_create(name=tag_name)
         tagged, created = Tagged.objects.get_or_create(tag=tag, user=user, item=self)
         
