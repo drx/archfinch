@@ -76,10 +76,23 @@
     </div>
 
     {% if related_tags %}
-    <h2>Related tags</h2><p>
-    {% for tag in related_tags %}
-        <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
-    {% endfor %}</p>
+    <h2>Related tags</h2>
+        <p>
+        {% for tag in related_tags|slice:":30" %}
+            <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
+        {% endfor %}
+        </p>
+        {% if related_tags|length > 30 %}
+        <div class="show">
+            <p>(<a href="#" class="showhide">full list</a>)</p>
+        </div>
+        <div class="hide" style='color: black'>
+            <p>
+            {% for tag in related_tags|slice:"30:" %}
+                <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
+            {% endfor %}</p>
+        </div>
+        {% endif %}
     {% endif %}
 
 {% endblock %}
