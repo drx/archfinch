@@ -78,7 +78,7 @@
     {% if related_tags %}
     <h2>Related tags</h2><p>
     {% for tag in related_tags %}
-        <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}">{{ tag.name }}</a></span> <span style='float: right'>{{ tag.count }}</span><br />
+        <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
     {% endfor %}</p>
     {% endif %}
 
