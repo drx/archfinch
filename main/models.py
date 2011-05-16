@@ -254,7 +254,7 @@ class Item(models.Model):
         if not popular_tags:
             return Item.objects.none()
 
-        items = Item.objects.raw("""
+        items = Item.objects.slicedraw("""
             SELECT item_id as id, similarity
             FROM (
               SELECT item_id, count(CASE WHEN tag_id in %(tag_ids)s THEN 1 ELSE NULL END) as similarity
@@ -263,10 +263,11 @@ class Item(models.Model):
             ) AS related_items
             WHERE similarity > 0
              AND item_id != %(item_id)s
-            ORDER BY similarity desc""",
+            ORDER BY similarity desc
+            """,
             {'item_id': self.id, 'tag_ids': tuple(map(lambda x: x.id, popular_tags))})
 
-        return items[:10]
+        return items
 
     def also_liked(self, user=None, category=None, category_id=None, like=True, also_like=True):
         '''
@@ -291,7 +292,7 @@ class Item(models.Model):
         if user is not None:
             select += ', COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%s AND mo.item_id=mi.id)) as rating' % (user.id)
 
-        recommended = Item.objects.raw("""
+        recommended = Item.objects.slicedraw("""
             SELECT * FROM (
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM(abs(mo2.rating-3)*(mo.rating-3)) AS recommendation,
@@ -309,7 +310,7 @@ class Item(models.Model):
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element
             ORDER BY recommendation DESC) AS recommended WHERE recommendation """+('>' if also_like else '<')+""" 0
-            LIMIT 10""",
+            """,
             params)
 
         return recommended
