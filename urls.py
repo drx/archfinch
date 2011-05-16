@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'tags/(?P<tag_names>.+)', 'archfinch.main.views.recommend', name='fresh-tags'),
     (r'^addtag/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.add_tag'),
     url(r'^blocktag/(?P<tag_name>[^\/]+)$', 'archfinch.main.views.block_tag', name='block-tag'),
+    url(r'^followtag/(?P<tag_name>[^\/]+)$', 'archfinch.main.views.follow_tag', name='follow-tag'),
 
     url(r'^search$', 'archfinch.search.views.query', {'query': ''}, name='search-base'),
     url(r'^search/(?P<query>.*?)(?:/(?P<page>\d+))?(?P<json>\.json)?(?P<autocomplete>\.autocomplete)?$', 'archfinch.search.views.query', name='search'),

@@ -500,6 +500,17 @@ class Tagged(models.Model):
         return '%s tagged %s with %s' % (self.user, self.item, self.tag)
 
 
+class TagFollow(models.Model):
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey('users.User')
+
+    class Meta:
+        unique_together = ('tag', 'user')
+
+    def __unicode__(self):
+        return '%s followed %s' % (self.user, self.tag)
+
+
 class TagBlock(models.Model):
     tag = models.ForeignKey(Tag)
     user = models.ForeignKey('users.User')

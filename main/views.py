@@ -5,7 +5,7 @@ from django.utils.http import base36_to_int, int_to_base36
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.db.models import Count
-from archfinch.main.models import Item, Opinion, Action, Similarity, Category, Tag, TagBlock
+from archfinch.main.models import Item, Opinion, Action, Similarity, Category, Tag, TagBlock, TagFollow
 from archfinch.main.forms import AddItemForm1, AddItemForm2, AddItemWizard
 from archfinch.comments.models import AddCommentForm
 from archfinch.users.models import User
@@ -288,6 +288,18 @@ def block_tag(request, tag_name):
     '''
     tag = get_object_or_404(Tag, name=tag_name)
     TagBlock.objects.get_or_create(tag=tag, user=request.user)
+
+    redirect_url = request.META['HTTP_REFERER'] or '/'
+    return HttpResponseRedirect(redirect_url)    
+
+
+@allow_lazy_user
+def follow_tag(request, tag_name):
+    '''
+    Follow a tag for a user.
+    '''
+    tag = get_object_or_404(Tag, name=tag_name)
+    TagFollow.objects.get_or_create(tag=tag, user=request.user)
 
     redirect_url = request.META['HTTP_REFERER'] or '/'
     return HttpResponseRedirect(redirect_url)    

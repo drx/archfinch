@@ -29,7 +29,7 @@
     {% if tags %}
         <h2>Selected tags</h2>
         {% for tag in tags %}
-        <p><span class="tag"><a class="taglink" href="{% url search-base %}/tag:{{ tag.name }}">{{ tag.name }}</a>{% if tags|length > 1 %} <a class="blocktag" href="#" onClick="remove_tag('{{ tag.name }}');return false">x</a>{% endif %}</span></p>
+        <p><span class="tag"><a class="taglink" href="{% url search-base %}/tag:{{ tag.name }}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a>{% if tags|length > 1 %} <a class="blocktag" href="#" onClick="remove_tag('{{ tag.name }}');return false">x</a>{% endif %}</span></p>
         {% endfor %}
         <form style="display: inline" onSubmit="enter_tag(this.tag.value);return false"><input class="tag_autocomplete" type="text" value="Type another tag..." name="tag" onClick='if (this.value=="Type another tag...") this.value=""'></form>
     {% endif %}
