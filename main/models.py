@@ -415,8 +415,11 @@ class Item(models.Model):
     def submitter_show(self):
         submitter = self.submitter
 
-        # if the submitter is drx or archfinch, fake the user
-        if submitter.username in ('drx', 'archfinch'):
+        if submitter.username == 'archfinch':
+            return None
+
+        # if the submitter is drx, fake the user
+        if submitter.id == 1:
             if not self.options.filter(option="showrealsubmitter").exists():
                 new_id = self.id%128 + 100
                 submitter = submitter.__class__.objects.get(id=new_id)
@@ -440,7 +443,7 @@ class Item(models.Model):
 
 
     def popular_tags(self):
-        return self.tags.annotate(Count('name')).order_by('-name__count')[:6]
+        return self.tags.annotate(Count('name')).order_by('name')[:6]
 
 
 class ItemProfile(models.Model):
