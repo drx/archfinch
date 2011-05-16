@@ -57,7 +57,7 @@ def static_delete():
     recursive_delete('/item')
 
 
-@periodic_task(run_every=timedelta(minutes=1))
+@periodic_task(run_every=timedelta(minutes=10))
 def static_republish():
     from archfinch.utils.cache import republish_static
     republish_static()
