@@ -113,7 +113,6 @@ def sync_hn():
 
         for tag in tags:
             link.add_tag(tag, archfinch_user)
-        Opinion.objects.create(user=archfinch_user, item_id=link.id, rating=4)
 
     if not settings.DEBUG:
         scrape_tags()
