@@ -267,7 +267,7 @@ class Item(models.Model):
             """,
             {'item_id': self.id, 'tag_ids': tuple(map(lambda x: x.id, popular_tags))})
 
-        return items
+        return items[:10]
 
     def also_liked(self, user=None, category=None, category_id=None, like=True, also_like=True):
         '''
@@ -313,7 +313,7 @@ class Item(models.Model):
             """,
             params)
 
-        return recommended
+        return recommended[:10]
 
     
     def root(self):
