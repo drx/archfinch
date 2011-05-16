@@ -159,38 +159,46 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
 
     cached_value = cache.get(cache_key)
 
-    computed = False
-    if cached_value is not None:
-        if type(cached_value) == tuple and cached_value[0] == 'task':
-            task_id = cached_value[1]
-            recommendations = celery.result.AsyncResult(task_id)
+    if category is not None and category.id in (9,10,11) or fresh:
+        computed = True
+        from archfinch.links.models import Link
+        if generic:
+            recommendations = Link.objects.recommended_generic(category=category, tags=tags)
         else:
-            recommendations = cached_value
+            recommendations = Link.objects.recommended(users[0], category=category, tags=tags)
+    else:
+        computed = False
+        if cached_value is not None:
+            if type(cached_value) == tuple and cached_value[0] == 'task':
+                task_id = cached_value[1]
+                recommendations = celery.result.AsyncResult(task_id)
+            else:
+                recommendations = cached_value
+                computed = True
+
+        else:
+            if generic:
+                recommendations = tasks.recommend_generic.delay(category, fresh, tags)
+            else:
+                recommendations = tasks.recommend.delay(category, fresh, tags, users)
+            task_id = recommendations.task_id
+            cache.set(cache_key, ('task', task_id), cache_timeout)
+
+        if not computed and recommendations.ready():
+            recommendations = recommendations.result
+            cache.set(cache_key, recommendations, cache_timeout)
             computed = True
 
-    else:
-        if generic:
-            recommendations = tasks.recommend_generic.delay(category, fresh, tags)
-        else:
-            recommendations = tasks.recommend.delay(category, fresh, tags, users)
-        task_id = recommendations.task_id
-        cache.set(cache_key, ('task', task_id), cache_timeout)
-
-    if not computed and recommendations.ready():
-        recommendations = recommendations.result
-        cache.set(cache_key, recommendations, cache_timeout)
-        computed = True
-
-    if not computed and publish:
-        recommendations = recommendations.get()
-        cache.set(cache_key, recommendations, cache_timeout)
-        computed = True
+        if not computed and publish:
+            recommendations = recommendations.get()
+            cache.set(cache_key, recommendations, cache_timeout)
+            computed = True
 
     if not computed:
         wait_page = 'recommend'
         return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
     else:
-
+        print repr(recommendations)
         # pagination
         recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
 

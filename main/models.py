@@ -17,7 +17,47 @@ class Category(models.Model):
         return self.name
 
 
-class ItemManager(models.Manager):
+class SlicedRawQuerySet(object):
+    def __init__(self, raw_query, model=None, params=None, using=None):
+        self.raw_query = raw_query
+        self.model = model
+        self._db = using
+        self.params = params or ()
+        
+    def __repr__(self):
+        return "<SlicedRawQuerySet: %r>" % (self.raw_query % self.params)
+
+    def __getitem__(self, k):
+        if not isinstance(k, (slice, int, long)):
+            raise TypeError 
+        if isinstance(k, slice):
+            start = k.start or 0
+            stop = str(k.stop) or 'NULL'
+            query = "SELECT * FROM (%s) as raw LIMIT %s OFFSET %d" % (self.raw_query, stop, start)
+            rawqueryset = models.query.RawQuerySet(raw_query=query, model=self.model, params=self.params, using=self._db)
+            return list(rawqueryset)
+        else:
+            return self[k:k+1][0]
+
+    def __len__(self):
+        return self.count()
+
+    def count(self):
+        from django.db import connection, transaction
+        cursor = connection.cursor()
+        query = "SELECT COUNT(1) FROM (%s) as raw" % (self.raw_query)
+        cursor.execute(query, self.params)
+        row = cursor.fetchone()
+
+        return row[0]
+        
+
+class SlicedRawManager(models.Manager):
+    def slicedraw(self, raw_query, params=None, *args, **kwargs):
+        return SlicedRawQuerySet(raw_query=raw_query, model=self.model, params=params, using=self._db, *args, **kwargs) 
+
+
+class ItemManager(SlicedRawManager):
     def recommended_generic(self, category=None):
         '''
         Fetches items recommended generally (i.e. not for a specific user).
@@ -78,7 +118,7 @@ class ItemManager(models.Manager):
         #    where 
         #      rating: what the user has rated the item
         #      similarity: similarity between the user and self
-        recommended = Item.objects.raw("""
+        recommended = Item.objects.draw("""
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM((mo.rating-3)*ms.value) AS recommendation,
              mc.element_singular AS category_element

@@ -1,8 +1,8 @@
 from django.db import models
-from archfinch.main.models import Item
+from archfinch.main.models import Item, SlicedRawManager
 from archfinch.users.models import User
 
-class LinkManager(models.Manager):
+class LinkManager(SlicedRawManager):
     def recommended_generic(self, category=None, tags=None):
         '''
         Fetches links recommended generally (not for a specific user).
@@ -27,18 +27,11 @@ class LinkManager(models.Manager):
         #    where 
         #      rating: what the user has rated the item
         #      similarity: similarity between the user and self
-        recommended = Link.objects.raw("""
+        recommended = Link.objects.slicedraw("""
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
 
-             SUM((mo.rating-3)) *
-               (86400/extract(epoch from now()-ll.time))^2
-             AS recommendation,
-
              mc.element_singular AS category_element
-            FROM main_opinion mo
-              
-             INNER JOIN main_item mi
-              ON mo.item_id=mi.id
+             FROM main_item mi
              INNER JOIN main_category mc
               ON mc.id=mi.category_id
              INNER JOIN links_link ll
@@ -46,7 +39,7 @@ class LinkManager(models.Manager):
              
              """+where+"""
             GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
-            ORDER BY date_trunc('day', ll.time) DESC, recommendation DESC) AS recommended WHERE recommendation > 0""",
+            ORDER BY time DESC) AS recommended""",
             params)
 
         return recommended
@@ -71,12 +64,6 @@ class LinkManager(models.Manager):
             for tag in tags:
                 where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
 
-            archfinch_user = User.objects.get(username='archfinch')
-            ms_union = 'UNION SELECT %d, %d, 1' % (user.id, archfinch_user.id)
-
-        else:
-            ms_union = ''
-
         # Select items in order of their recommendation to self
         # 
         # recommendation =
@@ -85,30 +72,22 @@ class LinkManager(models.Manager):
         #    where 
         #      rating: what the user has rated the item
         #      similarity: similarity between the user and self
-        recommended = Link.objects.raw("""
-            SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
+        recommended = Link.objects.slicedraw("""
+            SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
 
-             SUM((mo.rating-3)*ms.value) *
-               (86400/extract(epoch from now()-ll.time))^2
-             AS recommendation,
              COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=mi.id)) AS rating,
 
              mc.element_singular AS category_element
-            FROM (SELECT user1_id, user2_id, value FROM main_similarity ms """+ms_union+""") as ms
-             INNER JOIN main_opinion mo
-              ON ms.user2_id=mo.user_id
-             INNER JOIN main_item mi
-              ON mo.item_id=mi.id
+             FROM main_item mi
              INNER JOIN main_category mc
               ON mc.id=mi.category_id
              INNER JOIN links_link ll
               ON ll.item_ptr_id=mi.id
-            WHERE ms.user1_id = %(user_id)s
-             AND ms.value > 0
-             AND NOT EXISTS (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id=%(user_id)s AND mtgd.item_id=ll.item_ptr_id)
+            WHERE
+             NOT EXISTS (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id=%(user_id)s AND mtgd.item_id=ll.item_ptr_id)
              """+where+"""
-            GROUP BY mi.id, mi.category_id, mi.parent_id, mi.name, category_element, ll.item_ptr_id, ll.time
-            ORDER BY date_trunc('day', ll.time) DESC,recommendation DESC) AS recommended WHERE recommendation > 0""",
+            ORDER BY time DESC
+            """,
             params)
 
         return recommended
