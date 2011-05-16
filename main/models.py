@@ -32,8 +32,8 @@ class SlicedRawQuerySet(object):
             raise TypeError 
         if isinstance(k, slice):
             start = k.start or 0
-            stop = str(k.stop) or 'NULL'
-            query = "SELECT * FROM (%s) as raw LIMIT %s OFFSET %d" % (self.raw_query, stop, start)
+            limit = str(k.stop-start) or 'NULL'
+            query = "SELECT * FROM (%s) as raw LIMIT %s OFFSET %d" % (self.raw_query, limit, start)
             rawqueryset = models.query.RawQuerySet(raw_query=query, model=self.model, params=self.params, using=self._db)
             return list(rawqueryset)
         else:
