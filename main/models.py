@@ -415,6 +415,8 @@ class Item(models.Model):
 
     def submitter_show(self):
         submitter = self.submitter
+        if not submitter:
+            return None
 
         if submitter.username == 'archfinch':
             return None
