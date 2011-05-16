@@ -103,10 +103,6 @@
 
 {% if not item.is_link and not item.is_comment %}
 <div id="ratings_graph"></div>
-{% else %}
-{% if item.is_link %}
-<p>{{ item.link.views }} views</p>
-{% endif %}
 {% endif %}
 
 {% if item.submitter_show %}
