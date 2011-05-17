@@ -270,6 +270,8 @@ class Item(models.Model):
             """,
             {'item_id': self.id, 'tag_ids': tuple(map(lambda x: x.id, popular_tags))})
 
+        print items
+
         return items[:10]
 
     def also_liked(self, user=None, category=None, category_id=None, like=True, also_like=True):
@@ -422,6 +424,8 @@ class Item(models.Model):
         return ratings_count
 
     def submitter_show(self):
+        if not self.submitter_id:
+            return None
         submitter = self.submitter
 
         try:
@@ -518,8 +522,8 @@ class TagManager(models.Manager):
         tags = []
         for tag_repr in tags_repr:
             tag_repr = tag_repr.split('/')
-            tag = Tag(name=tag_repr[0])
-            for opt in tag_repr[1:]:
+            tag = Tag(id=tag_repr[0], name=tag_repr[1])
+            for opt in tag_repr[2:]:
                 if opt == 'hide':
                     tag.hide_tag = True
             tags.append(tag)
@@ -538,7 +542,7 @@ class Tag(models.Model):
         return self.name
 
     def to_repr(self):
-        r = self.name
+        r = '%d/%s' % (self.id, self.name)
         if self.hide_tag:
             r += '/hide'
         return r
