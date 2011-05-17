@@ -1,0 +1,22 @@
+{% load reversetag %}
+{% for link in recommendations %}
+    {% include "includes/opinionbox.html" with page_id="links_recommend" item=link item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter seq_term2=link.id your_rating=link.rating %}
+{% empty %}
+    <div class="big">
+        <p>Nothing to see here, move along.</p>
+    </div>
+{% endfor %}
+{% if tags %}
+    {% reverse partial "fresh-tags-paged" tag_names=tag_names|join:"/" as pagination_url %}
+{% else %}
+    {% if usernames_specified %}
+        {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
+    {% else %}
+        {% if category_slug %}
+            {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
+        {% else %}
+            {% reverse partial "recommend-paged" as pagination_url %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+{% include "includes/new_pagination.html" %}

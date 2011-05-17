@@ -4,6 +4,7 @@
 {% load nbsp %}
 {% load sequence %}
 {% load reversetag %}
+{% load cache %}
 
 {% block title %}
     {% if category %}
@@ -28,7 +29,7 @@
 </h1>
 
 {% for link in recommendations %}
-    {% include "includes/opinionbox.html" with page_id="links_recommend" item=link item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter your_rating=link.rating %}
+    {% include "includes/opinionbox.html" with page_id="links_recommend" item=link item_id=link.id yr_big=1 terse_layout=1 item_name=link.name category_singular=link.category_element seq_term=forloop.counter seq_term2=link.id your_rating=link.rating %}
 {% empty %}
     <div class="big">
         <p>Nothing to see here, move along.</p>
@@ -47,7 +48,7 @@
         {% endif %}
     {% endif %}
 {% endif %}
-{% include "includes/pagination.html" %}
+{% include "includes/new_pagination.html" %}
 
 {% endblock %}
 {% block content_right %}
@@ -75,25 +76,27 @@
         <fb:like href="http://archfinch.com/" show_faces="true" width="225" font="verdana"></fb:like> 
     </div>
 
-    {% if related_tags %}
-    <h2>Related tags</h2>
-        <p>
-        {% for tag in related_tags|slice:":30" %}
-            <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
-        {% endfor %}
-        </p>
-        {% if related_tags|length > 30 %}
-        <div class="show">
-            <p>(<a href="#" class="showhide">full list</a>)</p>
-        </div>
-        <div class="hide" style='color: black'>
+    {% cache 18000 related_tags tag_names %}
+        {% if related_tags %}
+        <h2>Related tags</h2>
             <p>
-            {% for tag in related_tags|slice:"30:" %}
+            {% for tag in related_tags|slice:":30" %}
                 <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
-            {% endfor %}</p>
-        </div>
+            {% endfor %}
+            </p>
+            {% if related_tags|length > 30 %}
+            <div class="show">
+                <p>(<a href="#" class="showhide">full list</a>)</p>
+            </div>
+            <div class="hide" style='color: black'>
+                <p>
+                {% for tag in related_tags|slice:"30:" %}
+                    <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
+                {% endfor %}</p>
+            </div>
+            {% endif %}
         {% endif %}
-    {% endif %}
+    {% endcache %}
 
 {% endblock %}
 {% block media %}

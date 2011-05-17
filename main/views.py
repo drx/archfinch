@@ -88,14 +88,12 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @publish_static
-def recommend(request, category_slug=None, page=None, usernames=None, tag_names=None, publish=False):
+def recommend(request, category_slug=None, before=None, usernames=None, tag_names=None, publish=False, json=False):
     '''
     Shows a list of recommendations.
     '''
-    if page is None:
-        page = 1
-    else:
-        page = int(page)
+    if before is not None:
+        before = base36_to_int(before)
      
     fresh = False
     tags = None
@@ -198,13 +196,30 @@ def recommend(request, category_slug=None, page=None, usernames=None, tag_names=
         wait_page = 'recommend'
         return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
     else:
-        # pagination
-        recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
-
         if category is not None and category.id in (9,10,11) or fresh:
+            import time, datetime
             # links
-            response = render_to_response("links/recommend.html", locals(), context_instance=RequestContext(request))
+            if before:
+                before = datetime.datetime.fromtimestamp(before)
+            else:
+                before = datetime.datetime.now()
+            recommendations = recommendations.timeslice(before=before)
+            if len(recommendations) > 10:
+                next_before = int(time.mktime(recommendations[10].time.timetuple()))
+                recommendations = recommendations[:10]
+
+            if json:
+                ext = 'json'
+            else:
+                ext = 'html'
+            response = render_to_response("links/recommend.%s" % (ext,), locals(), context_instance=RequestContext(request))
+            if json:
+                json_data = simplejson.dumps(response.content)
+                return HttpResponse(json_data, mimetype='application/json')
         else:
+            # pagination
+            recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
+
             if request.user.is_authenticated():
                 user_categories = request.user.categories()
                 categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')

@@ -22,13 +22,13 @@ class SlicedRawQuerySet(object):
         self.raw_query = raw_query
         self.model = model
         self._db = using
-        self.params = params or ()
+        self.params = params or {}
         
     def __repr__(self):
         return "<SlicedRawQuerySet: %r>" % (self.raw_query % self.params)
 
     def __getitem__(self, k):
-        if not isinstance(k, (slice, int, long)):
+        if not isinstance(k, (slice, int, long, dict)):
             raise TypeError 
         if isinstance(k, slice):
             start = k.start or 0
@@ -36,6 +36,14 @@ class SlicedRawQuerySet(object):
             query = "SELECT * FROM (%s) as raw LIMIT %s OFFSET %d" % (self.raw_query, limit, start)
             rawqueryset = models.query.RawQuerySet(raw_query=query, model=self.model, params=self.params, using=self._db)
             return list(rawqueryset)
+        elif isinstance(k, dict):
+            if k['type'] == 'timeslice':
+                params = self.params
+                params['before'] = k['before']
+                params['n'] = k.get('n', 10) + 1
+                query = "SELECT * FROM (%s) as raw WHERE time <= %%(before)s LIMIT %%(n)s" % (self.raw_query)
+                rawqueryset = models.query.RawQuerySet(raw_query=query, model=self.model, params=params, using=self._db)
+                return list(rawqueryset)
         else:
             return self[k:k+1][0]
 
@@ -50,6 +58,13 @@ class SlicedRawQuerySet(object):
         row = cursor.fetchone()
 
         return row[0]
+
+    
+    def timeslice(self, **kwargs):
+        k = kwargs
+        k['type'] = 'timeslice'
+        return self[k]
+        
         
 
 class SlicedRawManager(models.Manager):

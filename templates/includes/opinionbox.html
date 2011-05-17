@@ -19,7 +19,7 @@
         {% endfor %}
     </div>
     {% if your_rating %}
-        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}"{% endif %}>{{ your_rating }}</div>
+        <div class="rating rating{{ your_rating }}" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}>{{ your_rating }}</div>
     {% else %}
         <div class="rating notrated" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}></div>
     {% endif %}

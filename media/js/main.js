@@ -144,7 +144,7 @@ function task_wait(task_id)
         }
     })
 }
-function generate_lists_tip(){
+function generate_opinionbox_tips(){
     $("img.add_to_list").each(function(){$(this).qtip({
         content: "<div style='float: left' class='tip'>Add to:<br /><ul item_id='"+get_item_id($(this))+"'>"+user_lists+"</ul><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
             position: {
@@ -171,9 +171,6 @@ function generate_lists_tip(){
         }
             
     })}); 
-}
-
-$(document).ready(function(){
     $("a.addtag").each(function(){$(this).qtip({
         content: "<div style='float: left' class='tip'><form class='tagthis' item_id='"+get_item_id($(this))+"'><input type='text' name='tag' style='border-color: #0E8D94; outline: none'></form><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
             position: {
@@ -210,6 +207,30 @@ $(document).ready(function(){
     })
     .bind('click', function(event){ event.preventDefault(); return false; });
     }); 
+
+    $('.tag a.taglink').each(function(){
+        $(this).qtip(
+        {
+            content: '<span class="taglinks"><a href="'+$(this).attr('follow_url')+'">follow</a><br /><a href="'+$(this).attr('block_url')+'">block</a></span>',
+            position: {
+                corner: {
+                    target: 'bottomLeft'
+                }
+            },
+            show: {
+                delay: 0,
+                solo: true
+            },
+            hide: {
+                fixed: true
+            }
+        });
+    });
+
+
+}
+
+$(document).ready(function(){
     $(".box").live("hover", 
         function(e){
             if (e.type == "mouseenter")
@@ -278,24 +299,6 @@ $(document).ready(function(){
             }
         })
         e.preventDefault();
-    });
-    $('.tag a.taglink').each(function(){
-        $(this).qtip(
-        {
-            content: '<span class="taglinks"><a href="'+$(this).attr('follow_url')+'">follow</a><br /><a href="'+$(this).attr('block_url')+'">block</a></span>',
-            position: {
-                corner: {
-                    target: 'bottomLeft'
-                }
-            },
-            show: {
-                delay: 0,
-                solo: true
-            },
-            hide: {
-                fixed: true
-            }
-        });
     });
     $(".user_rate .rating_small:not(img)").live('click', function(e)
     {
@@ -807,7 +810,7 @@ $(document).ready(function(){
             if (data.success)
             {
                 $("div.also_liked").html(data.items);
-                generate_lists_tip();
+                generate_opinionbox_tips();
             }
             else
             {
@@ -916,6 +919,18 @@ $(document).ready(function(){
             previousPoint = null;
             $(this).qtip("hide");
         }
+    });
+
+    /* pagination */
+    $('div.pagination button.more').live('click', function(e){
+        loading = $("<img/>").attr("src", "/media/images/ajax-loader.gif").addClass("loading");
+        href = $(this).attr("href") + '.json';
+        $(this).replaceWith(loading);
+        $.getJSON(href, function(data){
+            loading.parent().replaceWith(data);
+            generate_opinionbox_tips();
+        });
+        
     });
 
         
