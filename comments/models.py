@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 from archfinch.main.models import Item
 from archfinch.utils.spam import AntiSpamModelForm
 
@@ -22,3 +23,11 @@ class AddCommentForm(AntiSpamModelForm):
     class Meta:
         model = Comment
         exclude = ('tags',)
+
+def comment_count_update(sender, **kwargs):
+    instance = kwargs['instance']
+
+    instance.root.update_comment_count()
+
+post_save.connect(comment_count_update, Comment)
+

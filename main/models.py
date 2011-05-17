@@ -201,6 +201,9 @@ class Item(models.Model):
         item_profile = ItemProfile(item=self)
         item_profile.save()
         self.profile = item_profile
+        item_stats = ItemStats(item=self)
+        item_stats.save()
+        self.stats = item_stats
         self.save()
         if scraped_data['category'] in ('pic', 'video'):
             if scraped_data['category'] == 'pic':
@@ -332,6 +335,11 @@ class Item(models.Model):
     def comment_count(self):
         return self.comment_tree(count=True)
 
+    def update_comment_count(self):
+        self.stats.comment_count = self.comment_count()
+        self.stats.save()
+
+
 
     def comment_tree(self, count=False, selected_path=None, user=None):
         params = {'root_id': self.id, 'selected_1': '', 'selected_n': ''}
@@ -415,14 +423,16 @@ class Item(models.Model):
 
     def submitter_show(self):
         submitter = self.submitter
-        if not submitter:
-            return None
 
-        if submitter.username == 'archfinch':
+        try:
+            username = self.submitter_username
+        except AttributeError:
+            username = submitter.username
+        if username == 'archfinch':
             return None
 
         # if the submitter is drx, fake the user
-        if submitter.id == 1:
+        if self.submitter_id == 1:
             if not self.options.filter(option="showrealsubmitter").exists():
                 new_id = self.id%128 + 100
                 submitter = submitter.__class__.objects.get(id=new_id)
@@ -447,8 +457,30 @@ class Item(models.Model):
         action.save()
 
 
+    def update_popular_tags(self):
+        r = ','.join([tag.to_repr() for tag in self.popular_tags_get()])
+        self.stats.popular_tags = r
+        self.stats.save()
+
+
+    def popular_tags_get(self):
+        return sorted(self.tags.annotate(Count('name')).order_by('-name__count')[:6], key=lambda tag: tag.name)
+
+
     def popular_tags(self):
-        return self.tags.annotate(Count('name')).order_by('name')[:6]
+        tags_repr = None
+        try:
+            tags_repr = self._popular_tags
+        except AttributeError:
+            try:
+                tags_repr = self.stats.popular_tags
+            except:
+                pass
+
+        if tags_repr is not None:
+            return Tag.objects.from_repr(tags_repr)
+        else:
+            return self.popular_tags_get()
 
 
 class ItemProfile(models.Model):
@@ -479,15 +511,37 @@ class TagManager(models.Manager):
             HAVING count(1) >= 2
             ORDER BY count(1) DESC""", params)
 
+    def from_repr(self, tags_repr):
+        if not tags_repr:
+            return []
+        tags_repr = tags_repr.split(',')
+        tags = []
+        for tag_repr in tags_repr:
+            tag_repr = tag_repr.split('/')
+            tag = Tag(name=tag_repr[0])
+            for opt in tag_repr[1:]:
+                if opt == 'hide':
+                    tag.hide_tag = True
+            tags.append(tag)
+        return tags
+
 
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True, db_index=True)
+    hide_item = models.BooleanField(default=False)
+    hide_tag = models.BooleanField(default=False)
 
     objects = TagManager()
 
     def __unicode__(self):
         return self.name
+
+    def to_repr(self):
+        r = self.name
+        if self.hide_tag:
+            r += '/hide'
+        return r
 
 
 class Tagged(models.Model):
@@ -500,6 +554,14 @@ class Tagged(models.Model):
 
     def __unicode__(self):
         return '%s tagged %s with %s' % (self.user, self.item, self.tag)
+
+
+def popular_tags_update(sender, **kwargs):
+    instance = kwargs['instance']
+
+    instance.item.update_popular_tags()
+
+post_save.connect(popular_tags_update, Tagged)
 
 
 class TagFollow(models.Model):
@@ -661,6 +723,13 @@ class Similarity(models.Model):
     def __unicode__(self):
         return "S(%s, %s) = %d" % (self.user1.username,
             self.user2.username, self.value)
+
+
+class ItemStats(models.Model):
+    item = models.OneToOneField(Item, related_name='stats', parent_link=True)
+
+    comment_count = models.IntegerField(default=0)
+    popular_tags = models.CharField(max_length=2000, default='')
 
 
 def bot_post_save(sender, **kwargs):

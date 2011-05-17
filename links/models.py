@@ -73,6 +73,8 @@ class LinkManager(SlicedRawManager):
         #      similarity: similarity between the user and self
         recommended = Link.objects.slicedraw("""
             SELECT mi.id, mi.category_id, mi.parent_id, mi.name, ll.item_ptr_id, ll.time,
+             mis.comment_count, mis.popular_tags as _popular_tags, url, image, submitter_id,
+             au.username AS submitter_username,
 
              COALESCE((SELECT rating FROM main_opinion mo WHERE mo.user_id=%(user_id)s AND mo.item_id=mi.id)) AS rating,
 
@@ -82,6 +84,10 @@ class LinkManager(SlicedRawManager):
               ON mc.id=mi.category_id
              INNER JOIN links_link ll
               ON ll.item_ptr_id=mi.id
+             INNER JOIN main_itemstats mis
+              ON mi.id=mis.item_id
+             INNER JOIN auth_user au
+              ON au.id=mi.submitter_id
             WHERE
              NOT EXISTS (SELECT 1 FROM main_tagblock mtb, main_tagged mtgd WHERE mtgd.tag_id=mtb.tag_id AND mtb.user_id=%(user_id)s AND mtgd.item_id=ll.item_ptr_id)
              """+where+"""
