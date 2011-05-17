@@ -471,6 +471,9 @@ class Item(models.Model):
         return sorted(self.tags.annotate(Count('name')).order_by('-name__count')[:6], key=lambda tag: tag.name)
 
 
+    def popular_tags_names(self):
+        return map(lambda tag: tag.name, self.popular_tags())
+
     def popular_tags(self):
         tags_repr = None
         try:

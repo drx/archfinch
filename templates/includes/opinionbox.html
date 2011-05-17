@@ -6,13 +6,15 @@
         <a class="addtag" href="#">Tag it</a>
         {# show selected tags last #}
         {% for tag in item.popular_tags %}
-            {% if tag not in selected_tags or not selected_tags %}
-            <span class="tag {% if tag in selected_tags %}selected_tag{% endif %} {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span>
+            {% if tag.name not in selected_tags or not selected_tags %}            
+                {% if not tag.hide_tag %}
+                <span class="tag {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span>
+                {% endif %}
             {% endif %}
         {% endfor %}
         {% for tag in item.popular_tags %}
-            {% if tag in selected_tags %}
-            <span class="tag {% if tag in selected_tags %}selected_tag{% endif %} {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span>
+            {% if tag.name in selected_tags %}
+            <span class="tag selected_tag {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span>
             {% endif %}
         {% endfor %}
     </div>
