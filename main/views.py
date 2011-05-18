@@ -99,13 +99,13 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
      
     fresh = False
     tags = None
+    tag_names = []
     if tag_names:
         fresh = True
         category = None
         tag_names = tag_names.split('/')
         tags = Tag.objects.filter(name__in=tag_names)
         selected_tags = tag_names
-        related_tags = list(Tag.objects.related_tags(tags))
 
     elif category_slug is not None and category_slug:
         if category_slug == 'fresh':
@@ -115,6 +115,8 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
             category = Category.objects.get(slug=category_slug)
     else:
         category = None
+
+    related_tags = list(Tag.objects.related_tags(tags))
 
     n = 100
     if category and category.name in ('Videos', 'Pics') or fresh:
