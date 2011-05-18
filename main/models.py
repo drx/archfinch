@@ -85,7 +85,7 @@ class ItemManager(SlicedRawManager):
         else:
             where += " mc.hide = 'f'"
 
-        recommended = Item.objects.raw("""
+        recommended = Item.objects.slicedraw("""
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM((mo.rating-3)) AS recommendation,
              mc.element_singular AS category_element
