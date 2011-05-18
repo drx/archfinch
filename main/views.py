@@ -117,8 +117,18 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
 
     if not tag_names:
         tag_names = []
+    if tag_names:
+        tag_names_k = ','.join(tag_names)
+    else:
+        tag_names_k = ''
 
-    related_tags = list(Tag.objects.related_tags(tags))
+    related_cache_key = 'related_tags;%s' % (tag_names_k,)
+    cached_value = cache.get(related_cache_key)
+    if cached_value:
+        related_tags = cached_value
+    else:
+        related_tags = list(Tag.objects.related_tags(tags))
+        cache.set(related_cache_key, related_tags, 60*60*6)
 
     n = 100
     if category and category.name in ('Videos', 'Pics') or fresh:
@@ -149,11 +159,6 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
 
     if generic:
         usernames_k = '#generic'
-
-    if tag_names:
-        tag_names_k = ','.join(tag_names)
-    else:
-        tag_names_k = ''
 
     cache_key = 'recommend;%s;%s;%s;%s' % (usernames_k, category_slug, tag_names_k, before)
     if settings.DEBUG:
