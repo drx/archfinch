@@ -145,32 +145,39 @@ function task_wait(task_id)
     })
 }
 function generate_opinionbox_tips(){
-    $("img.add_to_list").each(function(){$(this).qtip({
-        content: "<div style='float: left' class='tip'>Add to:<br /><ul item_id='"+get_item_id($(this))+"'>"+user_lists+"</ul><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
-            position: {
-            corner: {
-                target: 'topRight',
-                tooltip: 'bottomLeft'
+    if (window.user_lists)
+    {
+        $("img.add_to_list").each(function(){$(this).qtip({
+            content: "<div style='float: left' class='tip'>Add to:<br /><ul item_id='"+get_item_id($(this))+"'>"+user_lists+"</ul><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
+                position: {
+                corner: {
+                    target: 'topRight',
+                    tooltip: 'bottomLeft'
+                },
+                adjust: {
+                    screen: true
+                }
             },
-            adjust: {
-                screen: true
+            show: {
+                when: 'click',
+                solo: true
+            },
+            hide: 'unfocus',
+            style: {
+                tip: true,
+                border: {
+                    width: 1,
+                    radius: 5
+                },
+                name: 'light'
             }
-        },
-        show: {
-            when: 'click',
-            solo: true
-        },
-        hide: 'unfocus',
-        style: {
-            tip: true,
-            border: {
-                width: 1,
-                radius: 5
-            },
-            name: 'light'
-        }
-            
-    })}); 
+                
+        })}); 
+    }
+    else
+    {
+        $("img.add_to_list").remove();
+    }
     $("a.addtag").each(function(){$(this).qtip({
         content: "<div style='float: left' class='tip'><form class='tagthis' item_id='"+get_item_id($(this))+"'><input type='text' name='tag' style='border-color: #0E8D94; outline: none'></form><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
             position: {
