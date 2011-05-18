@@ -1135,6 +1135,10 @@ div.pagination a.more
     background-color: #0e8d94; 
     color: #ffffff;
 }
+.followed_tag .taglink
+{
+    background-color: #ffab07;
+}
 .selected_tag .taglink
 {
     background-color: #434D53;

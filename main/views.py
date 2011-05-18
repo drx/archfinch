@@ -90,7 +90,7 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @publish_static
-def recommend(request, category_slug=None, before=None, usernames=None, tag_names=None, publish=False, json=False):
+def recommend(request, followed=False, category_slug=None, before=None, usernames=None, tag_names=None, publish=False, json=False):
     '''
     Shows a list of recommendations.
     '''
@@ -112,6 +112,9 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
             category = None
         else:
             category = Category.objects.get(slug=category_slug)
+    elif followed:
+        fresh = True
+        category = None
     else:
         category = None
 
@@ -122,13 +125,14 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
     else:
         tag_names_k = ''
 
-    related_cache_key = 'related_tags;%s' % (tag_names_k,)
-    cached_value = cache.get(related_cache_key)
-    if cached_value:
-        related_tags = cached_value
-    else:
-        related_tags = list(Tag.objects.related_tags(tags))
-        cache.set(related_cache_key, related_tags, 60*60*6)
+    if not followed:
+        related_cache_key = 'related_tags;%s' % (tag_names_k,)
+        cached_value = cache.get(related_cache_key)
+        if cached_value:
+            related_tags = cached_value
+        else:
+            related_tags = list(Tag.objects.related_tags(tags))
+            cache.set(related_cache_key, related_tags, 60*60*6)
 
     n = 100
     if category and category.name in ('Videos', 'Pics') or fresh:
@@ -157,10 +161,13 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
     except AttributeError:
         generic = True
 
+    if followed:
+        generic = False
+
     if generic:
         usernames_k = '#generic'
 
-    cache_key = 'recommend;%s;%s;%s;%s' % (usernames_k, category_slug, tag_names_k, before)
+    cache_key = 'recommend;%s;%s;%s;%s;%s' % (usernames_k, category_slug, tag_names_k, before, followed)
     if settings.DEBUG:
         cache_timeout = 30
     else:
@@ -174,7 +181,7 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
         if generic:
             recommendations = Link.objects.recommended_generic(category=category, tags=tags)
         else:
-            recommendations = Link.objects.recommended(users[0], category=category, tags=tags)
+            recommendations = Link.objects.recommended(users[0], category=category, tags=tags, followed=followed)
 
     else:
         if before:

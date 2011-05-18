@@ -44,7 +44,7 @@ class LinkManager(SlicedRawManager):
         return recommended
 
 
-    def recommended(self, user, category=None, category_id=None, tags=None):
+    def recommended(self, user, category=None, category_id=None, tags=None, followed=False):
         '''
         Fetches links recommended for the user.
         '''
@@ -62,6 +62,10 @@ class LinkManager(SlicedRawManager):
         if tags:
             for tag in tags:
                 where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
+
+        if followed:
+            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id in %(followed_tag_ids)s)'
+            params['followed_tag_ids'] = tuple(map(lambda follow: follow.tag.id, user.tagfollow_set.all()))
 
         # Select items in order of their recommendation to self
         # 

@@ -145,6 +145,12 @@ function task_wait(task_id)
     })
 }
 function generate_opinionbox_tips(){
+    if (window.followed_tags)
+    {
+        $.each(followed_tags, function(i){
+            $("a.taglink:contains('"+followed_tags[i]+"')").parent().addClass("followed_tag");
+        });
+    }
     if (window.user_lists)
     {
         $("img.add_to_list").each(function(){$(this).qtip({
