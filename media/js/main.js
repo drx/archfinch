@@ -222,9 +222,14 @@ function generate_opinionbox_tips(){
     }); 
 
     $('.tag a.taglink').each(function(){
+        follow = 'follow'
+        if (window.followed_tags && $.inArray($(this).text(), followed_tags) != -1)
+        {
+            follow = 'unfollow'
+        }
         $(this).qtip(
         {
-            content: '<span class="taglinks"><a href="'+$(this).attr('follow_url')+'">follow</a><br /><a href="'+$(this).attr('block_url')+'">block</a></span>',
+            content: '<span class="taglinks"><a href="'+$(this).attr('action_url')+'?action='+follow+'">'+follow+'</a><br /><a href="'+$(this).attr('action_url')+'?action=block">block</a></span>',
             position: {
                 corner: {
                     target: 'bottomLeft'

@@ -322,12 +322,30 @@ def add_tag(request, item_id):
 
 
 @allow_lazy_user
-def block_tag(request, tag_name):
+def tag_action(request, tag_name):
     '''
-    Remove a tag for a user.
+    (Un)block/follow a tag for a user.
     '''
+    action = request.GET['action']
+    if action == 'follow':
+        model = TagFollow
+        un = False
+    elif action == 'block':
+        model = TagBlock
+        un = False
+    elif action == 'unfollow':
+        model = TagFollow
+        un = True
+    elif action == 'unblock':
+        model = TagBlock
+        un = True
+    else:
+        return
+
     tag = get_object_or_404(Tag, name=tag_name)
-    TagBlock.objects.get_or_create(tag=tag, user=request.user)
+    instance, created = model.objects.get_or_create(tag=tag, user=request.user)
+    if un:
+        instance.delete() 
 
     redirect_url = request.META['HTTP_REFERER'] or '/'
     return HttpResponseRedirect(redirect_url)    
