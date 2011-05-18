@@ -528,12 +528,12 @@ class TagManager(models.Manager):
         else:
             where = ''
         return Tag.objects.raw("""
-            SELECT mt.id, mt.name, count(1) as count
+            SELECT mt.id, mt.name, mt.hide_tag, mt.hide_item, count(1) as count
             FROM main_tagged mtgd1
              INNER JOIN main_tag mt
               ON mt.id=mtgd1.tag_id
              """+where+"""
-            GROUP BY mt.id, mt.name
+            GROUP BY mt.id, mt.name, mt.hide_tag, mt.hide_item
             HAVING count(1) >= 2
             ORDER BY count(1) DESC""", params)
 
