@@ -227,9 +227,14 @@ function generate_opinionbox_tips(){
         {
             follow = 'unfollow'
         }
+        block = 'block'
+        if ($(this).parent().hasClass('blocked_tag'))
+        {
+            block = 'unblock'
+        }
         $(this).qtip(
         {
-            content: '<span class="taglinks"><a href="'+$(this).attr('action_url')+'?action='+follow+'">'+follow+'</a><br /><a href="'+$(this).attr('action_url')+'?action=block">block</a></span>',
+            content: '<span class="taglinks"><a href="'+$(this).attr('action_url')+'?action='+follow+'">'+follow+'</a><br /><a href="'+$(this).attr('action_url')+'?action='+block+'">'+block+'</a></span>',
             position: {
                 corner: {
                     target: 'bottomLeft'

@@ -80,6 +80,22 @@
         <fb:like href="http://archfinch.com/" show_faces="true" width="225" font="verdana"></fb:like> 
     </div>
 
+    {% if followed %}
+        <h2>Followed tags</h2>
+        <p>
+        {% for follow in user.tagfollow_set.all %}
+            <span class="tag"><a class="taglink" href="{% url fresh-tags follow.tag.name %}" action_url="{% url tag-action follow.tag.name %}">{{ follow.tag.name }}</a><br />
+        {% endfor %}
+        </p>
+        {% if user.tagblock_set.exists %}
+            <h2>Blocked tags</h2>
+            <p>
+            {% for tagblock in user.tagblock_set.all %}
+                <span class="tag blocked_tag"><a class="taglink" href="{% url fresh-tags tagblock.tag.name %}" action_url="{% url tag-action tagblock.tag.name %}">{{ tagblock.tag.name }}</a><br />
+            {% endfor %}
+            </p>
+        {% endif %}
+    {% endif %}
     {% if related_tags %}
         {% if tag_names %}
             <h2>Related tags</h2>
