@@ -225,7 +225,6 @@ function generate_opinionbox_tips(){
                 }
             },
             show: {
-                delay: 0,
                 solo: true
             },
             hide: {
