@@ -39,16 +39,20 @@
         <p>Nothing to see here, move along.</p>
     </div>
 {% endfor %}
-{% if tags %}
-    {% reverse partial "fresh-tags-paged" tag_names=tag_names|join:"/" as pagination_url %}
+{% if followed %}
+    {% reverse partial "followed" as pagination_url %}
 {% else %}
-    {% if usernames_specified %}
-        {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
+    {% if tags %}
+        {% reverse partial "fresh-tags-paged" tag_names=tag_names|join:"/" as pagination_url %}
     {% else %}
-        {% if category_slug %}
-            {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
+        {% if usernames_specified %}
+            {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
         {% else %}
-            {% reverse partial "recommend-paged" as pagination_url %}
+            {% if category_slug %}
+                {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
+            {% else %}
+                {% reverse partial "recommend-paged" as pagination_url %}
+            {% endif %}
         {% endif %}
     {% endif %}
 {% endif %}
