@@ -233,7 +233,8 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
         if json:
             json_data = simplejson.dumps(response.content)
             return HttpResponse(json_data, mimetype='application/json')
-        response.publish_static = True
+        if not tags or 'hn' in tag_names:
+            response.publish_static = True
         return response
 
 
