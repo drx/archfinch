@@ -106,11 +106,6 @@ def sync_hn():
         synced = Synced(link=link, source=hn_source, original_id=str(item['id']))
         synced.save()
 
-        if not created:
-            if link.tags.exists():
-                synced.scraped = True
-                synced.save()
-
         for tag in tags:
             link.add_tag(tag, archfinch_user)
 
