@@ -88,7 +88,7 @@
         {% endif %}
         <p>
         {% for tag in related_tags|slice:":30" %}
-            <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
+            <span class="tag"><a class="taglink" href="{% if tag_names %}{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}{% else %}{% url fresh-tags tag.name %}{% endif %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
         {% endfor %}
         </p>
         {% if related_tags|length > 30 %}
@@ -98,7 +98,7 @@
         <div class="hide" style='color: black'>
             <p>
             {% for tag in related_tags|slice:"30:" %}
-                <span class="tag"><a class="taglink" href="{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
+                <span class="tag"><a class="taglink" href="{% if tag_names %}{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}{% else %}{% url fresh-tags tag.name %}{% endif %}" block_url="{% url block-tag tag.name %}" follow_url="{% url follow-tag tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
             {% endfor %}</p>
         </div>
         {% endif %}

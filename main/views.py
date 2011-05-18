@@ -99,7 +99,6 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
      
     fresh = False
     tags = None
-    tag_names = []
     if tag_names:
         fresh = True
         category = None
@@ -115,6 +114,9 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
             category = Category.objects.get(slug=category_slug)
     else:
         category = None
+
+    if not tag_names:
+        tag_names = []
 
     related_tags = list(Tag.objects.related_tags(tags))
 
