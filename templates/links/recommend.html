@@ -27,7 +27,7 @@
     {% if tags %}
         Tags: {{ tags|join:", " }}
     {% else %}
-        Things you might like.
+        Things you might like
     {% endif %}
 {% endif %}
 </h1>
@@ -114,17 +114,7 @@
         {% endfor %}
         </p>
         {% if related_tags|length > 30 %}
-        <div class="show">
-            <p>(<a href="#" class="showhide">full list</a>)</p>
-        </div>
-        <div class="hide" style='color: black'>
-            <p>
-            {% for tag in related_tags|slice:"30:" %}
-                {% if not tag.hide_tag %}
-                    <span class="tag"><a class="taglink" href="{% if tag_names %}{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}{% else %}{% url fresh-tags tag.name %}{% endif %}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
-                {% endif %}
-            {% endfor %}</p>
-        </div>
+            <p><a href="{% url explore-tags %}">explore more tags »</a></p>
         {% endif %}
     {% endif %}
 

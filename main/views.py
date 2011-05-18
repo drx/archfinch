@@ -254,6 +254,22 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         return response
 
 
+@publish_static
+def explore_tags(request):
+    cache_key = 'popular_tags'
+    cached_value = cache.get(cache_key)
+    if cached_value:
+        popular_tags = cached_value
+    else:
+        popular_tags = list(Tag.objects.related_tags([]))
+        cache.set(cache_key, popular_tags, 60*60*6)
+
+    response = render_to_response("main/explore_tags.html", locals(), context_instance=RequestContext(request))
+    response.publish_static = True
+    return response
+
+
+
 @allow_lazy_user
 def opinion_set(request, item_id, rating):
     '''
@@ -361,6 +377,9 @@ def follow_tag(request, tag_name):
 
     redirect_url = request.META['HTTP_REFERER'] or '/'
     return HttpResponseRedirect(redirect_url)    
+
+
+
 
 
 def task_wait_error(request):
