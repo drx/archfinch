@@ -516,6 +516,8 @@ class ItemOption(models.Model):
 
 class TagManager(models.Manager):
     def related_tags(self, tags):
+        if not tags:
+            return Tag.objects.none()
         params = {'tag_ids': tuple(map(lambda tag: tag.id, tags))}
         where = ''
         for tag in tags:
