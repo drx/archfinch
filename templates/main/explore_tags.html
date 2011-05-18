@@ -11,27 +11,10 @@ Explore tags - Archfinch
 {% block content_left %}
 <h1>Explore tags</h1>
 
-<script>
-$(document).ready(function(){
-    $("input#tagfilter").keyup(function(e){
-        filter = $(this).val();
-        if (filter)
-        {
-            $('div.tag-explorer div.tag-cell').hide();
-            $('div.tag-explorer div.tag-cell[tag*='+filter+']').show();
-        }
-        else
-        {
-            $('div.tag-explorer div.tag-cell').show();
-        }
-    });
-});
-</script>
-
-<div style='margin: 0.5em' class='tag-explorer'>
-    <div style='text-align: center; margin: 1em'><input type='text' id='tagfilter'></div>
+<div class='tag-explorer'>
+    <div class='tagfilter-container'><input type='text' id='tagfilter'></div>
     {% for tag in popular_tags %}
-        <div style='width: 220px; display: inline-block;' class='tag-cell' tag='{{ tag.name }}'>
+        <div class='tag-cell' tag='{{ tag.name }}'>
             <span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span>
         </div>
     {% endfor %}

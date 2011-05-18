@@ -1205,3 +1205,18 @@ pre
     border-color: #888;
     background-color: #f8f8ff;
 }
+
+div.tag-explorer
+{
+    margin: 0.5em;
+}
+div.tagfilter-container
+{
+    text-align: center;
+    margin: 1em;
+}
+div.tag-cell
+{
+    width: 220px;
+    display: inline-block;
+}

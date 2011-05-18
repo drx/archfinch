@@ -955,6 +955,18 @@ $(document).ready(function(){
         
     });
 
-        
+    $("input#tagfilter").keyup(function(e){
+        filter = $(this).val();
+        if (filter)
+        {
+            $('div.tag-explorer div.tag-cell').hide();
+            $('div.tag-explorer div.tag-cell[tag*='+filter+']').show();
+        }
+        else
+        {
+            $('div.tag-explorer div.tag-cell').show();
+        }
+    });
+            
 
 });
