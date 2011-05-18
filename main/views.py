@@ -21,6 +21,8 @@ from django.core.cache import cache
 from lazysignup.decorators import allow_lazy_user
 from django.conf import settings
 from archfinch.utils import paginate
+import time
+from datetime import datetime
 
 
 @allow_lazy_user
@@ -149,7 +151,7 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
     else:
         tag_names_k = ''
 
-    cache_key = 'recommend;%s;%s;%s' % (usernames_k, category_slug, tag_names_k)
+    cache_key = 'recommend;%s;%s;%s;%s' % (usernames_k, category_slug, tag_names_k, before)
     if settings.DEBUG:
         cache_timeout = 30
     else:
@@ -164,7 +166,13 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
             recommendations = Link.objects.recommended_generic(category=category, tags=tags)
         else:
             recommendations = Link.objects.recommended(users[0], category=category, tags=tags)
+
     else:
+        if before:
+            start = before
+        else:
+            start = 0
+
         computed = False
         if cached_value is not None:
             if type(cached_value) == tuple and cached_value[0] == 'task':
@@ -176,9 +184,9 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
 
         else:
             if generic:
-                recommendations = tasks.recommend_generic.delay(category, fresh, tags)
+                recommendations = tasks.recommend_generic.delay(category, start)
             else:
-                recommendations = tasks.recommend.delay(category, fresh, tags, users)
+                recommendations = tasks.recommend.delay(category, start, users)
             task_id = recommendations.task_id
             cache.set(cache_key, ('task', task_id), cache_timeout)
 
@@ -187,7 +195,7 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
             cache.set(cache_key, recommendations, cache_timeout)
             computed = True
 
-        if not computed and publish:
+        if not computed and (publish or json):
             recommendations = recommendations.get()
             cache.set(cache_key, recommendations, cache_timeout)
             computed = True
@@ -196,35 +204,35 @@ def recommend(request, category_slug=None, before=None, usernames=None, tag_name
         wait_page = 'recommend'
         return render_to_response("main/wait.html", locals(), context_instance=RequestContext(request))
     else:
+        if json:
+            ext = 'json'
+        else:
+            ext = 'html'
         if category is not None and category.id in (9,10,11) or fresh:
-            import time, datetime
             # links
             if before:
-                before = datetime.datetime.fromtimestamp(before)
+                before = datetime.fromtimestamp(before)
             else:
-                before = datetime.datetime.now()
+                before = datetime.now()
             recommendations = recommendations.timeslice(before=before)
             if len(recommendations) > 10:
                 next_before = int(time.mktime(recommendations[10].time.timetuple()))
                 recommendations = recommendations[:10]
 
-            if json:
-                ext = 'json'
-            else:
-                ext = 'html'
             response = render_to_response("links/recommend.%s" % (ext,), locals(), context_instance=RequestContext(request))
-            if json:
-                json_data = simplejson.dumps(response.content)
-                return HttpResponse(json_data, mimetype='application/json')
         else:
-            # pagination
-            recommendations, paginator, current_page, page_range = paginate(recommendations, page, n)
+            if len(recommendations) > 10:
+                next_before = start+100
+                recommendations = recommendations[:100]
 
             if request.user.is_authenticated():
                 user_categories = request.user.categories()
                 categories = Category.objects.filter(hide=False).order_by('name').values_list('id', 'element_plural', 'slug')
-            response = render_to_response("main/recommend.html", locals(), context_instance=RequestContext(request))
+            response = render_to_response("main/recommend.%s" % (ext,), locals(), context_instance=RequestContext(request))
 
+        if json:
+            json_data = simplejson.dumps(response.content)
+            return HttpResponse(json_data, mimetype='application/json')
         response.publish_static = True
         return response
 

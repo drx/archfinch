@@ -30,7 +30,7 @@
 </h1>
 
 {% for item in recommendations %}
-    {% include "includes/opinionbox.html" with page_id="recommend" item=item item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter %}
+    {% include "includes/opinionbox.html" with page_id="recommend" item=item item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter seq_term2=item.id %}
 {% empty %}
     {% if not category %}
         <div class="big">

@@ -19,4 +19,4 @@
         {% endif %}
     {% endif %}
 {% endif %}
-{% include "includes/new_pagination.html" %}
+{% include "includes/pagination.html" %}

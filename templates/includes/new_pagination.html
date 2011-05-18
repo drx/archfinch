@@ -1,8 +1,0 @@
-{% load reversetag %}
-{% load base36 %}
-{% if next_before %}
-<div class="pagination">
-    <button class="more" href="{% reverse pagination_url before=next_before|base36 %}">more</button>
-    <a class="more" href="{% reverse pagination_url before=next_before|base36 %}">more</a>
-</div>
-{% endif %}

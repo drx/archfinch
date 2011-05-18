@@ -133,7 +133,7 @@ class ItemManager(SlicedRawManager):
         #    where 
         #      rating: what the user has rated the item
         #      similarity: similarity between the user and self
-        recommended = Item.objects.draw("""
+        recommended = Item.objects.slicedraw("""
             SELECT * FROM (SELECT mi.id, mi.category_id, mi.parent_id, mi.name,
              SUM((mo.rating-3)*ms.value) AS recommendation,
              mc.element_singular AS category_element

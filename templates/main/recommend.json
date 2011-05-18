@@ -1,0 +1,16 @@
+{% load reversetag %}
+{% for item in recommendations %}
+    {% include "includes/opinionbox.html" with page_id="recommend" item=item item_id=item.id yr_big=1 terse_layout=1 click_hides=1 item_name=item category_singular=item.category_element seq_term=forloop.counter seq_term2=item.id %}
+{% endfor %}
+
+{% if usernames_specified %}
+    {% reverse partial "recommend-for" category_slug=category_slug|default:"" usernames=usernames_joined as pagination_url %}
+{% else %}
+    {% if category_slug %}
+        {% reverse partial "recommend-slugged-paged" category_slug=category_slug as pagination_url %}
+    {% else %}
+        {% reverse partial "recommend-paged" as pagination_url %}
+    {% endif %}
+{% endif %}
+{% include "includes/pagination.html" %}
+

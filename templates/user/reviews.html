@@ -33,7 +33,7 @@
 
 {% if not single %}
     {% reverse partial "user-reviews-paged" username=review_user.username as pagination_url %}
-    {% include "includes/pagination.html" %}
+    {% include "includes/numbered_pagination.html" %}
 {% endif %}
 
 

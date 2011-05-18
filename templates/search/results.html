@@ -19,7 +19,7 @@
 {% endfor %}
 
 {% reverse partial "search" query=query|urlencode as pagination_url %}
-{% include "includes/pagination.html" %}
+{% include "includes/numbered_pagination.html" %}
 
 <span class="smalltext">
 <p>Are we missing something? Please <a href="{% url missing %}">add it</a>!</p>

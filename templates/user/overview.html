@@ -57,7 +57,7 @@
 {% else %}
     {% reverse partial "user-overview-paged" username=viewed_user.username as pagination_url %}
 {% endif %}
-{% include "includes/pagination.html" %}
+{% include "includes/numbered_pagination.html" %}
 
 {% endblock %}
 {% block content_right %}

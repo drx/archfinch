@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^recommend/(?P<category_slug>[a-z-]+)$', 'archfinch.main.views.recommend', name='recommend-slugged'),
     url(r'^recommend/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-paged'),
     url(r'^recommend/(?P<category_slug>[a-z-]+)/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-slugged-paged'),
-    url(r'^recommend(?:/(?P<category_slug>[a-z-]*))?/for/(?P<usernames>[,\w@\+\.-]+)(?:/(?P<before>[0-9a-z]+))(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-for'),
+    url(r'^recommend(?:/(?P<category_slug>[a-z-]*))?/for/(?P<usernames>[,\w@\+\.-]+)(?:/(?P<before>[0-9a-z]+))?(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-for'),
 
     url(r'task_wait/(?P<task_id>[\w-]+)$', 'archfinch.main.views.task_wait', name='task-wait'),
     url(r'task_wait_error$', 'archfinch.main.views.task_wait_error', name='task-wait-error'),
