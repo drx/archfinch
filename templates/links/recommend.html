@@ -7,10 +7,14 @@
 {% load cache %}
 
 {% block title %}
-    {% if category %}
-        {{ category.element_singular|capfirst }} recommendations - Archfinch
+    {% if tags %}
+        Tag{{ tags|pluralize }}: {{ tags|join:" + " }} - Archfinch
     {% else %}
-        Link recommendations - Archfinch
+        {% if category %}
+            {{ category.element_singular|capfirst }} recommendations - Archfinch
+        {% else %}
+            Link recommendations - Archfinch
+        {% endif %}
     {% endif %}
 {% endblock %}
 
