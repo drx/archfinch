@@ -25,7 +25,7 @@
     {% endif %}
     {% cache 120 opinionbox item_id page_id %}
         {% if terse_layout and not link and not item.is_comment %}
-            <div class="title"><a href="{% url main.views.item item_id|base36 item_name|slugify %}">{{ item_name }}</a></div><br/>
+            <div class="title"><a href="{{ item.get_absolute_url }}">{{ item_name }}</a></div><br/>
             <div class="category_element" style="width: 100px; height: 32px;">{{ category_singular|capfirst }}</div>
         {% else %}
             {% if link or item.is_comment %}
@@ -48,7 +48,7 @@
                 </div>
                 <div class="rating rating{{ rating }} {% if not rating %}notrated{% endif %}" {% if yr_big %}id="yr_{{ seq_term }}{% if seq_term2 %}_{{ seq_term2 }}{% endif %}"{% endif %}>{% if rating %}{{ rating }}{% endif %}</div>
                 <div class="title">
-                    <span><a href="{% url main.views.item item_id|base36 item_name|slugify %}" class="title">{{ item_name }}</a></span>
+                    <span><a href="{{ item.get_absolute_url }}" class="title">{{ item_name }}</a></span>
                 </div>
             {% endif %}
         {% endif %}

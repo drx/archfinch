@@ -15,7 +15,7 @@
 
 
 {% for result in results %}
-    {% include "includes/opinionbox.html" with page_id="search_results" item_id=result.id yr_big=1 terse_layout=1 click_hides=1 item_name=result.name category_singular=result.category.element_singular your_rating=result.rating seq_term=forloop.counter %}
+    {% include "includes/opinionbox.html" with item=result page_id="search_results" item_id=result.id yr_big=1 terse_layout=1 click_hides=1 item_name=result.name category_singular=result.category.element_singular your_rating=result.rating seq_term=forloop.counter %}
 {% endfor %}
 
 {% reverse partial "search" query=query|urlencode as pagination_url %}
