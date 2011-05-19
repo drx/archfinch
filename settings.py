@@ -106,6 +106,11 @@ if DEBUG:
     DEVSERVER_TRUNCATE_SQL = False
 
     STATIC_URL = 'media'
+else:
+    INSTALLED_APPS += (
+        'sentry',
+        'sentry.client',
+    )
 
 AUTHENTICATION_BACKENDS = (
     'archfinch.users.auth_backends.ModelBackend',

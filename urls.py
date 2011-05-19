@@ -63,4 +63,7 @@ if settings.DEBUG:
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/var/django/archfinch/media'}),
         (r'^favicon.ico$', 'django.views.generic.simple.redirect_to', {'url': '/var/django/archfinch/media/favicon.ico', 'permanent': False}),
     )
-
+else:
+    urlpatterns += patterns('',
+        (r'^sentry/', include('sentry.web.urls')),
+    )
