@@ -27,7 +27,7 @@ class AddCommentForm(AntiSpamModelForm):
 def comment_count_update(sender, **kwargs):
     instance = kwargs['instance']
 
-    instance.root.update_comment_count()
+    instance.root().update_comment_count()
 
 post_save.connect(comment_count_update, Comment)
 
