@@ -182,7 +182,10 @@ class Item(models.Model):
 
     def __unicode__(self):
         if self.is_comment():
-            return self.comment.__unicode__()
+            if self.comment:
+                return self.comment.__unicode__()
+            else:
+                return ''
         else:
             return self.name
 
