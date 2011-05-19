@@ -181,13 +181,15 @@ class Item(models.Model):
     objects = ItemManager()
 
     def __unicode__(self):
+        name = None
         if self.is_comment():
             if self.comment:
-                return self.comment.__unicode__()
-            else:
-                return ''
+                name = self.comment.__unicode__()
         else:
-            return self.name
+            name = self.name
+        if not name:
+            name = ''
+        return name
 
     @models.permalink
     def get_absolute_url(self):
