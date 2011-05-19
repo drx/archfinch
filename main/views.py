@@ -113,6 +113,8 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         else:
             category = Category.objects.get(slug=category_slug)
     elif followed:
+        if request.user.is_anonymous() or not request.user.tagfollow_set.exists():
+            return render_to_response('main/followed_anonymous.html', context_instance=RequestContext(request))
         fresh = True
         category = None
     else:
