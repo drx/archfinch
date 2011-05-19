@@ -108,7 +108,8 @@ if DEBUG:
     STATIC_URL = 'media'
 else:
     INSTALLED_APPS += (
-        'djangodblog',
+        'sentry',
+        'sentry.client',
     )
 
 AUTHENTICATION_BACKENDS = (
