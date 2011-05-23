@@ -154,7 +154,7 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         usernames_specified = False
 
 
-    if followed and (not users[0].tagfollow_set.exists() or (request.user.is_anonymous() and not feed_username)):
+    if followed and (users[0].is_anonymous() or not users[0].tagfollow_set.exists() or (request.user.is_anonymous() and not feed_username)):
         recommendations = []
         if feed:
             return locals()
