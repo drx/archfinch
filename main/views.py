@@ -90,7 +90,7 @@ def item_also_liked(request, item_id, like, also_like):
 
 
 @publish_static
-def recommend(request, followed=False, category_slug=None, before=None, usernames=None, tag_names=None, publish=False, json=False):
+def recommend(request, followed=False, category_slug=None, before=None, usernames=None, tag_names=None, publish=False, json=False, feed=False, feed_username=None):
     '''
     Shows a list of recommendations.
     '''
@@ -144,6 +144,11 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         usernames = usernames.split(',')
         users = list(map(lambda un: get_object_or_404(User, username=un), usernames))
         usernames_specified = True
+
+    elif feed_username is not None:
+        usernames = [feed_username]
+        users = [get_object_or_404(User, username=feed_username)]
+        usernames_specified = False
 
     else:
         usernames = [request.user.username]
@@ -237,6 +242,8 @@ def recommend(request, followed=False, category_slug=None, before=None, username
                 next_before = int(time.mktime(recommendations[10].time.timetuple()))
                 recommendations = recommendations[:10]
 
+            if feed:
+                return locals()
             response = render_to_response("links/recommend.%s" % (ext,), locals(), context_instance=RequestContext(request))
         else:
             if len(recommendations) > 10:

@@ -4,6 +4,9 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
+from archfinch.links.feeds import LinkFeed
+
+
 urlpatterns = patterns('',
     url(r'^$',     'archfinch.main.views.recommend', {'category_slug': 'fresh'}),
     url(r'^missing$', 'archfinch.main.views.missing', name='missing'),
@@ -40,8 +43,10 @@ urlpatterns = patterns('',
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 
+    url(r'^rss/(?P<feed_username>[\w@\+\.-]+)/followed$', LinkFeed(), {'followed': True}),
     url(r'^followed(?:/(?P<before>[0-9a-z]+))?(?P<json>\.json)?$', 'archfinch.main.views.recommend', {'followed': True}, name='followed'),
     url(r'^tags/(?P<tag_names>.+)/before/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='fresh-tags-paged'),
+    url(r'^rss/tags/(?P<tag_names>.+)', LinkFeed()),
     url(r'^tags/(?P<tag_names>.+)', 'archfinch.main.views.recommend', name='fresh-tags'),
     url(r'^tag/(?P<tag_names>.+)', 'archfinch.main.views.recommend'),
     (r'^addtag/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.add_tag'),
