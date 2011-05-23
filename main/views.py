@@ -377,7 +377,7 @@ def tag_action(request, tag_name):
     if un:
         instance.delete() 
 
-    redirect_url = request.META['HTTP_REFERER'] or '/'
+    redirect_url = request.META.get('HTTP_REFERER', '/')
     return HttpResponseRedirect(redirect_url)    
 
 
