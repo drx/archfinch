@@ -28,6 +28,7 @@ def get_url(url, userpwd=None):
     curl.setopt(pycurl.CONNECTTIMEOUT, 30)
     curl.setopt(pycurl.TIMEOUT, 300)
     curl.setopt(pycurl.WRITEFUNCTION, content.write)
+    curl.setopt(pycurl.SSL_VERIFYPEER, 0)
     if userpwd is not None:
         curl.setopt(pycurl.USERPWD, userpwd)
 
