@@ -257,7 +257,7 @@ def recommend(request, followed=False, category_slug=None, before=None, username
 
 
 @publish_static
-def explore_tags(request):
+def explore_tags(request, publish=False):
     cache_key = 'popular_tags'
     cached_value = cache.get(cache_key)
     if cached_value:
