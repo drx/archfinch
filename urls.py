@@ -43,7 +43,7 @@ urlpatterns = patterns('',
     (r'^opinion/set/(?P<item_id>[0-9a-z]+)/(?P<rating>[1-5])$', 'archfinch.main.views.opinion_set'),
     (r'^opinion/remove/(?P<item_id>[0-9a-z]+)$', 'archfinch.main.views.opinion_remove'),
 
-    url(r'^rss/(?P<feed_username>[\w@\+\.-]+)/followed$', LinkFeed(), {'followed': True}),
+    url(r'^rss/followed/(?P<feed_username>[\w@\+\.-]+)$', LinkFeed(), {'followed': True}),
     url(r'^followed(?:/(?P<before>[0-9a-z]+))?(?P<json>\.json)?$', 'archfinch.main.views.recommend', {'followed': True}, name='followed'),
     url(r'^tags/(?P<tag_names>.+)/before/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='fresh-tags-paged'),
     url(r'^rss/tags/(?P<tag_names>.+)', LinkFeed()),
