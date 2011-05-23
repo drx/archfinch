@@ -113,11 +113,6 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         else:
             category = Category.objects.get(slug=category_slug)
     elif followed:
-        if request.user.is_anonymous() or not request.user.tagfollow_set.exists():
-            recommendations = []
-            if feed:
-                return locals()
-            return render_to_response('main/followed_anonymous.html', locals(), context_instance=RequestContext(request))
         fresh = True
         category = None
     else:
@@ -157,6 +152,13 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         usernames = [request.user.username]
         users = [request.user]
         usernames_specified = False
+
+
+    if followed and (not users[0].tagfollow_set.exists() or (request.user.is_anonymous() and not feed_username)):
+        recommendations = []
+        if feed:
+            return locals()
+        return render_to_response('main/followed_anonymous.html', locals(), context_instance=RequestContext(request))
 
     user_ids = map(lambda u: u.id, users)
     usernames_k = '+'.join(sorted(set(map(str, user_ids))))
