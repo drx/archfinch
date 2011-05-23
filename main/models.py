@@ -548,6 +548,8 @@ class TagManager(models.Manager):
         tags_repr = tags_repr.split(',')
         tags = []
         for tag_repr in tags_repr:
+            if not tag_repr:
+                continue
             tag_repr = tag_repr.split('/')
             tag = Tag(id=tag_repr[0], name=tag_repr[1])
             for opt in tag_repr[2:]:
