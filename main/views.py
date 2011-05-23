@@ -127,6 +127,7 @@ def recommend(request, followed=False, category_slug=None, before=None, username
 
     if not followed:
         related_cache_key = 'related_tags;%s' % (tag_names_k,)
+        related_cache_key = related_cache_key.replace(' ', '_space_')
         cached_value = cache.get(related_cache_key)
         if cached_value:
             related_tags = cached_value
@@ -180,6 +181,7 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         usernames_k = '#generic'
 
     cache_key = 'recommend;%s;%s;%s;%s;%s' % (usernames_k, category_slug, tag_names_k, before, followed)
+    cache_key = cache_key.replace(' ', '_space_')
     if settings.DEBUG:
         cache_timeout = 30
     else:
