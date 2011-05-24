@@ -177,6 +177,9 @@ def recommend(request, followed=False, category_slug=None, before=None, username
     if followed:
         generic = False
 
+    if fresh and request.user.is_authenticated():
+        generic = False
+
     if generic:
         usernames_k = '#generic'
 

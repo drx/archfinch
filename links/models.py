@@ -70,6 +70,8 @@ class LinkManager(SlicedRawManager):
             where += ' AND mi.category_id = %(category_id)s'
             params['category_id'] = category_id
 
+        followed_or = False
+
         if tags:
             for tag in tags:
                 where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
@@ -79,8 +81,16 @@ class LinkManager(SlicedRawManager):
             where += ' AND wilson_score(mi.id, true) >= %(threshold_frontpage)s'
             params['threshold_frontpage'] = threshold_frontpage
 
-        if followed:
-            where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id in %(followed_tag_ids)s)'
+            # add the user's follows to their frontpage
+            followed = True
+            followed_or = True
+
+        if followed and user.tagfollow_set.exists():
+            if followed_or:
+                where += ' OR'
+            else:
+                where += ' AND'
+            where += ' EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id in %(followed_tag_ids)s)'
             params['followed_tag_ids'] = tuple(map(lambda follow: follow.tag.id, user.tagfollow_set.all()))
 
         # Select items in order of their recommendation to self
