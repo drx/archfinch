@@ -21,7 +21,8 @@ CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer, lower_bound boolean
         END CASE;
     END LOOP;
     total := positive + negative;
-    if total = 0 then return 0; end if;
+    if total = 0 and lower_bound then return 0; end if;
+    if total = 0 and not lower_bound then return 1; end if;
 
     if lower_bound then bound_factor = -1; else bound_factor = 1; end if;
 

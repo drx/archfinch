@@ -1,6 +1,7 @@
 from django.db import models
 from archfinch.main.models import Item, SlicedRawManager
 from archfinch.users.models import User
+from archfinch.links.thresholds import *
 
 class LinkManager(SlicedRawManager):
     def recommended_generic(self, category=None, tags=None):
@@ -8,16 +9,26 @@ class LinkManager(SlicedRawManager):
         Fetches links recommended generally (not for a specific user).
         '''
 
-        where = ''
+        where = []
         params = {}
 
         if category is not None:
-            where += 'WHERE mi.category_id = %(category_id)s'
+            where.append('mi.category_id = %(category_id)s')
             params['category_id'] = category.id
 
         if tags:
             for tag in tags:
-                where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
+                where.append('EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id)))
+
+        else:
+            # front page
+            where.append('wilson_score(mi.id) >= %(threshold_frontpage)s')
+            params['threshold_frontpage'] = threshold_frontpage
+            
+        if where:
+            where = 'WHERE '+' AND '.join(where)
+        else:
+            where = ''
 
         # Select items in order of their recommendation to self
         # 
@@ -62,6 +73,11 @@ class LinkManager(SlicedRawManager):
         if tags:
             for tag in tags:
                 where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
+
+        else:
+            # front page
+            where += ' AND wilson_score(mi.id) >= %(threshold_frontpage)s'
+            params['threshold_frontpage'] = threshold_frontpage
 
         if followed:
             where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id in %(followed_tag_ids)s)'
