@@ -76,7 +76,7 @@ class LinkManager(SlicedRawManager):
             for tag in tags:
                 where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
 
-        else:
+        elif not followed:
             # front page
             where += ' AND wilson_score(mi.id, true) >= %(threshold_frontpage)s'
             params['threshold_frontpage'] = threshold_frontpage
