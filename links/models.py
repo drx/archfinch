@@ -22,7 +22,7 @@ class LinkManager(SlicedRawManager):
 
         else:
             # front page
-            where.append('wilson_score(mi.id) >= %(threshold_frontpage)s')
+            where.append('wilson_score(mi.id, true) >= %(threshold_frontpage)s')
             params['threshold_frontpage'] = threshold_frontpage
             
         if where:
@@ -76,7 +76,7 @@ class LinkManager(SlicedRawManager):
 
         else:
             # front page
-            where += ' AND wilson_score(mi.id) >= %(threshold_frontpage)s'
+            where += ' AND wilson_score(mi.id, true) >= %(threshold_frontpage)s'
             params['threshold_frontpage'] = threshold_frontpage
 
         if followed:
