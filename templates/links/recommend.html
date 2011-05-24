@@ -88,14 +88,14 @@
         <h2>Followed tags</h2>
         <p>
         {% for follow in user.tagfollow_set.all %}
-            <span class="tag"><a class="taglink" href="{% url fresh-tags follow.tag.name %}" action_url="{% url tag-action follow.tag.name %}">{{ follow.tag.name }}</a><br />
+            <span class="tag"><a class="taglink" href="{% url fresh-tags follow.tag.name %}" action_url="{% url tag-action follow.tag.name %}">{{ follow.tag.name }}</a></span><br />
         {% endfor %}
         </p>
         {% if user.tagblock_set.exists %}
             <h2>Blocked tags</h2>
             <p>
             {% for tagblock in user.tagblock_set.all %}
-                <span class="tag blocked_tag"><a class="taglink" href="{% url fresh-tags tagblock.tag.name %}" action_url="{% url tag-action tagblock.tag.name %}">{{ tagblock.tag.name }}</a><br />
+                <span class="tag blocked_tag"><a class="taglink" href="{% url fresh-tags tagblock.tag.name %}" action_url="{% url tag-action tagblock.tag.name %}">{{ tagblock.tag.name }}</a></span><br />
             {% endfor %}
             </p>
         {% endif %}
@@ -109,7 +109,7 @@
         <p>
         {% for tag in related_tags|slice:":30" %}
             {% if not tag.hide_tag %}
-                <span class="tag"><a class="taglink" href="{% if tag_names %}{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}{% else %}{% url fresh-tags tag.name %}{% endif %}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span><br />
+                <span class="tag"><a class="taglink" href="{% if tag_names %}{% url fresh-tags tag_names|join:"/"|add:"/"|add:tag.name %}{% else %}{% url fresh-tags tag.name %}{% endif %}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span></span><br />
             {% endif %}
         {% endfor %}
         </p>
