@@ -550,12 +550,15 @@ class TagManager(models.Manager):
         for tag_repr in tags_repr:
             if not tag_repr:
                 continue
-            tag_repr = tag_repr.split('/')
-            tag = Tag(id=tag_repr[0], name=tag_repr[1])
-            for opt in tag_repr[2:]:
-                if opt == 'hide':
-                    tag.hide_tag = True
-            tags.append(tag)
+            try:
+                tag_repr = tag_repr.split('/')
+                tag = Tag(id=tag_repr[0], name=tag_repr[1])
+                for opt in tag_repr[2:]:
+                    if opt == 'hide':
+                        tag.hide_tag = True
+                tags.append(tag)
+            except:
+                continue
         return tags
 
 
