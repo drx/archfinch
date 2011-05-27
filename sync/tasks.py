@@ -18,6 +18,7 @@ from archfinch.links.models import Link
 from archfinch.users.models import User
 from archfinch.sync.models import Synced, Source
 from django.conf import settings
+from django.core.cache import cache
 
 def get_url(url, userpwd=None):
     content = StringIO.StringIO()
@@ -45,6 +46,12 @@ def get_url(url, userpwd=None):
 
 @periodic_task(run_every=timedelta(hours=1))
 def sync_hn():
+    # run only one at a time
+    lock_id = 'lock;sync_hn'
+
+    if not cache.add(lock_id, "true", 60*5):
+        return 'Could not acquire lock. Task already running!'
+
     page = None
     items = []
 
