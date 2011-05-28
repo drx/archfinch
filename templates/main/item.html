@@ -120,7 +120,7 @@ Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ i
 {% endblock %}
 
 {% block ads %}
-{% if search_referrer_engine %}
+{% if user.is_anonymous and request.search_referrer_engine %}
     <div id="ads">
     <script type="text/javascript"><!--
     google_ad_client = "ca-pub-2539280925539348";
