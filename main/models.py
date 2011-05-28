@@ -360,7 +360,7 @@ class Item(models.Model):
         self.stats.comment_count = self.comment_count()
         self.stats.save()
 
-    def make_sure_stats_exists():
+    def make_sure_stats_exists(self):
         try:
             self.stats
         except ItemStats.DoesNotExist:
