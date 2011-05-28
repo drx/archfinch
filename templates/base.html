@@ -36,6 +36,22 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
 
+           _gaq.push(['_setCustomVar',
+             1,              // This custom var is set to slot #1.  Required parameter.
+             'User type',    // The name acts as a kind of category for the user activity.  Required parameter.
+      {% if user.is_authenticated %}
+        {% if user|is_lazy_user %}
+             'Anonymous user',  
+        {% else %}
+             'Registered user',
+        {% endif %}
+      {% else %}
+             'Unregistered user',
+      {% endif %}
+             2               // Sets the scope to session-level.  Optional parameter.
+          ]);
+      
+
     </script>
     {% endif %}
     {% if user.is_authenticated and user.tagfollow_set.exists %}
