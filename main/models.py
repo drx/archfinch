@@ -356,10 +356,18 @@ class Item(models.Model):
         return self.comment_tree(count=True)
 
     def update_comment_count(self):
+        self.make_sure_stats_exists()
         self.stats.comment_count = self.comment_count()
         self.stats.save()
 
-
+    def make_sure_stats_exists():
+        try:
+            self.stats
+        except ItemStats.DoesNotExist:
+            item_stats = ItemStats(item=self)
+            item_stats.save()
+            self.stats = item_stats
+            self.save()
 
     def comment_tree(self, count=False, selected_path=None, user=None):
         params = {'root_id': self.id, 'selected_1': '', 'selected_n': ''}
@@ -481,6 +489,7 @@ class Item(models.Model):
 
     def update_popular_tags(self):
         r = ','.join([tag.to_repr() for tag in self.popular_tags_get()])
+        self.make_sure_stats_exists()
         self.stats.popular_tags = r
         self.stats.save()
 
