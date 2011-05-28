@@ -952,6 +952,12 @@ $(document).ready(function(){
             loading.parent().replaceWith(data);
             generate_opinionbox_tips();
         });
+        _gaq.push(['_setCustomVar',
+             2,                   // This custom var is set to slot #1.  Required parameter.
+             'Clicked more',      // The name acts as a kind of category for the user activity.  Required parameter.
+             'Yes',               // This value of the custom variable.  Required parameter.
+             3                    // Sets the scope to session-level.  Optional parameter.
+          ]);
         
     });
 
