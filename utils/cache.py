@@ -1,6 +1,6 @@
 from django.views.decorators.cache import cache_page
 from django.conf import settings
-from staticgenerator import StaticGenerator
+from staticgenerator import StaticGenerator, StaticGeneratorException
 
 def expire_view_cache(request):
     from django.utils.cache import get_cache_key
@@ -30,7 +30,12 @@ def publish_static(func):
                 path = request.path
                 if not path.endswith('/'):
                     path += '/'
-                StaticGenerator().publish_from_path(path, '', response.content)
+                for trial in range(3):
+                    try:
+                        StaticGenerator().publish_from_path(path, '', response.content)
+                        break
+                    except StaticGeneratorException:
+                        pass
         except (AttributeError, KeyError) as err:
             pass
 
