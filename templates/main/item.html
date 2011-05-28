@@ -118,3 +118,21 @@ Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ i
 {% endfor %}
 
 {% endblock %}
+
+{% block ads %}
+{% if search_referrer_engine %}
+    <div id="ads">
+    <script type="text/javascript"><!--
+    google_ad_client = "ca-pub-2539280925539348";
+    /* Item ads */
+    google_ad_slot = "1980851805";
+    google_ad_width = 200;
+    google_ad_height = 200;
+    //-->
+    </script>
+    <script type="text/javascript"
+    src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+    </div>
+{% endif %}
+{% endblock %}

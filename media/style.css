@@ -1220,3 +1220,13 @@ div.tag-cell
     width: 220px;
     display: inline-block;
 }
+
+#ads
+{
+    float: right;
+    width: 260px;
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: 3em;
+    text-align: center;
+}
