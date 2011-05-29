@@ -117,6 +117,12 @@
             <p><a href="{% url explore-tags %}">explore more tags »</a></p>
         {% endif %}
     {% endif %}
+    {% if tags %}
+        <p>
+            <a href="{% url fresh-tags-rss tag_names|join:"/" %}"><img src="/media/images/feed-icon-14x14.png"></a>
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url fresh-tags-rss tag_names|join:"/" %}">
+        </p>
+    {% endif %}
 
 {% endblock %}
 {% block media %}
