@@ -57,7 +57,6 @@ def republish_static(path=''):
             if datetime.now()-datetime.fromtimestamp(os.path.getatime(filename)) > timedelta(minutes=5):
                 # if it hasn't been accessed in the last 5 minutes, delete it instead of republishing
                 os.remove(filename)
-                os.rmdir(root)
             relpath = '/'+os.path.relpath(filename, settings.WEB_ROOT)
             relpath = relpath.replace('/index.html', '')
             if relpath == '':
