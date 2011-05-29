@@ -4,7 +4,7 @@ from archfinch.users.models import User
 from archfinch.links.thresholds import *
 
 class LinkManager(SlicedRawManager):
-    def recommended_generic(self, category=None, tags=None):
+    def recommended_generic(self, category=None, tags=None, new=False):
         '''
         Fetches links recommended generally (not for a specific user).
         '''
@@ -20,7 +20,7 @@ class LinkManager(SlicedRawManager):
             for tag in tags:
                 where.append('EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id)))
 
-        else:
+        elif not new:
             # front page
             where.append('wilson_score(mi.id, true) >= %(threshold_frontpage)s')
             params['threshold_frontpage'] = threshold_frontpage
@@ -55,7 +55,7 @@ class LinkManager(SlicedRawManager):
         return recommended
 
 
-    def recommended(self, user, category=None, category_id=None, tags=None, followed=False):
+    def recommended(self, user, category=None, category_id=None, tags=None, followed=False, new=False):
         '''
         Fetches links recommended for the user.
         '''
@@ -76,7 +76,7 @@ class LinkManager(SlicedRawManager):
             for tag in tags:
                 where += ' AND EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id = %d)' % (int(tag.id))
 
-        elif not followed:
+        elif not followed and not new:
             # front page
             where += ' AND wilson_score(mi.id, true) >= %(threshold_frontpage)s'
             params['threshold_frontpage'] = threshold_frontpage

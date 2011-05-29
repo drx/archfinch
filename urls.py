@@ -8,7 +8,7 @@ from archfinch.links.feeds import LinkFeed
 
 
 urlpatterns = patterns('',
-    url(r'^$',     'archfinch.main.views.recommend', {'category_slug': 'fresh'}),
+    url(r'^$',     'archfinch.main.views.recommend', {'category_slug': 'fresh'}, name='frontpage'),
     url(r'^missing$', 'archfinch.main.views.missing', name='missing'),
     url(r'^submit$', 'archfinch.links.views.submit', name='submit'),
 

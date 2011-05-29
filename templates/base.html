@@ -88,29 +88,30 @@
 
 					<div id="navbar">
 						<ul class="menu">
-							<li> <a href="{% url recommend-slugged "fresh" %}">fresh</a>
+							<li> <a href="{% url frontpage %}">fresh</a>
 								<ul class="submenu" style='width: 100px'>
                                     {% if user.is_authenticated and user.tagfollow_set.exists %}
 									<li> <a href="{% url followed %}">followed</a>
                                     {% endif %}
 									<li> <a href="{% url recommend-slugged "videos" %}">videos</a>
-									<li> <a href="{% url recommend-slugged "pics" %}">pics</a>
 									<li> <a href="{% url recommend-slugged "links" %}">links</a>
+									<li> <a href="{% url recommend-slugged "pics" %}">pics</a>
+                                    <li> <a href="{% url recommend-slugged "new" %}">new</a>
 								</ul>
 							<li> <a href="{% url main.views.recommend %}">things you might like</a>
 								<ul class="submenu" style='width: 223px'>
-									<li> <a href="{% url recommend-slugged "films" %}">films</a>
-									<li> <a href="{% url recommend-slugged "tv-shows" %}">TV shows</a>
 									<li> <a href="{% url recommend-slugged "video-games" %}">video games</a>
+									<li> <a href="{% url recommend-slugged "tv-shows" %}">TV shows</a>
+									<li> <a href="{% url recommend-slugged "films" %}">films</a>
 									<li> <a href="{% url recommend-slugged "books" %}">books</a>
-									<li> <a href="{% url recommend-slugged "comic-books" %}">comic books</a>
 									<li> <a href="{% url recommend-slugged "anime" %}">anime</a>
 									<li> <a href="{% url recommend-slugged "manga" %}">manga</a>
+									<li> <a href="{% url recommend-slugged "comic-books" %}">comic books</a>
 								</ul>
 							<li> <a>people</a>
 								<ul class="submenu" style='width: 110px'>
-									<li> <a href="{% url users.views.similar %}">similar</a>
 									<li> <a href="{% url top-users %}">top users</a>
+									<li> <a href="{% url users.views.similar %}">similar</a>
 								</ul>
 							  </ul>
 							

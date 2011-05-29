@@ -99,6 +99,7 @@ def recommend(request, followed=False, category_slug=None, before=None, username
      
     fresh = False
     tags = None
+    new = False
     if tag_names:
         fresh = True
         category = None
@@ -110,6 +111,10 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         if category_slug == 'fresh':
             fresh = True
             category = None
+        elif category_slug == 'new':
+            fresh = True
+            category = None
+            new = True
         else:
             category = Category.objects.get(slug=category_slug)
     elif followed:
@@ -196,9 +201,9 @@ def recommend(request, followed=False, category_slug=None, before=None, username
         computed = True
         from archfinch.links.models import Link
         if generic:
-            recommendations = Link.objects.recommended_generic(category=category, tags=tags)
+            recommendations = Link.objects.recommended_generic(category=category, tags=tags, new=new)
         else:
-            recommendations = Link.objects.recommended(users[0], category=category, tags=tags, followed=followed)
+            recommendations = Link.objects.recommended(users[0], category=category, tags=tags, followed=followed, new=new)
 
     else:
         if before:
