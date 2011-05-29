@@ -278,19 +278,14 @@ class Item(models.Model):
             return Item.objects.none()
 
         items = Item.objects.slicedraw("""
-            SELECT related_items.item_id as id, similarity, mi.name, mi.category_id,
-             mis.comment_count, mis.popular_tags as _popular_tags
+            SELECT item_id as id, similarity
             FROM (
               SELECT item_id, count(CASE WHEN tag_id in %(tag_ids)s THEN 1 ELSE NULL END) as similarity
               FROM main_tagged
               GROUP BY item_id
-            ) AS related_items,
-             main_itemstats mis,
-             main_item mi
+            ) AS related_items
             WHERE similarity > 0
-             AND related_items.item_id != %(item_id)s
-             AND mis.item_id = related_items.item_id
-             AND mi.id=mis.item_id
+             AND item_id != %(item_id)s
             ORDER BY similarity desc
             """,
             {'item_id': self.id, 'tag_ids': tuple(map(lambda x: x.id, popular_tags))})
