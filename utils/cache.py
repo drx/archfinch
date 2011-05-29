@@ -49,12 +49,12 @@ def republish_static(path=''):
     from django.core.urlresolvers import resolve
     from django.http import HttpRequest, QueryDict
     from django.contrib.auth.models import AnonymousUser
-    from datetime import datetime
+    from datetime import datetime, timedelta
 
     for root, dirs, files in os.walk(os.path.join(settings.WEB_ROOT, path)):
         for name in files:
             filename = os.path.join(root, name)
-            if datetime.now()-datetime.fromtimestamp(os.path.getatime(filename)) > datetime.timedelta(minutes=5):
+            if datetime.now()-datetime.fromtimestamp(os.path.getatime(filename)) > timedelta(minutes=5):
                 # if it hasn't been accessed in the last 5 minutes, delete it instead of republishing
                 os.remove(filename)
                 os.rmdir(root)
