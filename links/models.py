@@ -71,6 +71,7 @@ class LinkManager(SlicedRawManager):
             params['category_id'] = category_id
 
         followed_or = False
+        show_submissions = False
 
         if tags:
             for tag in tags:
@@ -84,6 +85,7 @@ class LinkManager(SlicedRawManager):
             # add the user's follows to their frontpage
             followed = True
             followed_or = True
+            show_submissions = True
 
         if followed and user.tagfollow_set.exists():
             if followed_or:
@@ -92,6 +94,9 @@ class LinkManager(SlicedRawManager):
                 where += ' AND'
             where += ' EXISTS (SELECT 1 FROM main_tagged mtgd WHERE mi.id = mtgd.item_id AND mtgd.tag_id in %(followed_tag_ids)s)'
             params['followed_tag_ids'] = tuple(map(lambda follow: follow.tag.id, user.tagfollow_set.all()))
+
+        if show_submissions:
+            where += ' OR mi.submitter_id = %(user_id)s'
 
         # Select items in order of their recommendation to self
         # 
