@@ -1,1 +1,1 @@
-threshold_frontpage = 0.07
+threshold_frontpage = 0.19
