@@ -289,7 +289,9 @@ $(document).ready(function(){
                 }
                 if (data['success'])
                 {
-                    tag_name = $(self).children("input[name=tag]").val();
+                    tagox = $(self).children("input[name=tag]");
+                    tag_name = tagbox.val();
+                    tagbox.val('');
                     newtag = new_tag(tag_name);
                     $(self).after(newtag);
                     $(self).after(' ');
