@@ -226,7 +226,17 @@ function generate_opinionbox_tips(){
                 $(this).parent().submit();
                 e.preventDefault();
             }
-        });
+        })
+        .autocomplete({
+			source: "/tagsearch",
+			minLength: 2,
+			select: function( event, ui ) {
+                if (ui.item)
+                {
+                    $(this).parent().submit();
+                }
+			}
+		});
         tagbox.wrap('<form class="tagthis" item_id="'+get_item_id(tagbox)+'" style="display: inline-block"/>');
         tagbox.after("<span class='error'></span><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='margin-right: 1em'>");
         tagbox.focus();
