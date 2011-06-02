@@ -6,3 +6,4 @@ data
 site.py
 settings_local.py
 media/js/lib
+media/js/autoconf
