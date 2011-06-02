@@ -122,7 +122,7 @@ Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ i
 {% endblock %}
 
 {% block ads %}
-{% if 1 or user.is_anonymous and request.search_referrer_engine %}
+{% if user.is_anonymous and request.search_referrer_engine %}
     <div id="ads">
         <script type="text/javascript"><!--
         amazon_ad_tag = "archfinch-20"; amazon_ad_width = "180"; amazon_ad_height = "150"; amazon_ad_link_target = "new"; amazon_color_border = "FFFFFF"; amazon_color_link = "0E8D94"; amazon_color_price = "FFAB07"; amazon_color_logo = "FFAB07";//--></script>
