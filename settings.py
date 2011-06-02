@@ -56,6 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'archfinch.main.middleware.ShortenerMiddleware',
 )
 
 ROOT_URLCONF = 'archfinch.urls'
@@ -137,3 +138,5 @@ LAZYSIGNUP_USER_AGENT_BLACKLIST = (
 )
 
 DOMAIN = 'archfinch.com'
+SHORT_DOMAIN = 'arfn.ch'
+

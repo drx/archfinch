@@ -37,6 +37,11 @@ def item(request, item_id, publish=False):
     Item page.
     '''
 
+    from django.contrib.sites.models import Site
+    current_site = Site.objects.get_current()
+
+    print current_site
+
     item_id = base36_to_int(item_id)
     item = get_object_or_404(Item.objects.select_related('category', 'profile'), pk=item_id)
 

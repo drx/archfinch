@@ -113,9 +113,11 @@ Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ i
 
 {% for sync in item.link.synced_set.all %}
     {% if sync.source.name == 'Hacker News' %}
-        <p>via <a href="http://news.ycombinator.com/item?id={{ sync.original_id }}">HN</a></p>
+        <p>Via <a href="http://news.ycombinator.com/item?id={{ sync.original_id }}">HN</a></p>
     {% endif %}
 {% endfor %}
+
+<p>Short url: <input type='text' class='short_url' value='http://arfn.ch/{{ item.id|base36 }}'></p>
 
 {% endblock %}
 

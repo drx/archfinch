@@ -1230,3 +1230,8 @@ div.tag-cell
     margin-top: 3em;
     text-align: center;
 }
+
+input.short_url
+{
+    width: 120px;
+}

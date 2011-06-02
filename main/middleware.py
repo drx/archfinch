@@ -1,6 +1,24 @@
 import urlparse
 import cgi
 import re
+from django.conf import settings
+from django.shortcuts import redirect, get_object_or_404
+from django.utils.http import base36_to_int
+from archfinch.main.models import Item
+
+
+
+class ShortenerMiddleware:
+    '''
+    Middleware to capture arfn.ch requests and redirect them to archfinch.com
+    '''
+    def process_request(self, request):
+        if re.match(settings.SHORT_DOMAIN, request.META.get('HTTP_HOST', '')):
+            item_id = request.path[1:]
+            item = get_object_or_404(Item, pk=base36_to_int(item_id))
+            url = 'http://' + settings.DOMAIN + item.get_absolute_url()
+            return redirect(url, permanent=True)
+
 
 class SearchEngineReferrerMiddleware(object):
     """
