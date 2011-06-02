@@ -221,6 +221,12 @@ function generate_opinionbox_tips(){
     $("a.addtag").click(function(e){
         tagbox = $("<input/>").attr("type", "text").attr('name', 'tag').addClass("tagbox");
         $(this).replaceWith(tagbox);
+        tagbox.keypress(function(e){
+            if (e.which == 44) { // comma
+                $(this).parent().submit();
+                e.preventDefault();
+            }
+        });
         tagbox.wrap('<form class="tagthis" item_id="'+get_item_id(tagbox)+'" style="display: inline-block"/>');
         tagbox.after("<span class='error'></span><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='margin-right: 1em'>");
         tagbox.focus();
