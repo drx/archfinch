@@ -47,9 +47,14 @@ def item(request, item_id, publish=False):
 
     if item.is_comment():
         # item is a comment, so let's show its root and highlight it instead
+        from django.utils.html import strip_tags
+        from django.contrib.markup.templatetags.markup import markdown
+
         root = item.root()
         selected_path = root.path
         item, selected_comment_id = root, item.id
+
+        title = strip_tags(markdown(title))
 
     else:
         selected_path = None
