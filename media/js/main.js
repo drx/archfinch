@@ -969,6 +969,13 @@ $(document).ready(function(){
             $('div.tag-explorer div.tag-cell[tag*='+filter+']').show();
         }
     });
+
+    $("input.short_url").focus(function(e){
+        this.select();
+    })
+    .mouseup(function(e){ // webkit fix
+        e.preventDefault();
+    });
             
 
 });

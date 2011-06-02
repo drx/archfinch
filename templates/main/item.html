@@ -117,7 +117,7 @@ Submitted by <a href="{% url user-overview item.submitter_show.username %}">{{ i
     {% endif %}
 {% endfor %}
 
-<p>Short url: <input type='text' class='short_url' value='http://arfn.ch/{{ item.id|base36 }}'></p>
+<p>Short url: <input type='text' class='short_url' readonly='readonly' value='http://arfn.ch/{{ item.id|base36 }}'></p>
 
 {% endblock %}
 
