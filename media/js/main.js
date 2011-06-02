@@ -144,6 +144,40 @@ function task_wait(task_id)
         }
     })
 }
+function new_tag(tag_name)
+{
+    return $('<span class="tag"><a class="taglink" href="" tag_name="'+tag_name+'">'+tag_name+'</a></span>');
+}
+function taglink_dynamic()
+{
+    follow = 'follow'
+    if (window.followed_tags && $.inArray($(this).text(), followed_tags) != -1)
+    {
+        follow = 'unfollow'
+    }
+    block = 'block'
+    if ($(this).parent().hasClass('blocked_tag'))
+    {
+        block = 'unblock'
+    }
+    tag_name = $(this).attr('tag_name');
+    action_url = dutils.urls.resolve('tag-action', { tag_name: tag_name });
+    $(this).qtip(
+    {
+        content: '<span class="taglinks"><a href="'+action_url+'?action='+follow+'">'+follow+'</a><br /><a href="'+action_url+'?action='+block+'">'+block+'</a></span>',
+        position: {
+            corner: {
+                target: 'bottomLeft'
+            }
+        },
+        show: {
+            solo: true
+        },
+        hide: {
+            fixed: true
+        }
+    });
+}
 function generate_opinionbox_tips(){
     if (window.followed_tags)
     {
@@ -184,71 +218,16 @@ function generate_opinionbox_tips(){
     {
         $("img.add_to_list").remove();
     }
-    $("a.addtag").each(function(){$(this).qtip({
-        content: "<div style='float: left' class='tip'><form class='tagthis' item_id='"+get_item_id($(this))+"'><input type='text' name='tag' style='border-color: #0E8D94; outline: none'></form><span class='error'></span></div><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='float: right'>",
-            position: {
-            corner: {
-                target: 'topRight',
-                tooltip: 'bottomLeft'
-            },
-            adjust: {
-                screen: true
-            }
-        },
-        show: {
-            when: 'click',
-            solo: true,
-            effect: function() {
-               $(this).fadeIn(90, function() {
-                  $("input", $("a.addtag").qtip("api").elements.content).focus();
-               });
-            }
-        },
-        hide: 'unfocus',
-        style: {
-            tip: true,
-            background: '#0E8D94',
-            padding: 0,
-            border: {
-                width: 0,
-                radius: 0,
-                color: '#0E8D94'
-            },
-            name: 'light'
-        }
-            
-    })
-    .bind('click', function(event){ event.preventDefault(); return false; });
-    }); 
-
-    $('.tag a.taglink').each(function(){
-        follow = 'follow'
-        if (window.followed_tags && $.inArray($(this).text(), followed_tags) != -1)
-        {
-            follow = 'unfollow'
-        }
-        block = 'block'
-        if ($(this).parent().hasClass('blocked_tag'))
-        {
-            block = 'unblock'
-        }
-        $(this).qtip(
-        {
-            content: '<span class="taglinks"><a href="'+$(this).attr('action_url')+'?action='+follow+'">'+follow+'</a><br /><a href="'+$(this).attr('action_url')+'?action='+block+'">'+block+'</a></span>',
-            position: {
-                corner: {
-                    target: 'bottomLeft'
-                }
-            },
-            show: {
-                solo: true
-            },
-            hide: {
-                fixed: true
-            }
-        });
+    $("a.addtag").click(function(e){
+        tagbox = $("<input/>").attr("type", "text").attr('name', 'tag').addClass("tagbox");
+        $(this).replaceWith(tagbox);
+        tagbox.wrap('<form class="tagthis" item_id="'+get_item_id(tagbox)+'" style="display: inline-block"/>');
+        tagbox.after("<span class='error'></span><img src='/media/images/ajax-loader.gif' class='nodisplay loading' style='margin-right: 1em'>");
+        tagbox.focus();
+        e.preventDefault();
     });
 
+    $('.tag a.taglink').each(taglink_dynamic);
 
 }
 
@@ -283,9 +262,8 @@ $(document).ready(function(){
             }
         }
     )
-    $(".qtip form.tagthis").live("submit", function(e){
-        
-        $(this).parents('.tip').siblings(".loading").show()
+    $("form.tagthis").live("submit", function(e){
+        $(this).children(".loading").show()
         item_id = $(this).attr('item_id')
         var self = this
         $.ajax({
@@ -296,28 +274,31 @@ $(document).ready(function(){
             timeout: 2000,
             success: function(data)
             {
-                $(self).parents('.tip').siblings(".loading").hide()
+                $(self).children(".loading").hide()
                 if (!data)
                 {
                     /* this is due to a bug(?) in jQuery 1.4.2 */
-                    ajaxerror($(self).parents('.tip').siblings('.error'), 'Error: could not communicate with the server')
+                    ajaxerror($(self).children('.error'), 'Error: could not communicate with the server')
                     return;
                 }
                 if (data['success'])
                 {
-                    tooltip = $(self).parents('.qtip');
-                    tooltip.qtip('hide');
+                    tag_name = $(self).children("input[name=tag]").val();
+                    newtag = new_tag(tag_name);
+                    $(self).after(newtag);
+                    $(self).after(' ');
+                    newtag.children('a.taglink').each(taglink_dynamic);
                     return;
                 }
                 else
                 {
-                    ajaxerror($(self).parents('.tip').siblings('.error'), data['error_msg'])
+                    ajaxerror($(self).children('.error'), data['error_msg'])
                 }
             },
             error: function(request, error)
             {
-                $(self).parents('.tip').siblings(".loading").hide()
-                ajaxerror($(self).parents('.tip').siblings('.error'), 'Error: could not communicate with the server')
+                $(self).children(".loading").hide()
+                ajaxerror($(self).children('.error'), 'Error: could not communicate with the server')
             }
         })
         e.preventDefault();

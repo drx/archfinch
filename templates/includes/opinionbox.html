@@ -8,13 +8,13 @@
         {% for tag in item.popular_tags %}
             {% if tag.name not in selected_tags or not selected_tags %}            
                 {% if not tag.hide_tag %}
-                <span class="tag {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" tag_name="{{ tag.name }}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span>
+                <span class="tag {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" tag_name="{{ tag.name }}">{{ tag.name }}</a></span>
                 {% endif %}
             {% endif %}
         {% endfor %}
         {% for tag in item.popular_tags %}
             {% if tag.name in selected_tags %}
-            <span class="tag selected_tag {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" tag_name="{{ tag.name }}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span>
+            <span class="tag selected_tag {% if link %}freshtag{% endif %}"><a class="taglink" href="{% if item.is_link or item.is_comment %}{% url fresh-tags tag.name %}{% else %}{% url search-base %}/tag:{{ tag.name }}{% endif %}" tag_name="{{ tag.name }}">{{ tag.name }}</a></span>
             {% endif %}
         {% endfor %}
     </div>

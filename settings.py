@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'djcelery',
     'lazysignup',
     'reversetag',
+    'django_js_utils',
 )
 if DEBUG:
     INSTALLED_APPS += (

@@ -15,7 +15,7 @@ Explore tags - Archfinch
     <div class='tagfilter-container'><input type='text' id='tagfilter'></div>
     {% for tag in popular_tags %}
         <div class='tag-cell' tag='{{ tag.name }}'>
-            <span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}" tag_name="{{ tag.name }}" action_url="{% url tag-action tag.name %}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span>
+            <span class="tag"><a class="taglink" href="{% url fresh-tags tag.name %}" tag_name="{{ tag.name }}">{{ tag.name }}</a></span> <span style='font-size: 10px'>{{ tag.count }}</span>
         </div>
     {% endfor %}
 </div>
