@@ -299,13 +299,14 @@ $(document).ready(function(){
                 }
                 if (data['success'])
                 {
-                    tagox = $(self).children("input[name=tag]");
+                    tagbox = $(self).children("input[name=tag]");
                     tag_name = tagbox.val();
                     tagbox.val('');
                     newtag = new_tag(tag_name);
                     $(self).after(newtag);
                     $(self).after(' ');
                     newtag.children('a.taglink').each(taglink_dynamic);
+                    tagbox.autocomplete('close');
                     return;
                 }
                 else
