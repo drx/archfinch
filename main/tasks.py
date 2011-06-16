@@ -52,3 +52,12 @@ def static_delete():
 def static_republish():
     from archfinch.utils.cache import republish_static
     republish_static()
+
+
+@task(name="celery.backend_cleanup")
+def backend_cleanup():
+    '''Override the default celery backend cleanup, which just crashes for some reason.
+    
+    TODO: Fix this more better-like.
+    '''
+    pass
