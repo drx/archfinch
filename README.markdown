@@ -12,6 +12,6 @@ You should be able to recreate Archfinch if you devote enough time to it. If the
 
 **Pull requests very welcome.**
 
-# Contacing us
+# Contacting us
 
 If you need any assistance, have questions, are unsure about something, you can go on our IRC (#archfinch on irc.archfinch.com) or [email](mailto:luke@archfinch.com) me.
