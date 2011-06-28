@@ -9,8 +9,10 @@ CREATE OR REPLACE FUNCTION wilson_score(arg_item_id integer, lower_bound boolean
         bound_factor integer := 1;
         phat real;
         rating_row record;
+        submitter integer;
     BEGIN
-    FOR rating_row in SELECT rating, count(1) as count from main_opinion where item_id=arg_item_id group by rating
+    SELECT COALESCE(submitter_id, 0) INTO submitter FROM main_item WHERE id=arg_item_id;
+    FOR rating_row in SELECT rating, count(1) as count from main_opinion where item_id=arg_item_id and user_id != submitter group by rating
     LOOP
         CASE rating_row.rating
             WHEN 5 THEN positive := positive + rating_row.count*extremity_factor;
