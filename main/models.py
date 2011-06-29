@@ -201,7 +201,7 @@ class Item(models.Model):
         url = ('item', (int_to_base36(self.id), slug))
         return url 
 
-    def get_short_url(self);
+    def get_short_url(self):
         from django.utils.http import int_to_base36
         return 'http://%s/%s' % (settings.SHORT_DOMAIN, int_to_base36(self.id))
 
