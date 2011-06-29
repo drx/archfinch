@@ -201,6 +201,10 @@ class Item(models.Model):
         url = ('item', (int_to_base36(self.id), slug))
         return url 
 
+    def get_short_url(self);
+        from django.utils.http import int_to_base36
+        return 'http://%s/%s' % (settings.SHORT_DOMAIN, int_to_base36(self.id))
+
     def get_meta_data(self):
         from django.core.exceptions import ObjectDoesNotExist
         from archfinch.links.scraper import scrape, generate_thumbnail
@@ -236,7 +240,7 @@ class Item(models.Model):
 
     def post_save_message(self, created):
         if created:
-            return '%s has just %s %s' % (self.submitter, self.post_save_verb, self.__unicode__())
+            return '[%s] %s by %s, %s' % (self.category.name, self.get_short_url(), self.submitter, self.__unicode__())
         else:
             return None
     post_save_verb = 'submitted'
@@ -795,14 +799,8 @@ def bot_post_save(sender, **kwargs):
     if public:
         channels.append('#archfinch')
 
-    try:
-        path = instance.get_absolute_url()
-        urlstr = ' (http://%s%s)' % (settings.DOMAIN, path)
-    except AttributeError:
-        urlstr = ''
-
     for channel in channels:
-        bot.send_message(channel, '%s %s' % (message, urlstr))
+        bot.send_message(channel, message)
 
 post_save.connect(bot_post_save)
 
