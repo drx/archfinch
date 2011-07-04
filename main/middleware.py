@@ -4,6 +4,7 @@ import re
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.http import base36_to_int
+from django.http import Http404
 from archfinch.main.models import Item
 
 
@@ -15,7 +16,10 @@ class ShortenerMiddleware:
     def process_request(self, request):
         if re.match(settings.SHORT_DOMAIN, request.META.get('HTTP_HOST', '')):
             item_id = request.path[1:]
-            item = get_object_or_404(Item, pk=base36_to_int(item_id))
+            try:
+                item = get_object_or_404(Item, pk=base36_to_int(item_id))
+            except ValueError:
+                raise Http404
             url = 'http://' + settings.DOMAIN + item.get_absolute_url()
             return redirect(url, permanent=True)
 
