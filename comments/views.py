@@ -39,7 +39,10 @@ def add_comment(request, json=False):
                 return render_to_response('form_error.html', locals(), context_instance=RequestContext(request))
 
     else:
-        return_data['error_msg'] = 'Wrong request method'
+        if json:
+            return_data['error_msg'] = 'Wrong request method'
+        else:
+            return HttpResponseRedirect('/')
 
     if json:
         json = simplejson.dumps(return_data)

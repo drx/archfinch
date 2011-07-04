@@ -209,6 +209,7 @@ class Item(models.Model):
         from django.core.exceptions import ObjectDoesNotExist
         from archfinch.links.scraper import scrape, generate_thumbnail
 
+        scraped_data = {}
         if self.__class__.__name__ == 'Link':
             scraped_data = scrape(self.url)
             self.category_id = scraped_data['category_id']
@@ -229,7 +230,7 @@ class Item(models.Model):
         item_stats.save()
         self.stats = item_stats
         self.save()
-        if scraped_data['category'] in ('pic', 'video'):
+        if scraped_data and scraped_data['category'] in ('pic', 'video'):
             if scraped_data['category'] == 'pic':
                 tag = 'pics'
             else:
