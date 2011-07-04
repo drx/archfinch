@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^recommend/fresh$', 'archfinch.main.views.recommend', {'category_slug': 'fresh'}, name='fresh'),
     url(r'^recommend$', 'archfinch.main.views.recommend', name='recommend'),
     url(r'^recommend/(?P<category_slug>[a-z-]+)$', 'archfinch.main.views.recommend', name='recommend-slugged'),
-    url(r'^recommend/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-paged'),
+    url(r'^recommend/before/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-paged'),
     url(r'^recommend/(?P<category_slug>[a-z-]+)/(?P<before>[0-9a-z]+)(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-slugged-paged'),
     url(r'^recommend(?:/(?P<category_slug>[a-z-]*))?/for/(?P<usernames>[,\w@\+\.-]+)(?:/(?P<before>[0-9a-z]+))?(?P<json>\.json)?$', 'archfinch.main.views.recommend', name='recommend-for'),
 
