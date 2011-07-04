@@ -20,6 +20,22 @@ class ShortenerMiddleware:
             return redirect(url, permanent=True)
 
 
+class NofollowMiddleware:
+    '''
+    Middleware to add rel="nofollow" to all outgoing links.
+    '''
+    def process_response(self, request, response):
+        NOFOLLOW_RE = re.compile('<a (?![^>]*rel=["\']nofollow[\'"])' \
+                         '(?![^>]*href=["\']\.{0,2}/[^/])' \
+                         '(?![^>]*archfinch)',
+                         re.IGNORECASE)
+
+        from django.utils.encoding import smart_unicode
+
+        response.content = re.sub(NOFOLLOW_RE, u'<a rel="nofollow" ', smart_unicode(response.content, encoding='utf-8', strings_only=False, errors='strict'))
+        return response
+
+
 class SearchEngineReferrerMiddleware(object):
     """
     http://djangosnippets.org/snippets/1240/

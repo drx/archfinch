@@ -51,6 +51,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
+    'archfinch.main.middleware.NofollowMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'archfinch.main.middleware.SearchEngineReferrerMiddleware',
     'django.middleware.common.CommonMiddleware',
