@@ -31,8 +31,11 @@ class NofollowMiddleware:
                          re.IGNORECASE)
 
         from django.utils.encoding import smart_unicode
+        from django.conf import settings
+        
+        if response['Content-type'].startswith(settings.DEFAULT_CONTENT_TYPE):
+            response.content = re.sub(NOFOLLOW_RE, u'<a rel="nofollow" ', smart_unicode(response.content, encoding='utf-8', strings_only=False, errors='strict'))
 
-        response.content = re.sub(NOFOLLOW_RE, u'<a rel="nofollow" ', smart_unicode(response.content, encoding='utf-8', strings_only=False, errors='strict'))
         return response
 
 
