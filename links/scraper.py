@@ -72,13 +72,14 @@ def scrape(url):
         try:
             req = urllib2.urlopen(urllib2.Request(url))
             content = req.read(max_filesize)
+            print 'a'
             if 'image' in req.headers.get('content-type'):
                 img = str_to_image(content)
                 data['url'] = url
                 data['width'], data['height'] = img.size
                 data['category'] = 'pic'
-        except:
-            pass
+        except Exception as e:
+            print e
 
     if keys: 
         for key in keys: 
