@@ -1,6 +1,6 @@
 <script type="text/javascript"> 
 {% if user.is_authenticated %}
-user_lists = "{% for list in user.self_lists %}<li>{% if forloop.last %}or {% endif %}<a href='#' list_id='{{ list.id }}'>{{ list.name }}</a>{% if not forloop.last %},{% endif %}{% endfor %}";
+user_lists = '{% for list in user.self_lists %}<li>{% if forloop.last %}or {% endif %}<a href="#" list_id="{{ list.id }}">{{ list.name }}</a>{% if not forloop.last %},{% endif %}{% endfor %}';
 {% endif %}
 $(document).ready(generate_opinionbox_tips);
 </script>
