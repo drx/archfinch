@@ -148,9 +148,9 @@ def recommend(request, followed=False, category_slug=None, before=None, username
             related_tags = list(Tag.objects.related_tags(tags))
             cache.set(related_cache_key, related_tags, 60*60*6)
 
-    n = 100
+    n = 50
     if category and category.name in ('Videos', 'Pics') or fresh:
-        n = 10
+        n = 20
 
     if usernames is not None:
         usernames = usernames.split(',')
