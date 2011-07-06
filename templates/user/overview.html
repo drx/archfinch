@@ -41,7 +41,7 @@
     {% for date in date_list %}
         <h2>{{ date.grouper|capfirst }}</h2>
         {% for opinion in date.list %}
-            {% include "includes/opinionbox.html" with item=opinion page_id="user_overview" terse_layout=1 your_rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter my_rating=opinion.your_rating item_name=opinion.item category_singular=opinion.item.category.element_singular no_src=1 %}
+            {% include "includes/opinionbox.html" with item=opinion.item page_id="user_overview" terse_layout=1 your_rating=opinion.rating item_id=opinion.item_id yr_big=your_profile review=opinion.review seq_term=forloop.counter seq_term2=forloop.parentloop.counter my_rating=opinion.your_rating item_name=opinion.item category_singular=opinion.item.category.element_singular no_src=1 %}
         {% endfor %}
     {% endfor %}
 {% else %}
