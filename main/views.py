@@ -260,18 +260,18 @@ def recommend(request, followed=False, category_slug=None, before=None, username
                 before = datetime.fromtimestamp(before)
             else:
                 before = datetime.now()
-            recommendations = recommendations.timeslice(before=before)
-            if len(recommendations) > 10:
-                next_before = int(time.mktime(recommendations[10].time.timetuple()))
-                recommendations = recommendations[:10]
+            recommendations = recommendations.timeslice(before=before, n=n)
+            if len(recommendations) > n:
+                next_before = int(time.mktime(recommendations[n].time.timetuple()))
+                recommendations = recommendations[:n]
 
             if feed:
                 return locals()
             response = render_to_response("links/recommend.%s" % (ext,), locals(), context_instance=RequestContext(request))
         else:
-            if len(recommendations) > 10:
-                next_before = start+100
-                recommendations = recommendations[:100]
+            if len(recommendations) > n:
+                next_before = start+n
+                recommendations = recommendations[:n]
 
             if request.user.is_authenticated():
                 user_categories = request.user.categories()
